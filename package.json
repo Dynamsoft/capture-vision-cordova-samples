@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-dbr",
-  "version": "6.0.0",
-  "description": "You can use the BarcodeScanner plugin to scan different types of barcodes (using the device's camera) and get the metadata encoded in them for processing within your application.",
+  "version": "1.0.0",
+  "description": "Build mobile barcode reader apps for Android and iOS with Dynamsoft Barcode Reader SDK",
   "cordova": {
     "id": "cordova-plugin-dbr",
     "platforms": [
@@ -25,7 +25,7 @@
       "version": ">=3.0.0"
     }
   ],
-  "author": "Adobe PhoneGap Team",
+  "author": "Dynamsoft",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dynamsoft-dbr/cordova-plugin-dbr/issues"
