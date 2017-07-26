@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rim="http://www.blackberry.com/ns/widgets"
     id="cordova-plugin-dbr"
-    version="6.0.0">
+    version="1.0.0">
 
     <name>BarcodeScanner</name>
-    <description>You can use the BarcodeScanner plugin to scan different types of barcodes (using the device's camera) and get the metadata encoded in them for processing within your application.</description>
+    <description>Build mobile barcode reader apps for Android and iOS with Dynamsoft Barcode Reader SDK</description>
     <license>MIT</license>
 
     <repo>https://github.com/dynamsoft-dbr/cordova-plugin-dbr</repo>
