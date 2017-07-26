@@ -1,6 +1,5 @@
 # Cordova Plugin with Dynamsoft Barcode Reader for iOS and Android
-================================
-Use the Cordova plugin to quickly develop mobile barcode reader apps for iOS and Android.
+Use the Cordova plugin to quickly develop mobile barcode reader apps for iOS and Android. For more information, please visit http://www.dynamsoft.com/Products/Dynamic-Barcode-Reader.aspx.
 
 ## Installation
 1. Install **Cordova** vi **npm**:
@@ -83,4 +82,7 @@ The following barcode types are currently supported:
         this.receivedEvent('deviceready');
     },
 ```
+
+## Technical Support
+support@dynamsoft.com
 
