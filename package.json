@@ -1,0 +1,34 @@
+{
+  "name": "cordova-plugin-dbr",
+  "version": "6.0.0",
+  "description": "You can use the BarcodeScanner plugin to scan different types of barcodes (using the device's camera) and get the metadata encoded in them for processing within your application.",
+  "cordova": {
+    "id": "cordova-plugin-dbr",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dynamsoft-dbr/cordova-plugin-dbr.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "ecosystem:phonegap",
+    "cordova-ios",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "Adobe PhoneGap Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dynamsoft-dbr/cordova-plugin-dbr/issues"
+  },
+  "homepage": "https://github.com/dynamsoft-dbr/cordova-plugin-dbr#readme"
+}

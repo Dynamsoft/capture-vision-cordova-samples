@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    id="cordova-plugin-dbr"
+    version="6.0.0">
+
+    <name>BarcodeScanner</name>
+    <description>You can use the BarcodeScanner plugin to scan different types of barcodes (using the device's camera) and get the metadata encoded in them for processing within your application.</description>
+    <license>MIT</license>
+
+    <repo>https://github.com/dynamsoft-dbr/cordova-plugin-dbr</repo>
+    <issue>https://github.com/dynamsoft-dbr/cordova-plugin-dbr/issues</issue>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <js-module src="www/barcodescanner.js" name="BarcodeScanner">
+        <clobbers target="cordova.plugins.barcodeScanner" />
+    </js-module>
+
+    <!-- ios -->
+    <platform name="ios">
+        <!-- Cordova >= 2.8 -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="BarcodeScanner">
+                <param name="ios-package" value="CDVBarcodeScanner" />
+            </feature>
+        </config-file>
+        <resource-file src="src/ios/scannerOverlay.xib" />
+        <resource-file src="src/ios/CDVBarcodeScanner.bundle" />
+        <source-file src="src/ios/CDVBarcodeScanner.mm" compiler-flags="-fno-objc-arc" />
+        <framework src="libiconv.dylib" />
+        <framework src="AVFoundation.framework" />
+        <framework src="AssetsLibrary.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreImage.framework" />
+        <framework src="AudioToolbox.framework" />
+        <framework src="src/ios/DynamsoftBarcodeReader.framework" custom="true"/>
+    </platform>
+
+  <platform name="android">
+    <source-file src="src/android/com/phonegap/plugins/barcodescanner/BarcodeScanner.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="BarcodeScanner">
+        <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
+      </feature>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <activity android:name="com.dynamsoft.demo.dynamsoftbarcodereaderdemo.DBR" android:clearTaskOnLaunch="true" android:configChanges="orientation|keyboardHidden|screenSize" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:windowSoftInputMode="stateAlwaysHidden" android:exported="false" />
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.CAMERA"/>
+      <uses-permission android:name="android.permission.FLASHLIGHT"/>
+      <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    </config-file>
+    <framework src="src/android/barcodescanner.gradle" custom="true" type="gradleReference"/>
+    <resource-file src="src/android/dbr.aar" target="libs/dbr.aar"/>
+    <resource-file src="src/android/DynamsoftBarcodeReader.aar" target="libs/DynamsoftBarcodeReader.aar"/>
+    <dependency id="cordova-plugin-compat" version="^1.0.0"/>
+  </platform>
+
+</plugin>
