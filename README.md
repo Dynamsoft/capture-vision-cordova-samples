@@ -86,3 +86,7 @@ The following barcode types are currently supported:
 ## Technical Support
 support@dynamsoft.com
 
+## Screenshots
+![Cordova barcode plugin](http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2911.PNG)
+
+![Cordova barcode plugin for PDF417](http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2913.PNG)
