@@ -19,8 +19,7 @@
 #import <Cordova/CDVPlugin.h>
 
 // use Dynamsoft Barcode Reader SDK
-#import <DynamsoftBarcodeReader/DynamsoftBarcodeReader.h>
-#import <DynamsoftBarcodeReader/Barcode.h>
+#import <DynamsoftBarcodeSDK/DynamsoftBarcodeSDK.h>
 
 //------------------------------------------------------------------------------
 // Delegate to handle orientation functions
@@ -74,7 +73,7 @@
 @property (nonatomic)         BOOL                        isFrontCamera;
 @property (nonatomic)         BOOL                        isShowFlipCameraButton;
 @property (nonatomic)         BOOL                        isFlipped;
-@property (nonatomic, retain) BarcodeReader*              barcodeReader;
+@property (nonatomic, retain) DynamsoftBarcodeReader*              barcodeReader;
 @property (nonatomic)         long                        barcodeFormat;
 
 
@@ -220,12 +219,12 @@
 }
 
 //--------------------------------------------------------------------------
-- (void)returnSuccess:(NSString*)scannedText format:(NSString*)format cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback{
+- (void)returnSuccess:(NSString*)scannedText cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback{
     NSNumber* cancelledNumber = [NSNumber numberWithInt:(cancelled?1:0)];
 
     NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
     [resultDict setObject:scannedText     forKey:@"text"];
-    [resultDict setObject:format          forKey:@"format"];
+    //[resultDict setObject:format          forKey:@"format"];
     [resultDict setObject:cancelledNumber forKey:@"cancelled"];
 
     CDVPluginResult* result = [CDVPluginResult
@@ -289,8 +288,8 @@ parentViewController:(UIViewController*)parentViewController
     CFURLRef soundFileURLRef  = CFBundleCopyResourceURL(CFBundleGetMainBundle(), CFSTR("CDVBarcodeScanner.bundle/beep"), CFSTR ("caf"), NULL);
     AudioServicesCreateSystemSoundID(soundFileURLRef, &_soundFileObject);
     
-    self.barcodeReader = [[BarcodeReader alloc] initWithLicense:@"license"];
-    self.barcodeFormat = Barcode.OneD | Barcode.PDF417 | Barcode.QR_CODE;
+    self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0068MgAAAEMKwCG/nGtAHejYbWgJH1sqDrUEhjbY2iIPP+rd//VnS2xWkcqSLMF3cxKetujwrYi4MxyyYl2qim4I1KKY3tk="];
+    self.barcodeFormat = BarcodeTypeONED | BarcodeTypePDF417 | BarcodeTypeQRCODE;
 
     return self;
 }
@@ -384,10 +383,10 @@ parentViewController:(UIViewController*)parentViewController
 }
 
 //--------------------------------------------------------------------------
-- (void)barcodeScanSucceeded:(NSString*)text format:(NSString*)format {
+- (void)barcodeScanSucceeded:(NSString*)text {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self barcodeScanDone:^{
-            [self.plugin returnSuccess:text format:format cancelled:FALSE flipped:FALSE callback:self.callback];
+            [self.plugin returnSuccess:text cancelled:FALSE flipped:FALSE callback:self.callback];
         }];
         AudioServicesPlaySystemSound(_soundFileObject);
     });
@@ -449,14 +448,15 @@ parentViewController:(UIViewController*)parentViewController
     AVCaptureVideoDataOutput* output = [[AVCaptureVideoDataOutput alloc] init];
     if (!output) return @"unable to obtain video capture output";
 
-    NSDictionary* videoOutputSettings = [NSDictionary
-                                         dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8PlanarFullRange]
-                                         forKey:(id)kCVPixelBufferPixelFormatTypeKey
-                                         ];
+    //NSDictionary* videoOutputSettings = [NSDictionary
+    //                                     dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32ARGB]
+    //                                     forKey:(id)kCVPixelBufferPixelFormatTypeKey
+    //                                     ];
 
     output.alwaysDiscardsLateVideoFrames = YES;
 //    output.videoSettings = videoOutputSettings;
-    [output setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+    [output setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+
     [output setSampleBufferDelegate:self queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
     
 //    [output setSampleBufferDelegate:self queue:dispatch_queue_create("dbrCameraQueue", NULL)];
@@ -496,7 +496,8 @@ parentViewController:(UIViewController*)parentViewController
 // this method gets sent the captured frames
 //--------------------------------------------------------------------------
 - (void)captureOutput:(AVCaptureOutput*)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection*)connection {
-
+    
+    NSLog(@"get in");
     if (!self.capturing) return;
 
 #if USE_SHUTTER
@@ -520,129 +521,39 @@ parentViewController:(UIViewController*)parentViewController
     //         [self dumpImage: [[self getImageFromSample:sampleBuffer] autorelease]];
 #endif
 
-
-//    using namespace zxing;
-//
-//    // LuminanceSource is pretty dumb; we have to give it a pointer to
-//    // a byte array, but then can't get it back out again.  We need to
-//    // get it back to free it.  Saving it in imageBytes.
-//    uint8_t* imageBytes;
-//
-//    //        NSTimeInterval timeStart = [NSDate timeIntervalSinceReferenceDate];
-//
-//    try {
-//        NSArray *supportedFormats = nil;
-//        if (self.formats != nil) {
-//            supportedFormats = [self.formats componentsSeparatedByString:@","];
-//        }
-//        DecodeHints decodeHints;
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_QR_CODE]]) {
-//            decodeHints.addFormat(BarcodeFormat_QR_CODE);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_CODE_128]]) {
-//            decodeHints.addFormat(BarcodeFormat_CODE_128);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_CODE_39]]) {
-//            decodeHints.addFormat(BarcodeFormat_CODE_39);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_DATA_MATRIX]]) {
-//            decodeHints.addFormat(BarcodeFormat_DATA_MATRIX);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_UPC_E]]) {
-//            decodeHints.addFormat(BarcodeFormat_UPC_E);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_UPC_A]]) {
-//            decodeHints.addFormat(BarcodeFormat_UPC_A);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_EAN_8]]) {
-//            decodeHints.addFormat(BarcodeFormat_EAN_8);
-//        }
-//        if (supportedFormats == nil || [supportedFormats containsObject:[self formatStringFrom:BarcodeFormat_EAN_13]]) {
-//            decodeHints.addFormat(BarcodeFormat_EAN_13);
-//        }
-////        decodeHints.addFormat(BarcodeFormat_ITF);   causing crashes
-//
-//        // here's the meat of the decode process
-//        Ref<LuminanceSource>   luminanceSource   ([self getLuminanceSourceFromSample: sampleBuffer imageBytes:&imageBytes]);
-//        //            [self dumpImage: [[self getImageFromLuminanceSource:luminanceSource] autorelease]];
-//        Ref<Binarizer>         binarizer         (new HybridBinarizer(luminanceSource));
-//        Ref<BinaryBitmap>      bitmap            (new BinaryBitmap(binarizer));
-//        Ref<MultiFormatReader> reader            (new MultiFormatReader());
-//        Ref<Result>            result            (reader->decode(bitmap, decodeHints));
-//        Ref<String>            resultText        (result->getText());
-//        BarcodeFormat          formatVal =       result->getBarcodeFormat();
-//        NSString*              format    =       [self formatStringFrom:formatVal];
-//
-//
-//        const char* cString      = resultText->getText().c_str();
-//        NSString*   resultString = [[NSString alloc] initWithCString:cString encoding:NSUTF8StringEncoding];
-//
-//        if ([self checkResult:resultString]) {
-//            [self barcodeScanSucceeded:resultString format:format];
-//        }
-//    }
-//    catch (zxing::ReaderException &rex) {
-//        //            NSString *message = [[[NSString alloc] initWithCString:rex.what() encoding:NSUTF8StringEncoding] autorelease];
-//        //            NSLog(@"decoding: ReaderException: %@", message);
-//    }
-//    catch (zxing::IllegalArgumentException &iex) {
-//        //            NSString *message = [[[NSString alloc] initWithCString:iex.what() encoding:NSUTF8StringEncoding] autorelease];
-//        //            NSLog(@"decoding: IllegalArgumentException: %@", message);
-//    }
-//    catch (...) {
-//        //            NSLog(@"decoding: unknown exception");
-//        //            [self barcodeScanFailed:@"unknown exception decoding barcode"];
-//    }
-//
-//    //        NSTimeInterval timeElapsed  = [NSDate timeIntervalSinceReferenceDate] - timeStart;
-//    //        NSLog(@"decoding completed in %dms", (int) (timeElapsed * 1000));
-//
-//    // free the buffer behind the LuminanceSource
-//    if (imageBytes) {
-//        free(imageBytes);
-//    }
     // Dynamsoft Barcode Reader SDK
     @autoreleasepool {
-        
-        void *imageData = NULL;
-        uint8_t *copyToAddress;
         
         CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
         
         OSType pixelFormat = CVPixelBufferGetPixelFormatType(imageBuffer);
         
-        if (!(pixelFormat == '420v' || pixelFormat == '420f'))
-        {
-            return;
-        }
+        //if (!(pixelFormat == '420v' || pixelFormat == '420f'))
+        //{
+            //return;
+        //}
         
         CVPixelBufferLockBaseAddress(imageBuffer, 0);
-        int numPlanes = (int)CVPixelBufferGetPlaneCount(imageBuffer);
         int bufferSize = (int)CVPixelBufferGetDataSize(imageBuffer);
-        int imgWidth = (int)CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
-        int imgHeight = (int)CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+        int imgWidth = (int)CVPixelBufferGetWidth(imageBuffer);
+        int imgHeight = (int)CVPixelBufferGetHeight(imageBuffer);
+        int stride = (int) CVPixelBufferGetBytesPerRow(imageBuffer);
         
-        if(numPlanes < 1)
-        {
-            return;
-        }
-        
-        uint8_t *baseAddress = (uint8_t *) CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-        size_t bytesToCopy = CVPixelBufferGetHeightOfPlane(imageBuffer, 0) * CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
-        imageData = malloc(bytesToCopy);
-        copyToAddress = (uint8_t *) imageData;
-        memcpy(copyToAddress, baseAddress, bytesToCopy);
+        void *baseAddress = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
         
         CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
         
-        NSData *buffer = [NSData dataWithBytesNoCopy:imageData length:bufferSize freeWhenDone:YES];
-        
-        // read frame using Dynamsoft Barcode Reader in async manner
-        ReadResult *result = [self.barcodeReader readSingle:buffer width:imgWidth height:imgHeight barcodeFormat: self.barcodeFormat];
-        
-        if (result.barcodes != nil) {
-            Barcode *barcode = (Barcode *)result.barcodes[0];
-            [self barcodeScanSucceeded:barcode.displayValue format:barcode.formatString];
+        NSData *buffer = [NSData dataWithBytes:baseAddress length:bufferSize];
+        NSLog(@"get a frame");
+        @try{
+            NSArray<TextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:ImagePixelTypeARGB_8888 templateName:@"" error:nil];
+            if (results!=nil){
+                [self barcodeScanSucceeded:results[0].barcodeText];
+                NSLog(@"%@",results[0].barcodeText);
+            }
+        }
+        @catch(NSException *e){
+            
         }
         
     }
