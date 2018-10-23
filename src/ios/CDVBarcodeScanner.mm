@@ -19,7 +19,7 @@
 #import <Cordova/CDVPlugin.h>
 
 // use Dynamsoft Barcode Reader SDK
-#import <DynamsoftBarcodeSDK/DynamsoftBarcodeSDK.h>
+#import <DynamsoftBarcodeReader/DynamsoftBarcodeSDK.h>
 
 //------------------------------------------------------------------------------
 // Delegate to handle orientation functions
