@@ -219,12 +219,12 @@
 }
 
 //--------------------------------------------------------------------------
-- (void)returnSuccess:(NSString*)scannedText cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback{
+- (void)returnSuccess:(NSString*)scannedText barcodeFormat:(NSString*)format cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback{
     NSNumber* cancelledNumber = [NSNumber numberWithInt:(cancelled?1:0)];
 
     NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
     [resultDict setObject:scannedText     forKey:@"text"];
-    //[resultDict setObject:format          forKey:@"format"];
+    [resultDict setObject:format          forKey:@"format"];
     [resultDict setObject:cancelledNumber forKey:@"cancelled"];
 
     CDVPluginResult* result = [CDVPluginResult
@@ -383,10 +383,10 @@ parentViewController:(UIViewController*)parentViewController
 }
 
 //--------------------------------------------------------------------------
-- (void)barcodeScanSucceeded:(NSString*)text {
+- (void)barcodeScanSucceeded:(NSString*)result barcodeFormat:(NSString*)format {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self barcodeScanDone:^{
-            [self.plugin returnSuccess:text cancelled:FALSE flipped:FALSE callback:self.callback];
+            [self.plugin returnSuccess:result barcodeFormat:format cancelled:FALSE flipped:FALSE callback:self.callback];
         }];
         AudioServicesPlaySystemSound(_soundFileObject);
     });
@@ -492,12 +492,65 @@ parentViewController:(UIViewController*)parentViewController
     return nil;
 }
 
+- (NSString*)getBarcodeFormatString:(BarcodeType)barcodeType{
+    NSString* format = @"";
+    switch(barcodeType)
+    {
+        case BarcodeTypeITF:
+            format = @"ITF";
+            break;
+        case BarcodeTypeEAN8:
+            format = @"EAN8";
+            break;
+        case BarcodeTypeONED:
+            format = @"ONED";
+            break;
+        case BarcodeTypeUPCA:
+            format = @"UPCA";
+            break;
+        case BarcodeTypeUPCE:
+            format = @"UPCE";
+            break;
+        case BarcodeTypeAZTEC:
+            format = @"AZTEC";
+            break;
+        case BarcodeTypeEAN13:
+            format = @"EAN13";
+            break;
+        case BarcodeTypeCODE39:
+            format = @"CODE39";
+            break;
+        case BarcodeTypeCODE93:
+            format = @"CODE93";
+            break;
+        case BarcodeTypePDF417:
+            format = @"PDF417";
+            break;
+        case BarcodeTypeQRCODE:
+            format = @"QRCODE";
+            break;
+        case BarcodeTypeCODABAR:
+            format = @"CODABAR";
+            break;
+        case BarcodeTypeCODE128:
+            format = @"CODE128";
+            break;
+        case BarcodeTypeDATAMATRIX:
+            format = @"DATAMATRIX";
+            break;
+        case BarcodeTypeINDUSTRIAL:
+            format = @"INDUSTRIAL";
+            break;
+    }
+    return format;
+}
+
 //--------------------------------------------------------------------------
 // this method gets sent the captured frames
 //--------------------------------------------------------------------------
 - (void)captureOutput:(AVCaptureOutput*)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection*)connection {
     
-    NSLog(@"get in");
+    //NSLog(@"get in");
     if (!self.capturing) return;
 
 #if USE_SHUTTER
@@ -548,7 +601,8 @@ parentViewController:(UIViewController*)parentViewController
         @try{
             NSArray<TextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:ImagePixelTypeARGB_8888 templateName:@"" error:nil];
             if (results!=nil){
-                [self barcodeScanSucceeded:results[0].barcodeText];
+                NSString* barcodeFormat = [self getBarcodeFormatString:results[0].barcodeFormat];
+                [self barcodeScanSucceeded:results[0].barcodeText   barcodeFormat:barcodeFormat];
                 NSLog(@"%@",results[0].barcodeText);
             }
         }
