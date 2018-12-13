@@ -57,7 +57,6 @@
     </config-file>
     <framework src="src/android/barcodescanner.gradle" custom="true" type="gradleReference"/>
     <resource-file src="src/android/dbr.aar" target="libs/dbr.aar"/>
-    <resource-file src="src/android/DynamsoftBarcodeReader.aar" target="libs/DynamsoftBarcodeReader.aar"/>
     <dependency id="cordova-plugin-compat" version="^1.0.0"/>
   </platform>
 

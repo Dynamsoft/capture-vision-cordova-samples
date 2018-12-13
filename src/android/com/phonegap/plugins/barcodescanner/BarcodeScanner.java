@@ -27,23 +27,11 @@ public class BarcodeScanner extends CordovaPlugin {
     public static final int REQUEST_CODE = 0x0ba7c0de;
 
     private static final String SCAN = "scan";
-    private static final String ENCODE = "encode";
     private static final String CANCELLED = "cancelled";
     private static final String FORMAT = "format";
     private static final String TEXT = "text";
     private static final String DATA = "data";
     private static final String TYPE = "type";
-    private static final String PREFER_FRONTCAMERA = "preferFrontCamera";
-    private static final String ORIENTATION = "orientation";
-    private static final String SHOW_FLIP_CAMERA_BUTTON = "showFlipCameraButton";
-    private static final String RESULTDISPLAY_DURATION = "resultDisplayDuration";
-    private static final String SHOW_TORCH_BUTTON = "showTorchButton";
-    private static final String TORCH_ON = "torchOn";
-    private static final String FORMATS = "formats";
-    private static final String PROMPT = "prompt";
-    private static final String TEXT_TYPE = "TEXT_TYPE";
-    private static final String EMAIL_TYPE = "EMAIL_TYPE";
-    private static final String PHONE_TYPE = "PHONE_TYPE";
     private static final String SMS_TYPE = "SMS_TYPE";
 
     private static final String LOG_TAG = "BarcodeScanner";
@@ -109,8 +97,15 @@ public class BarcodeScanner extends CordovaPlugin {
 
                 // avoid calling other phonegap apps
                 intentScan.setPackage(that.cordova.getActivity().getApplicationContext().getPackageName());
-
-                that.cordova.startActivityForResult(that, intentScan, REQUEST_CODE);
+				String strLicense ="",strLicenseKey="";
+				try{				
+				JSONObject json = args.getJSONObject(0);				
+                strLicense = json.getString("dynamsoftlicense");
+				strLicenseKey = json.getString("dynamsoftlicenseKey");
+				}catch(Exception e){
+					Log.d(LOG_TAG, "dynamsoftlicense:error");
+				}
+                that.cordova.startActivityForResult(that, intentScan.putExtra("barcodeLicense",strLicense).putExtra("barcodeLicenseKey",strLicenseKey), REQUEST_CODE);
             }
         });
     }

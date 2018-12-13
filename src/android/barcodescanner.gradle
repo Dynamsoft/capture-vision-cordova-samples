@@ -13,12 +13,18 @@ repositories{
     }
 }
 
+repositories {      
+        maven {
+            url "http://download.dynamsoft.com/maven/dbr/aar"
+        }
+    }
+
 dependencies {
     compile 'com.android.support:support-v4:+'
     compile(name:'dbr', ext:'aar')
-    compile(name:'DynamsoftBarcodeReader', ext:'aar')
+	
+	compile 'com.dynamsoft:dynamsoftbarcodereader:6.4.1@aar'
 }
-
 android {
     packagingOptions {
         exclude 'META-INF/NOTICE'
