@@ -76,6 +76,8 @@ The following barcode types are currently supported:
                                                             {
                                                             "preferFrontCamera" : false, // iOS and Android
                                                             "showFlipCameraButton" : true, // iOS and Android
+                                                            "dynamsoftlicense": "your license ",//set the dynamsoftbarcodereader license
+                                                            //"dynamsoftlicenseKey": "", //set the server license key
                                                             }
                                                             );
                     }
