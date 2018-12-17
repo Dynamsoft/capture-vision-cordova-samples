@@ -67,6 +67,7 @@
 @property (nonatomic, retain) NSString*                   alternateXib;
 @property (nonatomic, retain) NSMutableArray*             results;
 @property (nonatomic, retain) NSString*                   formats;
+
 @property (nonatomic)         BOOL                        is1D;
 @property (nonatomic)         BOOL                        is2D;
 @property (nonatomic)         BOOL                        capturing;
@@ -77,7 +78,9 @@
 @property (nonatomic)         long                        barcodeFormat;
 
 
-- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib;
+- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib
+             license:(NSString*)license
+          licenseKey:(NSString*)licenseKey;
 - (void)scanBarcode;
 - (void)barcodeScanSucceeded:(NSString*)text format:(NSString*)format;
 - (void)barcodeScanFailed:(NSString*)message;
@@ -153,6 +156,8 @@
     }
     BOOL preferFrontCamera = [options[@"preferFrontCamera"] boolValue];
     BOOL showFlipCameraButton = [options[@"showFlipCameraButton"] boolValue];
+	NSString* strDynamsoftLicense   = [options objectForKey:@"dynamsoftlicense"];
+    NSString* strDynamsoftLicenseKey= [options objectForKey:@"dynamsoftlicensekey"];
     // We allow the user to define an alternate xib file for loading the overlay.
     NSString *overlayXib = [options objectForKey:@"overlayXib"];
 
@@ -167,6 +172,8 @@
                  callback:callback
                  parentViewController:self.viewController
                  alterateOverlayXib:overlayXib
+                 license:strDynamsoftLicense
+                 licenseKey:strDynamsoftLicenseKey
                  ];
     // queue [processor scanBarcode] to run on the event loop
 
@@ -177,7 +184,6 @@
     if (showFlipCameraButton) {
       processor.isShowFlipCameraButton = true;
     }
-
     processor.formats = options[@"formats"];
 
     [processor performSelector:@selector(scanBarcode) withObject:nil afterDelay:0];
@@ -271,14 +277,18 @@ SystemSoundID _soundFileObject;
 - (id)initWithPlugin:(CDVBarcodeScanner*)plugin
             callback:(NSString*)callback
 parentViewController:(UIViewController*)parentViewController
-  alterateOverlayXib:(NSString *)alternateXib {
-    self = [super init];
-    if (!self) return self;
+  alterateOverlayXib:(NSString *)alternateXib
+             license:(NSString *)license
+          licenseKey:(NSString *)licenseKey
+             {
+                self = [super init];
+                if (!self) return self;
 
-    self.plugin               = plugin;
-    self.callback             = callback;
-    self.parentViewController = parentViewController;
-    self.alternateXib         = alternateXib;
+                self.plugin               = plugin;
+                self.callback             = callback;
+                self.parentViewController = parentViewController;
+                self.alternateXib         = alternateXib;
+                 
 
     self.is1D      = YES;
     self.is2D      = YES;
@@ -287,9 +297,14 @@ parentViewController:(UIViewController*)parentViewController
 
     CFURLRef soundFileURLRef  = CFBundleCopyResourceURL(CFBundleGetMainBundle(), CFSTR("CDVBarcodeScanner.bundle/beep"), CFSTR ("caf"), NULL);
     AudioServicesCreateSystemSoundID(soundFileURLRef, &_soundFileObject);
+    if(license == nil)
+        license = @"";
+    self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:license];
     
-    self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0068MgAAAEMKwCG/nGtAHejYbWgJH1sqDrUEhjbY2iIPP+rd//VnS2xWkcqSLMF3cxKetujwrYi4MxyyYl2qim4I1KKY3tk="];
-    self.barcodeFormat = BarcodeTypeONED | BarcodeTypePDF417 | BarcodeTypeQRCODE;
+    if(licenseKey !=nil && ![licenseKey isEqualToString:@""] ){
+        NSError *err;
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc]initWithLicenseFromServer:@"" licenseKey:licenseKey error:&err ];
+    }
 
     return self;
 }
@@ -491,6 +506,7 @@ parentViewController:(UIViewController*)parentViewController
 
     return nil;
 }
+
 
 - (NSString*)getBarcodeFormatString:(BarcodeType)barcodeType{
     NSString* format = @"";
