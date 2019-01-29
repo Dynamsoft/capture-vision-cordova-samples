@@ -50,7 +50,7 @@
 - (void)scan:(CDVInvokedUrlCommand*)command;
 - (void)encode:(CDVInvokedUrlCommand*)command;
 - (void)returnImage:(NSString*)filePath format:(NSString*)format callback:(NSString*)callback;
-- (void)returnSuccess:(NSString*)scannedText format:(NSString*)format cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback;
+- (void)returnSuccess:(NSString*)scannedText barcodeFormat:(NSString*)format cancelled:(BOOL)cancelled flipped:(BOOL)flipped callback:(NSString*)callback;
 - (void)returnError:(NSString*)message callback:(NSString*)callback;
 @end
 
@@ -417,7 +417,9 @@ parentViewController:(UIViewController*)parentViewController
 //--------------------------------------------------------------------------
 - (void)barcodeScanCancelled {
     [self barcodeScanDone:^{
-        [self.plugin returnSuccess:@"" format:@"" cancelled:TRUE flipped:self.isFlipped callback:self.callback];
+        [self.plugin returnSuccess:@"" barcodeFormat:@"" cancelled:TRUE flipped:self.isFlipped callback:self.callback];        
+        
+        
     }];
     if (self.isFlipped) {
         self.isFlipped = NO;
@@ -427,7 +429,7 @@ parentViewController:(UIViewController*)parentViewController
 - (void)flipCamera {
     self.isFlipped = YES;
     self.isFrontCamera = !self.isFrontCamera;
-    [self barcodeScanDone];
+    [self barcodeScanDone :nil];
     if (self.isFlipped) {
       self.isFlipped = NO;
     }
