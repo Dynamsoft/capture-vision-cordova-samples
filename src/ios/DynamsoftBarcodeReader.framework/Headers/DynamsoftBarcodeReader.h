@@ -735,6 +735,9 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 @property (nonatomic, assign) BarcodeType barcodeFormat;
 /**< The barcode format */
 
+@property (nonatomic, nullable) NSString* barcodeFormatString;
+/**< Barcode type as string */
+
 @property (nonatomic, nullable) NSString* barcodeText;
 /**< The barcode text, ends by '\0' */
 
