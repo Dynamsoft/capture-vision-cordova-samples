@@ -28,7 +28,7 @@
         </config-file>
         <resource-file src="src/ios/scannerOverlay.xib" />
         <resource-file src="src/ios/CDVBarcodeScanner.bundle" />
-        <source-file src="src/ios/CDVBarcodeScanner.mm" compiler-flags="-fno-objc-arc" />
+        <source-file src="src/ios/CDVBarcodeScanner.mm" compiler-flags="-fobjc-arc" />
         <framework src="libiconv.dylib" />
         <framework src="AVFoundation.framework" />
         <framework src="AssetsLibrary.framework" />
