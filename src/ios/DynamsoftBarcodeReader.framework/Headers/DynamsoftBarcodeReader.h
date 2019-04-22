@@ -200,6 +200,16 @@ typedef NS_ENUM(NSInteger, DBRErrorCode) {
 };
 
 /**
+ * Describes the error codes.
+ * @enum LicenseServerErrorCode
+ */
+typedef NS_ENUM(NSInteger, DLSErrorCode) {
+    
+    DLSErrorCode_CommonError                = -20000
+    /**<Common Error from Dynamsoft license server. */
+};
+
+/**
  * Describes the type of the barcode. All the formats can be combined, such as BF_CODE_39 | BF_CODE_128.
  */
 typedef NS_OPTIONS(NSInteger, BarcodeType) {
@@ -282,8 +292,14 @@ typedef NS_ENUM(NSInteger, ImagePixelType) {
     ImagePixelTypeRGB_888,
 	/**< 24bit */
 
-    ImagePixelTypeARGB_8888
+    ImagePixelTypeARGB_8888,
 	/**< 32bit */
+    
+    ImagePixelTypeRGB_161616,
+    /**< 48bit */
+    
+    ImagePixelTypeARGB_16161616
+    /**< 64bit */
 
 };
 
@@ -735,6 +751,9 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 @property (nonatomic, assign) BarcodeType barcodeFormat;
 /**< The barcode format */
 
+@property (nonatomic, nullable) NSString* barcodeFormatString;
+/**< Barcode type as string */
+
 @property (nonatomic, nullable) NSString* barcodeText;
 /**< The barcode text, ends by '\0' */
 
@@ -746,6 +765,14 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 
 @end
 
+@protocol DBRServerLicenseVerificationDelegate <NSObject>
+
+@required
+
+- (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
+
+
+@end
 
 /*--------------------------------------------------------------------*/
 
@@ -777,7 +804,6 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
   */
 @property (nonatomic, nonnull) NSString* license;
 
-
 /**
  * @name Basic Funcitons
  * @{
@@ -801,7 +827,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
   *
   * @return The instance of DynamsoftBarcodeReader.
   */
-- (instancetype _Nonnull)initWithLicense:(NSString* _Nonnull)license NS_DESIGNATED_INITIALIZER;
+- (instancetype _Nonnull)initWithLicense:(NSString* _Nonnull)license;
 
 /**
  * Initializes barcode reader license and connects to the specified server for online verification.
@@ -812,7 +838,9 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  *
  * @return The instance of DynamsoftBarcodeReader.
  */
-- (instancetype _Nonnull)initWithLicenseFromServer:(NSString* _Nullable)licenseSeServer licenseKey:(NSString* _Nonnull)licenseKey error:(NSError * _Nullable * _Nullable)error NS_DESIGNATED_INITIALIZER;
+
+- (instancetype _Nonnull)initWithLicenseFromServer:(NSString* _Nullable)licenseSeServer licenseKey:(NSString* _Nonnull)licenseKey verificationDelegate:(id)connectionDelegate;
+
 
 /**
  * Outputs the license content as an encrypted string from the license server to be used for offline license verification.
