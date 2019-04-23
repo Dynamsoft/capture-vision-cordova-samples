@@ -305,10 +305,14 @@ parentViewController:(UIViewController*)parentViewController
     
     if(licenseKey !=nil && ![licenseKey isEqualToString:@""] ){
         NSError *err;
-        self.barcodeReader = [[DynamsoftBarcodeReader alloc]initWithLicenseFromServer:@"" licenseKey:licenseKey error:&err ];
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc]initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
     }
     
     return self;
+}
+//-------------------------------------------------------------------------
+- (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error {
+        NSNumber* boolNumber = [NSNumber numberWithBool:isSuccess];
 }
 
 //--------------------------------------------------------------------------
