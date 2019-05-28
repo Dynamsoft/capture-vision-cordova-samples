@@ -49,6 +49,7 @@
  *		- [Extended Result](@ref ExtendedResult)
  *		- [Localization Result](@ref LocalizationResult)
  *		- [Text Result](@ref TextResult)
+ *		- [Server License Verification Delegate](@ref DBRServerLicenseVerificationDelegate)
  *		- [Dynamsoft Barcode Reader](@ref DynamsoftBarcodeReader)
  *
  */
@@ -765,10 +766,19 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 
 @end
 
+/*--------------------------------------------------------------------*/
+/**
+ * @biref Protocol for a delegate to handle callback when license server return.
+ */
 @protocol DBRServerLicenseVerificationDelegate <NSObject>
 
 @required
-
+ /**
+  * The callback of license server.
+  *
+  * @param [in,out] isSuccess The value of whether the license verification was successful.
+  * @param [in,out] error The error message from license server.
+  */
 - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
 
@@ -832,10 +842,17 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 /**
  * Initializes barcode reader license and connects to the specified server for online verification.
  * 
- * @param [in] licenseSeServer The name/IP of the license server.		   
+ * @param [in] licenseSeServer The name/IP of the license server, If you set it an empty string (""), it will connect to Dynamsoft License Server for online verification.		   
  * @param [in] licenseKey The license key of Barcode Reader.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
+ * @param [in,out] connectionDelegate The delegate to handle callback when license server return.
+ * @par Code Snippet:
+ * @code
+	@property (nonatomic, retain) DynamsoftBarcodeReader* barcodeReader;
+	self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
+	(void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error {
+       
+	}
+ * @endcode
  * @return The instance of DynamsoftBarcodeReader.
  */
 
