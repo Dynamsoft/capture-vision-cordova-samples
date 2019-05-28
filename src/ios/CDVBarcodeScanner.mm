@@ -157,7 +157,7 @@
     BOOL preferFrontCamera = [options[@"preferFrontCamera"] boolValue];
     BOOL showFlipCameraButton = [options[@"showFlipCameraButton"] boolValue];
     NSString* strDynamsoftLicense   = [options objectForKey:@"dynamsoftlicense"];
-    NSString* strDynamsoftLicenseKey= [options objectForKey:@"dynamsoftlicensekey"];
+    NSString* strDynamsoftLicenseKey= [options objectForKey:@"dynamsoftlicenseKey"];
     // We allow the user to define an alternate xib file for loading the overlay.
     NSString *overlayXib = [options objectForKey:@"overlayXib"];
     
