@@ -1,59 +1,3 @@
-/**
- *
- * @mainpage 
- * 
- * @section Introduction
- * Dynamsoft's Barcode Reader SDK enables you to efficiently embed barcode reading functionality in your application using just a few lines of code. This can save you from months of added development time and extra costs. 
- * With the Barcode Reader SDK, you can decode barcodes from various image file formats (bmp, jpg, png, gif, tiff and pdf) as well as device-independent bitmap (DIB) which has just been obtained from cameras and scanners, etc.
- * The SDK has the multiple editions available include Windows, JavaScript, Moblie, Linux, Raspberry Pi and Mac. This document contains detailed API references for iOS.
- *
- * @section mp1 Barcode Reading Features
- * - Reads barcodes within a specified area of a selected image.
- * - Reads multiple barcodes in one image.
- * - Can read blurred and damaged barcodes.
- * - Detects barcode at any orientation and rotation angle.
- *
- * @section mp2 Supported Barcode Type
- * - 1D barcodes: Code39, Code93, Code128, Codabar, ITF, EAN13, EAN8, UPCA, UPCE, INDUSTRIAL 2 OF 5.
- * - 2D barcodes: QRCode, PDF417, DATAMATRIX, AZTEC.
- *
- * @section mp3 Barcode Reading Results
- * - Barcode angle
- * - Barcode type
- * - Barcode count
- * - Barcode data as byte array
- * - Barcode value as string
- * - Barcode bounding rectangle
- * - Confidence
- * - Coordinate of four corners
- * - Module size
- * - Page number
- * - Terminated stage
- * 
- * @section mp4 Supported Image Source Types
- * - Bmp, jpg, png, tiff and pdf image files; multi-page tiff and pdf are also supported
- * - Windows DIB and .NET bitmap
- * - Black/white, grayscale or color
- * 
- * @section mp5 Contents - iOS
- * @subsection sbs1 Enumerations
- *		- [Barcode Type](@ref BarcodeType)
- *		- [DBR Conflict Mode](@ref DBRConflictMode)
- *		- [DBR Error Code](@ref DBRErrorCode)
- *		- [Image Pixel Type](@ref ImagePixelType)
- *		- [Result Text Type](@ref ResultTextType)
- *		- [Terminate Status](@ref TerminateStatus)
- *
- * @subsection sbs2 Class
- *		- [Public Settings](@ref PublicSettings)
- *		- [Extended Result](@ref ExtendedResult)
- *		- [Localization Result](@ref LocalizationResult)
- *		- [Text Result](@ref TextResult)
- *		- [Server License Verification Delegate](@ref DBRServerLicenseVerificationDelegate)
- *		- [Dynamsoft Barcode Reader](@ref DynamsoftBarcodeReader)
- *
- */
-
 #import <UIKit/UIKit.h>
 
 
@@ -71,709 +15,1620 @@ static NSString* _Nonnull const DBRErrorDomain = @"com.dynamsoft.barcodereader.e
 
 /**
  * Describes the error codes. 
- * @enum DBRErrorCode
+ * @enum EnumErrorCode
  */
-typedef NS_ENUM(NSInteger, DBRErrorCode) {
+typedef NS_ENUM(NSInteger, EnumErrorCode) 
+{
+	/** Successful. */
+	EnumErrorCode_OK                         = 0,
     
-    DBRErrorCode_Unknown                    = -10000,
-	/**< Unknown error. */
+    /** Unknown error. */
+    EnumErrorCode_Unknown                    = -10000,
+	
+	/** Not enough memory to perform the operation. */
+    EnumErrorCode_No_Memory                  = -10001,
+	
+    /** Null pointer. */
+    EnumErrorCode_Null_Pointer               = -10002,
+	
+	/** The license is invalid. */
+    EnumErrorCode_License_Invalid            = -10003,
+	
+    /** The license has expired. */
+    EnumErrorCode_License_Expired            = -10004,
+	
+    /** The file is not found. */
+    EnumErrorCode_File_Not_Found             = -10005,
+	
+    /** The file type is not supported. */
+    EnumErrorCode_Filetype_Not_Supported     = -10006,
+	
+	/** The BPP(Bits per pixel) is not supported. */
+    EnumErrorCode_BPP_Not_Supported          = -10007,
+	
+    /** The index is invalid. */
+    EnumErrorCode_Index_Invalid              = -10008,
+	
+	/** The barcode format is invalid. */
+    EnumErrorCode_Barcode_Format_Invalid     = -10009,
+	
+	/** The input region value parameter is invalid. */
+    EnumErrorCode_Custom_Region_Invalid      = -10010,
+	
+    /** The maximum barcode number is invalid. */
+    EnumErrorCode_Max_Barcode_Number_Invalid = -10011,
+	
+	/** Failed to read the image. */
+    EnumErrorCode_Image_Read_Failed          = -10012,
 
-    DBRErrorCode_No_Memory                  = -10001,    
-	/**< Not enough memory to perform the operation. */
+	/** Failed to read the TIFF image. */
+    EnumErrorCode_TIFF_Read_Failed           = -10013,
 
-    DBRErrorCode_Null_Pointer               = -10002,
-	/**< Null pointer. */
+	/** The QR Code license is invalid. */
+    EnumErrorCode_QR_License_Invalid         = -10016,
 
-    DBRErrorCode_License_Invalid            = -10003,
-	/**< The license is invalid. */
+	/** The 1D Barcode license is invalid. */
+    EnumErrorCode_1D_Lincese_Invalid         = -10017,
 
-    DBRErrorCode_License_Expired            = -10004,   
-	/**< The license has expired. */
+	/** The DIB(Device-independent bitmaps) buffer is invalid. */
+    EnumErrorCode_DIB_Buffer_Invalid         = -10018,
 
-    DBRErrorCode_File_Not_Found             = -10005,
-	/**< The file is not found. */
+	/** The PDF417 license is invalid. */
+    EnumErrorCode_PDF417_License_Invalid     = -10019,
 
-    DBRErrorCode_Filetype_Not_Supported     = -10006,
-	/**< The file type is not supported. */
+	/** The DATAMATRIX license is invalid. */
+    EnumErrorCode_Datamatrix_License_Invalid = -10020,
+	
+	/** Failed to read the PDF file. */
+    EnumErrorCode_PDF_Read_Failed            = -10021,
 
-    DBRErrorCode_BPP_Not_Supported          = -10007,
-	/**< The BPP(Bits per pixel) is not supported. */
+	/** The PDF DLL is missing. */
+    EnumErrorCode_PDF_DLL_Missing            = -10022,
 
-    DBRErrorCode_Index_Invalid              = -10008,
-	/**< The index is invalid. */
+	/** The page number is invalid. */
+    EnumErrorCode_Page_Number_Invalid        = -10023,
 
-    DBRErrorCode_Barcode_Format_Invalid     = -10009,
-	/**< The barcode format is invalid. */
+	/** The custom size is invalid. */
+    EnumErrorCode_Custom_Size_Invalid        = -10024,
 
-    DBRErrorCode_Custom_Region_Invalid      = -10010,
-	/**< The input region value parameter is invalid. */
+	/** The custom module size is invalid. */
+    EnumErrorCode_Custom_Modulesize_Invalid  = -10025,
 
-    DBRErrorCode_Max_Barcode_Number_Invalid = -10011,
-	/**< The maximum barcode number is invalid. */
+	/** Recognition timeout. */
+    EnumErrorCode_Recognition_Timeout        = -10026,
 
-    DBRErrorCode_Image_Read_Failed          = -10012,
-	/**< Failed to read the image. */
+	/** Failed to parse json string. */
+    EnumErrorCode_Json_Parse_Failed          = -10030,
 
-    DBRErrorCode_TIFF_Read_Failed           = -10013,  
-	/**< Failed to read the TIFF image. */
+	/** The value type is invalid. */
+    EnumErrorCode_Json_Type_Invalid          = -10031,
 
-    DBRErrorCode_QR_License_Invalid         = -10016,
-	/**< The QR Code license is invalid. */
+	/** The key is invalid. */
+    EnumErrorCode_Json_Key_Invalid           = -10032,
 
-    DBRErrorCode_1D_Lincese_Invalid         = -10017,
-	/**< The 1D Barcode license is invalid. */
+	/** The value is invalid or out of range. */
+    EnumErrorCode_Json_Value_Invalid         = -10033,
 
-    DBRErrorCode_PDF417_License_Invalid     = -10019,
-	/**< The PDF417 license is invalid. */
+	/** The mandatory key "Name" is missing. */
+    EnumErrorCode_Json_Name_Key_Missing      = -10034,
 
-    DBRErrorCode_Datamatrix_License_Invalid = -10020,
-	/**< The DATAMATRIX license is invalid. */
+	/** The value of the key "Name" is duplicated. */
+    EnumErrorCode_Json_Name_Value_Duplicated = -10035,
 
-    DBRErrorCode_PDF_Read_Failed            = -10021,
-	/**< Failed to read the PDF file. */
+	/** The template name is invalid. */
+    EnumErrorCode_Template_Name_Invalid      = -10036,
 
-    DBRErrorCode_PDF_DLL_Missing            = -10022,
-	/**< The PDF DLL is missing. */
+	/** The name reference is invalid. */
+    EnumErrorCode_Json_Name_Reference_Invalid = -10037,
 
-    DBRErrorCode_Page_Number_Invalid        = -10023,
-	/**< The page number is invalid. */
+	/**The parameter value is invalid or out of range. */
+    EnumErrorCode_Parameter_Value_Invalid    = -10038,
 
-    DBRErrorCode_Custom_Size_Invalid        = -10024,
-	/**< The custom size is invalid. */
+	/**The domain of your current site does not match the domain bound in the current product key. */
+    EnumErrorCode_Domain_Not_Matched         = -10039,
 
-    DBRErrorCode_Custom_Modulesize_Invalid  = -10025,
-	/**< The custom module size is invalid. */
+	/**The reserved info does not match the reserved info bound in the current product key. */
+    EnumErrorCode_ReservedInfo_Not_Matched   = -10040,
 
-    DBRErrorCode_Recognition_Timeout        = -10026,
-	/**< Recognition timeout. */
+	/** The AZTEC license is invalid. */
+    EnumErrorCode_AZTEC_License_Invalid      = -10041,
 
-    DBRErrorCode_Json_Parse_Failed          = -10030,
-	/**< Failed to parse json string. */
+    /** The License DLL is missing. */    
+    EnumErrorCode_License_Dll_Missing        = -10042,
 
-    DBRErrorCode_Json_Type_Invalid          = -10031,
-	/**< The value type is invalid. */
+    /** The license key is not match the license file. */    
+    EnumErrorCode_Licensekey_Not_Matched     = -10043,
 
-    DBRErrorCode_Json_Key_Invalid           = -10032,
-	/**< The key is invalid. */
+    /** Failed to request the license file. */    
+    EnumErrorCode_Requested_Failed           = -10044,
 
-    DBRErrorCode_Json_Value_Invalid         = -10033,
-	/**< The value is invalid or out of range. */
-
-    DBRErrorCode_Json_Name_Key_Missing      = -10034,
-	/**< The mandatory key "Name" is missing. */
-
-    DBRErrorCode_Json_Name_Value_Duplicated = -10035,
-	/**< The value of the key "Name" is duplicated. */
-
-    DBRErrorCode_Template_Name_Invalid      = -10036,
-	/**< The template name is invalid. */
-
-    DBRErrorCode_Json_Name_Reference_Invalid = -10037,
-	/**< The name reference is invalid. */
-
-    DBRErrorCode_Parameter_Value_Invalid    = -10038,
-	/**<The parameter value is invalid or out of range. */
-
-    DBRErrorCode_Domain_Not_Matched         = -10039,
-	/**<The domain of your current site does not match the domain bound in the current product key. */
-
-    DBRErrorCode_ReservedInfo_Not_Matched   = -10040,
-	/**<The reserved info does not match the reserved info bound in the current product key. */
-
-    DBRErrorCode_AZTEC_License_Invalid      = -10041,
-	/**< The AZTEC license is invalid. */
+    /** Failed to init the license. */    
+    EnumErrorCode_License_Init_Failed        = -10045,
     
-    DBRErrorCode_License_Dll_Missing        = -10042,
-    /**< The License DLL is missing. */
-    
-    DBRErrorCode_Licensekey_Not_Matched     = -10043,
-    /**< The license key is not match the license file. */
-    
-    DBRErrorCode_Licensefile_Expried        = -10044,
-    /**< The license file is expried. */
-    
-    DBRErrorCode_Licensefile_Invalide       = -10045,
-    /**< The license file is invalide. */
-    
-    DBRErrorCode_Requested_Failed           = -10046
-    /**< Failed to request the license file. */
-    
+    /** Failed to start framedecode */
+    EnumErrorCode_Patchcode_License_Invalid   = -10046,
+
+	/**The Postal code license is invalid. */
+    EnumErrorCode_Postalcode_License_Invalid   = -10047,
+
+	/**The DPM license is invalid. */
+    EnumErrorCode_DPM_License_Invalid   = -10048,
+
+	/**The frame decoding thread is already existed. */
+    EnumErrorCode_Frame_Decoding_Thread_Exists   = -10049,
+
+	/**Failed to stop the frame decoding thread. */
+    EnumErrorCode_Stop_Decoding_Thread_Failed   = -10050,
+
+	/**Failed to set mode's argument. */
+    EnumErrorCode_Set_Mode_Argument_Error       = -10051,
+
+	/**The license content is invalid. */
+    EnumErrorCode_Licnse_Content_Invalid        = -10052,
+
+	/**The license key is invalid. */
+    EnumErrorCode_License_Key_Invalid           = -10053,
+
+	/**The device number in the license key runs out. */
+    EnumErrorCode_License_Device_Runs_Out       = -10054 
 };
 
 /**
  * Describes the error codes.
- * @enum LicenseServerErrorCode
+ * @enum DLSErrorCode
  */
-typedef NS_ENUM(NSInteger, DLSErrorCode) {
+typedef NS_ENUM(NSInteger, DLSErrorCode) 
+{
     
+    /**Common Error from Dynamsoft license server. */
     DLSErrorCode_CommonError                = -20000
-    /**<Common Error from Dynamsoft license server. */
+    
 };
 
 /**
  * Describes the type of the barcode. All the formats can be combined, such as BF_CODE_39 | BF_CODE_128.
+ * @enum EnumBarcodeFormat
  */
-typedef NS_OPTIONS(NSInteger, BarcodeType) {
-    BarcodeTypeCODE39     = 1 << 0,
-	/**< Code 39 */
+typedef NS_OPTIONS(NSInteger, EnumBarcodeFormat) 
+{
 
-    BarcodeTypeCODE128    = 1 << 1,
-	/**< Code 128 */
+	/** Code 39 */
+    EnumBarcodeFormatCODE39     		 = 1 << 0,
+	
+	/** Code 128 */
+    EnumBarcodeFormatCODE128    		 = 1 << 1,
 
-    BarcodeTypeCODE93     = 1 << 2,
-	/**< Code 93 */
+	/** Code 93 */
+    EnumBarcodeFormatCODE93     		 = 1 << 2,
 
-    BarcodeTypeCODABAR    = 1 << 3,
-	/**< Codebar */
+	/** Codabar */
+    EnumBarcodeFormatCODABAR    		 = 1 << 3,
 
-    BarcodeTypeITF        = 1 << 4,   
-	/**< ITF */
+	/** ITF */
+    EnumBarcodeFormatITF        		 = 1 << 4,
 
-    BarcodeTypeEAN13      = 1 << 5,
-	/**< EAN-13 */
+	/** EAN-13 */
+    EnumBarcodeFormatEAN13      		 = 1 << 5,
 
-    BarcodeTypeEAN8       = 1 << 6,
-	/**< EAN-8 */
+	/** EAN-8 */
+    EnumBarcodeFormatEAN8       		 = 1 << 6,
 
-    BarcodeTypeUPCA       = 1 << 7,
-	/**< UPC-A */
+	/** UPC-A */
+    EnumBarcodeFormatUPCA       		 = 1 << 7,
 
-    BarcodeTypeUPCE       = 1 << 8,
-	/**< UPC-E */
+	/** UPC-E */
+    EnumBarcodeFormatUPCE       		 = 1 << 8,
 
-    BarcodeTypeINDUSTRIAL = 1 << 9,
-	/**< Industrial 2 of 5 */
+	/** Industrial 2 of 5 */
+    EnumBarcodeFormatINDUSTRIAL 		 = 1 << 9,
 
-    BarcodeTypePDF417     = 1 << 25,
-	/**< PDF417 */
+    /** CODE39 Extended */
+    EnumBarcodeFormatCODE39EXTENDED 	 = 1 << 10,
 
-    BarcodeTypeQRCODE     = 1 << 26,
-	/**< QRCode */
+	/** PDF417 */
+    EnumBarcodeFormatPDF417     		 = 1 << 25,
 
-    BarcodeTypeDATAMATRIX = 1 << 27,
-	/**< DataMatrix */
+	/** QRCode */
+    EnumBarcodeFormatQRCODE     		 = 1 << 26,
 
-    BarcodeTypeAZTEC       = 1 << 28,
-	/**< AZTEC */
+	/** DataMatrix */
+    EnumBarcodeFormatDATAMATRIX 		 = 1 << 27,
 
-    BarcodeTypeONED       = BarcodeTypeCODE39 | BarcodeTypeCODE128 |
-                            BarcodeTypeCODE93 | BarcodeTypeCODABAR |
-                            BarcodeTypeITF    | BarcodeTypeEAN13   |
-                            BarcodeTypeEAN8   | BarcodeTypeUPCA    |
-                            BarcodeTypeUPCE   | BarcodeTypeINDUSTRIAL,
-	/**< One-D */
+	/** AZTEC */
+    EnumBarcodeFormatAZTEC       		 = 1 << 28,
 
-    BarcodeTypeALL        = BarcodeTypeONED   | BarcodeTypePDF417  |
-                            BarcodeTypeQRCODE | BarcodeTypeDATAMATRIX|
-                            BarcodeTypeAZTEC,
-	/**< All supported formats */
+	/** USPS Intelligent Mail. Not supported yet. */
+    EnumBarcodeFormatUSPSINTELLIGENTMAIL = 1 << 20,
 
-};
+	/** PostNet.Not supported yet. */
+	EnumBarcodeFormatPOSTNET 			 = 1 << 21,
 
-/** Describes the image pixel format. */
-typedef NS_ENUM(NSInteger, ImagePixelType) {
-    ImagePixelTypeBinary,
-	/**< 0:Black, 1:White */
+	/** Palnet.Not supported yet. */
+	EnumBarcodeFormatPLANET 			 = 1 << 22,
 
-    ImagePixelTypeBinaryInverted,
-	/**< 0:White, 1:Black */
+	/** AustralianPost.Not supported yet. */
+	EnumBarcodeFormatAUSTRALIANPOST 	 = 1 << 23,
 
-    ImagePixelTypeGrayScaled,
-	/**< 8bit gray */
+	/** UKRoyalMail.Not supported yet. */
+	EnumBarcodeFormatUKROYALMAIL 		 = 1 << 24,
 
-    ImagePixelTypeNV21,
-	/**< NV21 */
+	/** PatchCode.Not supported yet. */
+	EnumBarcodeFormatPATCHCODE 			 = 1 << 16,
 
-    ImagePixelTypeRGB_565,
-	/**< 16bit */
+    /** Combined value of BF_USPSINTELLIGENTMAIL, BF_POSTNET, BF_PLANET, BF_AUSTRALIANPOST, BF_UKROYALMAIL. Not supported yet. */
+    EnumBarcodeFormatPOSTALCODE = EnumBarcodeFormatUSPSINTELLIGENTMAIL | EnumBarcodeFormatPOSTNET |
+                            	  EnumBarcodeFormatPLANET | EnumBarcodeFormatAUSTRALIANPOST |
+                            	  EnumBarcodeFormatUKROYALMAIL,
 
-    ImagePixelTypeRGB_555,
-	/**< 16bit */
+	/** Combined value of BF_CODABAR, BF_CODE_128, BF_CODE_39, BF_CODE_39_Extended, BF_CODE_93, BF_EAN_13, BF_EAN_8, INDUSTRIAL_25, BF_ITF, BF_UPC_A, BF_UPC_E; */
+    EnumBarcodeFormatONED       = EnumBarcodeFormatCODE39 | EnumBarcodeFormatCODE128 |
+                            	  EnumBarcodeFormatCODE93 | EnumBarcodeFormatCODABAR |
+                            	  EnumBarcodeFormatITF    | EnumBarcodeFormatEAN13   |
+                            	  EnumBarcodeFormatEAN8   | EnumBarcodeFormatUPCA    |
+                            	  EnumBarcodeFormatUPCE   | EnumBarcodeFormatINDUSTRIAL | EnumBarcodeFormatCODE39EXTENDED,
 
-    ImagePixelTypeRGB_888,
-	/**< 24bit */
-
-    ImagePixelTypeARGB_8888,
-	/**< 32bit */
-    
-    ImagePixelTypeRGB_161616,
-    /**< 48bit */
-    
-    ImagePixelTypeARGB_16161616
-    /**< 64bit */
+	/** All supported formats */
+    EnumBarcodeFormatALL        = EnumBarcodeFormatONED   | EnumBarcodeFormatPDF417  |
+                            	  EnumBarcodeFormatQRCODE | EnumBarcodeFormatDATAMATRIX |
+                            	  EnumBarcodeFormatAZTEC,
 
 };
 
-/** Describes the extended result type. */
-typedef NS_ENUM(NSInteger, ResultTextType) {
-    ResultTextTypeStandardText,
-	/**< Specifies the standard text. This means the barcode value. */
+/** 
+* Describes the image pixel format. 
+* @enum EnumImagePixelFormat
+*/
+typedef NS_ENUM(NSInteger, EnumImagePixelFormat) 
+{
 
-    ResultTextTypeRawText,
-	/**< Specifies the raw text. This means the text that includes start/stop characters, check digits, etc. */
+	/** 0:Black, 1:White */
+    EnumImagePixelFormatBinary         = 0,
 
-    ResultTextTypeCandidateText,
-	/**< Specifies all the candidate text. This means all the standard text results decoded from the barcode. */
+	/** 0:White, 1:Black */
+    EnumImagePixelFormatBinaryInverted = 1,
 
-    ResultTextTypePartialText
-	/**< Specifies the partial Text. This means part of the text result decoded from the barcode. */
+	/** 8bit gray */
+    EnumImagePixelFormatGrayScaled     = 2,
+
+	/** NV21 */
+    EnumImagePixelFormatNV21 		   = 3,
+
+	/** 16bit */
+    EnumImagePixelFormatRGB_565 	   = 4,
+
+	/** 16bit */
+    EnumImagePixelFormatRGB_555 	   = 5,
+
+	/** 24bit */
+    EnumImagePixelFormatRGB_888 	   = 6,
+
+	/** 32bit */
+    EnumImagePixelFormatARGB_8888      = 7,
+
+    /** 48bit */
+    EnumImagePixelFormatRGB_161616     = 8,
+
+    /** 64bit */
+    EnumImagePixelFormatARGB_16161616  = 9
 
 };
 
-/** Describes the status when the results are returned. */
-typedef NS_ENUM(NSInteger, TerminateStatus) {
-    TerminateStatusPrelocalized,
-	/**< Prelocalized */
+/*
+* Describes the type of the barcode.
+* @enum EnumBarcodeComplementMode
+*/
+typedef NS_ENUM(NSInteger, EnumBarcodeComplementMode)
+{
+	/** Not supported yet.*/
+	EnumBarcodeComplementModeAuto 	 = 0x01,
 
-    TerminateStatusLocalized,
-	/**< Localized */
+	/** Complements the barcode using the general algorithm.*/
+	EnumBarcodeComplementModeGeneral = 0x02,
 
-    TerminateStatusRecognized
-	/**< Recognized */
+	/**Skip the barcode complement. */
+	EnumBarcodeComplementModeSkip 	 = 0x00
 };
 
-/** Describes the options for setting parameters value. Detailed info can be found in PublicSettings. */
-typedef NS_ENUM(NSInteger, DBRConflictMode) {
-	DBRECM_Ignore = 1,
-	/**< Ignore new settings and inherit from previous settings. */
+/*
+* Describes the barcode colour mode.
+* @enum EnumBarcodeColourMode
+*/
+typedef NS_ENUM(NSInteger, EnumBarcodeColourMode)
+{
+	/** Dark items on the light background. */
+	EnumBarcodeColourModeDarkOnLight 				= 0x01,
 
-	DBRECM_Overwrite = 2,
-	/**< overwrite and replace by new settings. */
+	/** Light items on the dark background. Not supported yet. */
+	EnumBarcodeColourModeLightOnDark 				= 0x02,
 
+	/** Dark items on the dark background. Not supported yet. */
+	EnumBarcodeColourModeDarkOnDark 				= 0x04,
+
+	/** Light items on the light background. Not supported yet. */
+	EnumBarcodeColourModeLightOnLight 				= 0x08,
+
+	/** The background is mixed by dark and light. Not supported yet. */
+	EnumBarcodeColourModeDarkLightMixed 			= 0x10,
+
+	/** Dark on light items on the dark background */
+	EnumBarcodeColourModeDarkOnLightDarkSurrounding = 0x20,
+
+	/** Skip the barcode colour operation.  */
+	EnumBarcodeColourModeSkip 						= 0x00
 };
+
+/*
+* Describes the binarization mode.
+* @enum EnumBinarizationMode
+*/
+typedef NS_ENUM(NSInteger, EnumBinarizationMode)
+{
+	/** Not supported yet. */
+	EnumBinarizationModeAuto 	   = 0x01,
+
+	/** Binarizes the image based on the local block. */
+	EnumBinarizationModeLocalBlock = 0x02,
+
+	/** Skip the binarization. */
+	EnumBinarizationModeSkip       = 0x00
+};
+
+/*
+* Describes the colour clustering mode.\
+* @enum EnumColourClusteringMode
+*/
+typedef NS_ENUM(NSInteger, EnumColourClusteringMode)
+{
+	/** Not supported yet. */
+	EnumColourClusteringModeAuto 	   = 0x01,
+
+	/** Clusters colours using the general algorithm based on HSV. */
+	EnumColourClusteringModeGeneralHSV = 0x02,
+
+	/** Skip the colour clustering. */
+	EnumColourClusteringModeSkip 	   = 0x00
+};
+
+/*
+* Describes the colour conversion mode.	
+* @enum EnumColourConversionMode
+*/
+typedef NS_ENUM(NSInteger, EnumColourConversionMode)
+{
+	/** Converts a colour image to a grayscale image using the general algorithm. */
+	EnumColourConversionModeGeneral = 0x01,
+
+	/** Skip the colour conversion. */
+	EnumColourConversionModeSkip 	= 0x00
+};
+
+/*
+* Describes the DPM code reading mode.
+* @enum EnumDPMCodeReadingMode
+*/
+typedef NS_ENUM(NSInteger, EnumDPMCodeReadingMode)
+{
+	/** Not supported yet. */
+	EnumDPMCodeReadingModeAuto    = 0x01,
+
+	/** Reads DPM code using the general algorithm. */
+	EnumDPMCodeReadingModeGeneral = 0x02,
+
+	/** Skip the DPM code reading. */
+	EnumDPMCodeReadingModeSkip    = 0x00
+};
+
+/*
+* Describes the conflict mode.
+* @enum EnumConflictMode
+*/
+typedef NS_ENUM(NSInteger, EnumConflictMode)
+{
+	/** Ignore new settings and inherit from previous settings. */
+	EnumConflictModeIgnore    = 1,
+
+	/** overwrite and replace by new settings. */
+	EnumConflictModeOverwrite = 2
+};
+
+/*
+* Describes the image preprocessing mode.
+* @enum EnumImagePreprocessingMode
+*/
+typedef NS_ENUM(NSInteger, EnumImagePreprocessingMode)
+{
+	/** Not supported yet. */
+	EnumImagePreprocessingModeAuto   	    = 0x01,
+
+	/** Take the unpreprocessed image as the preprocessed result for further reference. */
+	EnumImagePreprocessingModeGeneral 	    = 0x02,
+
+	/** Preprocesses the image using the gray equalization algorithm. */
+	EnumImagePreprocessingModeGrayEqualize  = 0x04,
+
+	/** Preprocesses the image using the gray smoothing algorithm. */
+	EnumImagePreprocessingModeGraySmooth    = 0x08,
+
+	/** Preprocesses the image using the sharpening and smoothing algorithm. */
+	EnumImagePreprocessingModeSharpenSmooth = 0x10,
+
+	/** Skip the image preprocess */
+	EnumImagePreprocessingModeSkip 			= 0x00
+};
+
+/*
+* Describes the intermediate result type.
+* @enum EnumIntermediateResultType
+*/
+typedef NS_ENUM(NSInteger, EnumIntermediateResultType)
+{
+	/** No intermediate result */
+	EnumIntermediateResultTypeNoResult 					    = 0x00,
+
+	/** Original image */
+	EnumIntermediateResultTypeOriginalImage 			    = 0x01,
+
+	/** Colour clustered image. Not supported yet. */
+	EnumIntermediateResultTypeColourClusteredImage 		    = 0x02,
+
+	/** Colour converted grayscale image */
+	EnumIntermediateResultTypeColourConvertedGrayScaleImage = 0x04,
+
+	/** Transformed grayscale image */
+	EnumIntermediateResultTypeTransformedGrayScaleImage 	= 0x08,
+
+	/** Predetected region */
+	EnumIntermediateResultTypePredetectedRegion 			= 0x10,
+
+	/** Preprocessed image */
+	EnumIntermediateResultTypePreprocessedImage 			= 0x20,
+
+	/** Binarized image */
+	EnumIntermediateResultTypeBinarizedImage 				= 0x40,
+
+	/** Text zone */
+	EnumIntermediateResultTypeTextZone 						= 0x80,
+
+	/** Contour */
+	EnumIntermediateResultTypeContour 						= 0x100,
+
+	/** Line segment */
+	EnumIntermediateResultTypeLineSegment 					= 0x200,
+
+	/** Form. Not supported yet. */
+	EnumIntermediateResultTypeForm 							= 0x400,
+
+	/** Segmentation block. Not supported yet. */
+	EnumIntermediateResultTypeSegmentationBlock 			= 0x800,
+
+	/** Typed barcode zone */
+	EnumIntermediateResultTypeTypedBarcodeZone 				= 0x1000
+};
+
+/*
+* Describes the localization mode.
+* @enum EnumLocalizationMode
+*/
+typedef NS_ENUM(NSInteger, EnumLocalizationMode)
+{
+	/** Not supported yet. */
+	EnumLocalizationModeAuto = 0x01,
+
+	/** Localizes barcodes by searching connected blocks. This algorithm usually gives best result and it is recommended to set ConnectedBlocks to the highest priority. */
+	EnumLocalizationModeConnectedBlocks = 0x02,
+
+	/** Localizes barcodes by groups of contiguous black-white regions. This is optimized for QRCode and DataMatrix. */
+	EnumLocalizationModeStatistics = 0x04,
+
+	/** Localizes barcodes by searching for groups of lines. This is optimized for 1D and PDF417 barcodes.  */
+	EnumLocalizationModeLines = 0x08,
+
+	/** Localizes barcodes quickly. This mode is recommended in interactive scenario. */
+	EnumLocalizationModeScanDirectly = 0x10,
+
+	/** Skip the localization. */
+	EnumLocalizationModeSkip = 0x00
+};
+
+/*
+* Describes the QR Code error correction level.
+* @enum EnumQRCodeErrorCorrectionLevel
+*/
+typedef NS_ENUM(NSInteger, EnumQRCodeErrorCorrectionLevel)
+{
+	/** Error Correction Level H (high) */	
+	EnumQRCodeErrorCorrectionLevelErrorCorrectionH = 0,
+	
+	/** Error Correction Level L (low) */
+	EnumQRCodeErrorCorrectionLevelErrorCorrectionL = 1,
+
+	/** Error Correction Level M (medium-low) */
+	EnumQRCodeErrorCorrectionLevelErrorCorrectionM = 2,
+
+	/** Error Correction Level Q (medium-high) */
+	EnumQRCodeErrorCorrectionLevelErrorCorrectionQ = 3
+};
+
+/*
+* Describes the region predetection mode.
+* @enum EnumRegionPredetectionMode
+*/
+typedef NS_ENUM(NSInteger, EnumRegionPredetectionMode)
+{
+	/** The library will automatically choose the algorithm to detect region. */
+	EnumRegionPredetectionModeAuto 					= 0x01,
+
+	/** Take the whole image as a region. */
+	EnumRegionPredetectionModeGeneral 				= 0x02,
+
+	/** Detects region using the general algorithm based on RGB colour contrast. */
+	EnumRegionPredetectionModeGeneralRGBContrast 	= 0x04,
+
+	/** Detects region using the general algorithm based on gray contrast. */
+	EnumRegionPredetectionModeGeneralGrayContrast 	= 0x08,
+
+	/** Detects region using the general algorithm based on HSV colour contrast. */
+	EnumRegionPredetectionModeGeneralHSVContrast 	= 0x10,
+
+	/** Skip the region detection. */
+	EnumRegionPredetectionModeSkip 					= 0x00
+};
+
+/*
+* Describes the deformation resisting mode.	
+* @enum EnumDeformationResistingMode
+*/
+typedef NS_ENUM(NSInteger, EnumDeformationResistingMode)
+{
+	/** Not supported yet. */
+	EnumDeformationResistingModeAuto 	= 0x01,
+
+	/** Resists deformation using the general algorithm. */
+	EnumDeformationResistingModeGeneral = 0x02,
+
+	/** Skip the deformation resisting. */
+	EnumDeformationResistingModeSkip 	= 0x00
+};
+
+/*
+* Describes the extended result type. 
+* @enum EnumResultType
+*/
+typedef NS_ENUM(NSInteger, EnumResultType) 
+{
+	/** Specifies the standard text. This means the barcode value. */
+    EnumResultTypeStandardText 	= 0,
+
+	/** Specifies the raw text. This means the text that includes start/stop characters, check digits, etc. */
+    EnumResultTypeRawText 		= 1,
+
+	/** Specifies all the candidate text. This means all the standard text results decoded from the barcode. */
+    EnumResultTypeCandidateText = 2,
+
+	/** Specifies the partial Text. This means part of the text result decoded from the barcode. */
+    EnumResultTypePartialText 	= 3
+};
+
+/*
+* Describes the terminate phase. 
+* @enum EnumTerminatePhase
+*/
+typedef NS_ENUM(NSInteger, EnumTerminatePhase) 
+{
+	/** Exits the barcode reading algorithm after the region predetection is done. */
+    EnumTerminatePhasePredetected 	 = 0x01,
+
+	/** Exits the barcode reading algorithm after the region predetection and image pre-processing is done. */
+    EnumTerminatePhasePreprocecessed = 0x02,
+
+	/** Exits the barcode reading algorithm after the region predetection, image pre-processing and image binarization are done. */
+    EnumTerminatePhaseBinarized 	 = 0x04,
+
+	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization and barcode localization are done. */
+    EnumTerminatePhasesLocalized  	 = 0x08,
+
+	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization, barcode localization and barcode type determining are done. */
+    EnumTerminatePhaseDetermined 	 = 0x10,
+
+	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization, barcode localization, barcode type determining and barcode recognition are done. */
+    EnumTerminatePhaseRecognized 	 = 0x20
+};
+
+/*
+* Describes the text assisted correction mode.
+* @enum EnumTextAssistedCorrectionMode
+*/
+typedef NS_ENUM(NSInteger, EnumTextAssistedCorrectionMode)
+{
+	/** Not supported yet. */
+	EnumTextAssistedCorrectionModeAuto 				= 0x01,
+
+	/** The accompanying text will be used to verify the decoded barcode result. */
+	EnumTextAssistedCorrectionModeVerifying 		= 0x02,
+
+	/** The accompanying text will be used to verify and patch the decoded barcode result. */
+	EnumTextAssistedCorrectionModeVerifyingPatching = 0x04,
+
+	/** Skip the text assisted correction. */
+	EnumTextAssistedCorrectionModeSkip 				= 0x00
+};
+
+/*
+* Describes the text filter mode. 
+* @enum EnumTextFilterMode
+*/
+typedef NS_ENUM(NSInteger, EnumTextFilterMode)
+{
+	/** Not supported yet. */
+	EnumTextFilterModeAuto 			 = 0x01,
+
+	/** Filters text using the general algorithm based on contour. */
+	EnumTextFilterModeGeneralContour = 0x02,
+
+	/** Skip the text filtering. */
+	EnumTextFilterModeSkip 			 = 0x00
+};
+
+/*
+* Describes the text result order mode.
+* @enum EnumTextResultOrderMode
+*/
+typedef NS_ENUM(NSInteger, EnumTextResultOrderMode)
+{
+	/** Returns the text results in descending order by confidence. */
+	EnumTextResultOrderModeConfidence = 0x01,
+
+	/** Returns the text results in position order, from top to bottom, then left to right */
+	EnumTextResultOrderModePosition   = 0x02,
+
+	/** Returns the text results in alphabetical and numerical order by barcode format string. */
+	EnumTextResultOrderModeFormat     = 0x04,
+
+	/** Skip the ordering operation. */
+	EnumTextResultOrderModeSkip       = 0x00
+};
+
+/*
+* Describes the texture detection mode.
+* @enum EnumTextureDetectionMode
+*/
+typedef NS_ENUM(NSInteger, EnumTextureDetectionMode)
+{
+	/** Not supported yet. */
+	EnumTextureDetectionModeAuto = 0X01,
+
+	/** Detects texture using the general algorithm. */
+	EnumTextureDetectionModeGeneralWidthConcentration = 0X02,
+
+	/** Skip the texture detection. */
+	EnumTextureDetectionModeSkip = 0x00
+};
+
+/*
+* Describes the grayscale transformation mode.
+* @enum EnumGrayscaleTransformationMode
+*/
+typedef NS_ENUM(NSInteger, EnumGrayscaleTransformationMode)
+{
+	/** Transforms to the inverted grayscale for further reference. This value is recommand for light on dark images. */
+	EnumGrayscaleTransformationModeInverted = 0x01,
+	
+	/** Keeps the original grayscale for further reference. This value is recommand for dark on light images. */
+	EnumGrayscaleTransformationModeOriginal = 0x02,
+
+	/** Skip the grayscale transformation. */
+	EnumGrayscaleTransformationModeSkip 	= 0x00
+};
+
+/*
+* Describes the result coordinate type.
+* @enum EnumResultCoordinateType
+*/
+typedef NS_ENUM(NSInteger, EnumResultCoordinateType)
+{
+	/** Returns the coordinate in pixel value. */
+	EnumResultCoordinateTypePixel 	   = 0x01,
+
+	/** Returns the coordinate as a percentage. */
+	EnumResultCoordinateTypePercentage = 0x02
+};
+
+/*
+* Describes the intermediate result data type.
+* @enum EnumIMResultDataType
+*/
+typedef NS_ENUM(NSInteger,EnumIMResultDataType)
+{
+	/**Specifies the ImageData */
+	EnumIMResultDataTypeImage 				= 0x01,
+
+	/**Specifies the Contour */
+	EnumIMResultDataTypeContour 			= 0x02,
+	
+	/**Specifies the LineSegment */
+	EnumIMResultDataTypeLineSegment 		= 0x04,
+
+	/**Specifies the LocalizationResult */
+    EnumIMResultDataTypeLocalizationResult 	= 0x08,
+	
+	/**Specifies the RegionOfInterest */
+	EnumIMResultDataTypeREGIONOFINTEREST 	= 0x10
+};
+
 /**
- * @}
+ * @} defgroup Enum Enumerations
  */
 
+
+/*--------------------------------------------------------------------*/
 
 /**
  * @defgroup IOSInterface Class 
  * @{
- * @defgroup PublicSettings PublicSettings
- * @{
- */
-
- /** Values that represent text filter modes */
-typedef NS_ENUM(NSInteger, TextFilter) {
-    TextFilterDisable = 1,
-	/**< Disable text filter */
-
-    TextFilterEnable  = 2
-	/**< Enable text filter */
-
-};
-
-
-/** Values that represent region predetection modes */
-typedef NS_ENUM(NSInteger, RegionPredetection) {
-    RegionPredetectionDisable = 1,
-	/**< Disable region pre-detection */
-
-    RegionPredetectionEnable  = 2
-	/**< Enable region pre-detection */
-};
-
-
-/** Values that represent barcode invert modes */
-typedef NS_ENUM(NSInteger, BarcodeInvert) {
-    BarcodeInvertDarkOnLight,
-	/**< Dark barcode region on light background. */
-
-    BarcodeInvertLightOnDark
-	/**< Light barcode region on dark background. */
-};
-
-
-/** Values that represent colour image convert modes */
-typedef NS_ENUM(NSInteger, ColourImageConvert) {
-    ColourImageConvertAuto,
-	/**< Process input image as its original colour space. */
-
-    ColourImageConvertGrayScale
-	/**< Process input image with gray scale. */
-};
-
-
-
-/*--------------------------------------------------------------------*/
 
 /**
- * @brief PublicSettings is used for storing current runtime settings.
- * 
- * The value of public parameters in runtime settings need to be set according to a specified rules if there are conflicts between different templates. The rules will been shown below:
- * 
- * @par Parameters Assignment Rules:
- * - Set as maximal value: timeout, PDFRasterDPI, deblurLevel, antiDamageLevel, maxDimOfFullImageAsBarcodeZone, maxBarcodeCount, scaleDownThreshold, expectedBarcodeCount.
- * 
- * - Set as union (merged or sum): barcodeTypeID.
- * 
- * - Based on ConflictMode (ignore or overwrite): textFilter, regionPredetection, localizationAlgorithmPriority, textureDetectionSensitivity, barcodeInvert, grayEqualizationSensitivity, enableFillBinaryVacancy, colourImageConvert, binarizationBlockSize.
- * 
- * 
- * @par References
- * More information about public parameters and template file can be found in file DBR_Developer's_Guide.pdf.
- * 
+ * Stores the FurtherModes.
  */
-@interface PublicSettings: NSObject
+@interface iFurtherModes : NSObject
+
+/** Sets the mode and priority for colour categorization. Not supported yet..
+*
+* @par Value range:
+* 	    Each array item can be any one of the ColourClusteringMode Enumeration items.
+* @par Default value:
+* 	    [CCM_SKIP,CCM_SKIP,CCM_SKIP,CCM_SKIP,CCM_SKIP,CCM_SKIP,CCM_SKIP,CCM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumColourClusteringMode
+*/
+@property (nonatomic, assign) NSArray* colourClusteringModes;
+
+/** Sets the mode and priority for converting a colour image to a grayscale image.
+*
+* @par Value range:
+* 	    Each array item can be any one of the ColourConversionMode Enumeration items.
+* @par Default value:
+* 	    [CICM_GENERAL,CICM_SKIP,CICM_SKIP,CICM_SKIP,CICM_SKIP,CICM_SKIP,CICM_SKIP,CICM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumColourConversionMode
+*/
+@property (nonatomic, assign) NSArray* colourConversionModes;
+
+/** Sets the mode and priority for the grayscale image conversion.
+*
+* @par Value range:
+* 	    Each array item can be any one of the GrayscaleTransformationMode Enumeration items
+* @par Default value:
+* 	    [GTM_ORIGINAL,GTM_SKIP,GTM_SKIP,GTM_SKIP,GTM_SKIP,GTM_SKIP,GTM_SKIP,GTM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumGrayscaleTransformationMode
+*/
+@property (nonatomic, assign) NSArray* grayscaleTransformationModes;
+
+/** Sets the region pre-detection mode for barcodes search.
+*
+* @par Value range:
+* 	    Each array item can be any one of the RegionPredetectionMode Enumeration items
+* @par Default value:
+* 	    [RPM_GENERAL,RPM_SKIP,RPM_SKIP,RPM_SKIP,RPM_SKIP,RPM_SKIP,RPM_SKIP,RPM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+*     If the image is large and the barcode on the image is very small, it is recommended to enable region predetection to speed up the localization process and recognition accuracy.
+* @sa EnumRegionPredetectionMode
+*/
+@property (nonatomic, assign) NSArray* regionPredetectionModes;
+
+/** Sets the mode and priority for image preprocessing algorithms.
+*
+* @par Value range:
+* 	    Each array item can be any one of the ImagePreprocessingMode Enumeration items
+* @par Default value:
+* 	    [IPM_GENERAL,IPM_SKIP,IPM_SKIP,IPM_SKIP,IPM_SKIP,IPM_SKIP,IPM_SKIP,IPM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumImagePreprocessingMode
+*/
+@property (nonatomic, assign) NSArray* imagePreprocessingModes;
+
+/** Sets the mode and priority for texture detection.
+*
+* @par Value range:
+* 	    Each array item can be any one of the TextureDetectionMode Enumeration items
+* @par Default value:
+* 	    [TDM_GENERAL_WIDTH_CONCENTRATION,TDM_SKIP,TDM_SKIP,TDM_SKIP,TDM_SKIP,TDM_SKIP,TDM_SKIP,TDM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumTextureDetectionMode
+*/
+@property (nonatomic, assign) NSArray* textureDetectionModes;
+
+/** Sets the mode and priority for text filter.
+*
+* @par Value range:
+* 	    Each array item can be any one of the TextFilterMode Enumeration items
+* @par Default value:
+* 	    [TFM_GENERAL_CONTOUR,TFM_SKIP,TFM_SKIP,TFM_SKIP,TFM_SKIP,TFM_SKIP,TFM_SKIP,TFM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+*     If the image contains a lot of text, you can enable text filter to speed up the localization process.
+* @sa EnumTextFilterMode
+*/
+@property (nonatomic, assign) NSArray* textFilterModes;
+
+/** Sets the mode of text assisted correction for barcode decoding. Not supported yet.
+*
+* @par Value range:
+* 	    Any one of the TextAssistedCorrectionMode Enumeration items
+* @par Default value:
+* 	    TACM_VERIFYING
+* @sa EnumTextAssistedCorrectionMode
+*/
+@property (nonatomic, assign) EnumTextAssistedCorrectionMode textAssistedCorrectionMode;
+
+/** Sets the mode and priority for DPM code reading. Not supported yet.
+*
+* @par Value range:
+* 	    Each array item can be any one of the ColourConversionMode Enumeration items
+* @par Default value:
+* 	    [DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP,DPMCRM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumColourConversionMode
+*/
+@property (nonatomic, assign) NSArray* dpmCodeReadingModes;
+
+/** Sets the mode and priority for deformation resisting. Not supported yet.
+*
+* @par Value range:
+* 	    Each array item can be any one of the DeformationResistingMode Enumeration items
+* @par Default value:
+* 	    [DRM_SKIP,DRM_SKIP,DRM_SKIP,DRM_SKIP,DRM_SKIP,DRM_SKIP,DRM_SKIP,DRM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumDeformationResistingMode
+*/
+@property (nonatomic, assign) NSArray* deformationResistingModes;
+
+/** Sets the mode and priority to complement the missing parts in the barcode. Not supported yet.
+*
+* @par Value range:
+* 	    Each array item can be any one of the BarcodeComplementMode Enumeration items
+* @par Default value:
+* 	    [BCM_SKIP,BCM_SKIP,BCM_SKIP,BCM_SKIP,BCM_SKIP,BCM_SKIP,BCM_SKIP,BCM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumBarcodeComplementMode
+*/
+@property (nonatomic, assign) NSArray* barcodeComplementModes;
+
+/** Sets the mode and priority for the barcode colour mode used to process the barcode zone.
+*
+* @par Value range:
+* 	    Each array item can be any one of the BarcodeColourMode Enumeration items
+* @par Default value:
+* 	    [BICM_DARK_ON_LIGHT,BICM_SKIP,BICM_SKIP,BICM_SKIP,BICM_SKIP,BICM_SKIP,BICM_SKIP,BICM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumBarcodeColourMode
+*/
+@property (nonatomic, assign) NSArray* barcodeColourModes;
+
+@end
 
 
-@property (nonatomic, nonnull) NSString * name;
-/**< Stores the name of the struct, which is mainly help users to distinguish different version rather than practical use in the library.
- * @deprecated mName
- */
+/**
+*Stores the region info.
+*/
+@interface iRegionDefinition : NSObject
+
+/** The top-most coordinate or percentage of the region.
+*
+* @par Value range:
+* 	    regionMeasuredByPercentage = 0, [0, 0x7fffffff]
+* 	    regionMeasuredByPercentage = 1, [0, 100]
+* @par Default value:
+* 	    0
+*/
+@property (nonatomic, assign) NSInteger regionTop;
+
+/** The left-most coordinate or percentage of the region.
+*
+* @par Value range:
+* 	    regionMeasuredByPercentage = 0, [0, 0x7fffffff]
+* 	    regionMeasuredByPercentage = 1, [0, 100]
+* @par Default value:
+* 	    0
+*/
+@property (nonatomic, assign) NSInteger regionLeft;
+
+/** The right-most coordinate or percentage of the region.
+*
+* @par Value range:
+* 	    regionMeasuredByPercentage = 0, [0, 0x7fffffff]
+* 	    regionMeasuredByPercentage = 1, [0, 100]
+* @par Default value:
+* 	    0
+*/
+@property (nonatomic, assign) NSInteger regionRight;
+
+/** The bottom-most coordinate or percentage of the region.
+*
+* @par Value range:
+* 	    regionMeasuredByPercentage = 0, [0, 0x7fffffff]
+* 	    regionMeasuredByPercentage = 1, [0, 100]
+* @par Default value:
+* 	    0
+*/
+@property (nonatomic, assign) NSInteger regionBottom;
+
+/** Sets whether or not to use percentages to measure the Region size.
+*
+* @par Value range:
+* 	    [0, 1]
+* @par Default value:
+* 	    0
+* @par Remarks:
+*     When itos set to 1, the values of Top, Left, Right, Bottom indicates the percentage (from 0 to 100). Otherwise, they refer to the coordinates.
+*     0: not by percentage
+*     1: by percentage
+*/
+@property (nonatomic, assign) NSInteger regionMeasuredByPercentage;
+
+@end
 
 
+/**
+* Defines a struct to configure the barcode reading runtime settings.
+* These settings are used to control the barcode recognition process such as which barcode types are to be decoded.
+*
+*/
+@interface iPublicRuntimeSettings: NSObject
+
+/** Sets the phase where the algorithm stops.
+*
+* @par Value range:
+* 	    Any one of the TerminatePhase Enumeration items
+* @par Default value:
+* 	    TP_BARCODE_RECOGNIZED
+* @par Remarks:
+*	    When the recognition result is not desired, this parameter can be set to skip certain processing stages.
+* @sa EnumTerminatePhase
+*/
+@property (nonatomic, assign) EnumTerminatePhase terminatePhase;
+
+/** Sets the maximum amount of time (in milliseconds) that should be spent searching for a barcode per page. It does not include the time taken to load/decode an image (Tiff, PNG, etc) from disk into memory.
+*
+* @par Value range:
+* 	    [0, 0x7fffffff]
+* @par Default value:
+* 	    10000
+* @par Remarks:
+*	    If you want to stop reading barcodes after a specified amount of time, you can use this parameter to set a timeout.
+*/
 @property (nonatomic, assign) NSInteger timeout;
-/**< Sets the maximum amount of time (in milliseconds) it should spend searching for a barcode per page. It does not include the time taken to load an image (Tiff, PNG, etc.) from disk into memory.
- *
- * @par Value range:
- * 	    [0,7ffffff]
- * @par Default value:
- * 	    10000
- * @par Remarks:
- *	    If you want to stop reading barcodes after a specified amount of time, you can use this parameter to set a timeout.
- */
 
+/** Sets the number of threads the image processing algorithm will use to decode barcodes.
+*
+* @par Value range:
+* 	    [1, 4]
+* @par Default value:
+* 	    4
+* @par Remarks:
+*	    By default, the library concurrently runs four different threads for decoding barcodes in order to keep a balance between speed and quality. For some devices (e.g. Raspberry Pi) that only use one core, you can set it to 1 for best speed. If you create BarcodeReader.
+*/
+@property (nonatomic, assign) NSInteger maxAlgorithmThreadCount;
 
-@property (nonatomic, assign) NSInteger PDFRasterDPI;
-/**< Sets the output image resolution. When you are trying to decode a PDF file using the DecodeFile method, the library will convert the PDF file to image(s) first, then perform barcode recognition.
- *
- * @par Value range:
- * 		[100,600]
- * @par Default value:
- * 		300
- * @par Remarks:
- *		To ensure your barcodes in the PDF files are readable, please set the resolution to at least 300 dpi.
- */
+/** Sets the number of barcodes expected to be detected for each image.
+*
+* @par Value range:
+* 	    [0, 0x7fffffff]
+* @par Default value:
+* 	    0
+* @par Remarks:
+*	    0: means Unknown and it will find at least one barcode.
+*	    1: try to find one barcode. If one barcode is found, the library will stop the localization process and perform barcode decoding.
+*	    n: try to find n barcodes. If the library only finds m (m<n) barcode, it will try different algorithms till n barcodes are found or all algorithms are used.
+*/
+@property (nonatomic, assign) NSInteger expectedBarcodesCount;
 
+/** Sets the formats of the barcode to be read. Barcode formats can be combined.
+*
+* @par Value range:
+* 	    A combined value of BarcodeFormat Enumeration items
+* @par Default value:
+* 	    BF_ALL
+* @par Remarks:
+*	    If you already know the barcode type(s) before performing barcode reading, specifying the barcode type(s) to be read will speed up the recognition process.
+* @sa EnumBarcodeFormat
+*/
+@property (nonatomic, assign) NSInteger barcodeFormatIds;
 
-@property (nonatomic, assign) TextFilter textFilter;
-/**< Sets whether to filter text before barcode localization.
- * 
- *  @par Value range:
- * 		TextFilterDisable, TextFilterEnable
- * 	@par Default value:
- *		TextFilterEnable
- * @par Remarks:
- *		If the barcode image contains a lot of text, you can set this property to "TextFilterEnable" to speed up the localization process.
- *	@sa TextFilter
- * 
- */
+/** Sets the output image resolution.
+*
+* @par Value range:
+* 	    [100, 600]
+* @par Default value:
+* 	    300
+* @par Remarks:
+*	    When you are trying to decode a PDF file using DecodeFile method, the library will convert the pdf file to image(s) first, then perform barcode recognition.
+*/
+@property (nonatomic, assign) NSInteger pdfRasterDPI;
 
-
-@property (nonatomic, assign) RegionPredetection regionPredetection;
-/**< Sets whether to pre-detect barcode regions before accurate localization. 
- * 
- * @par Value range:
- * 		RegionPredetectionDisable, RegionPredetectionEnable
- * @par Default value:
- * 		RegionPredetectionDisable
- * @par Remarks:
- *		If the image is large and the barcode on the image is very small, it is recommended to set this property to "RPM_Enable" to speed up the localization process and recognition accuracy.
- *		If this property is set to "RegionPredetectionEnable", also set colourImageConvert to "ColourImageConvertAuto" and scaleDownThreshold to 0x7fffffff for best performance.
- * @sa RegionPredetection colourImageConvert scaleDownThreshold
- */
-
-
-@property (nonatomic, nonnull) NSString * localizationAlgorithmPriority;
-/**< Sets the priority of localization algorithms to decide the ordering of the following four localization algorithms.
- * 
- * @par Default values:
- * 		""
- * @par Optional localization algorithms:
- * 		"ConnectedBlocks", "Statistics", "Lines", "FullImageAsBarcodeZone"
- * @par Remarks:
- * 		- Default value: The library will automatically use optimized localization priority, i.e. ConnectedBlocks -> Statistics -> Lines -> FullImageAsBarcodeZone, which is also the recommended order.
- * 
- * 		- ConnectedBlocks: Localizes barcodes by searching connected blocks. This algorithm usually gives best result and it is recommended to set ConnectedBlock to the highest priority.
- * 
- * 		- Lines: Localizes barcodes by searching for groups of lines. This is optimized for 1D and PDF417 barcodes.
- * 
- * 		- Statistics: Localizes barcodes by groups of contiguous black-white regions. This is optimized for QRCode and DataMatrix.
- * 
- * 		- FullImageAsBarcodeZone: Disables localization. In this mode, it will directly localize barcodes on the full image without localization. If there is nothing other than the barcode in the image, it is recommended to use this mode.
- * 
- */
-
-
-@property (nonatomic, assign) NSInteger barcodeTypeID;
-/**< Sets which types of barcode to read. Barcode types can be combined. Notice that one barcode reader can support more than one barcode format, i.e. the barcode format can be combined like BarcodeTypeCODE39 | BarcodeTypeCODE128.
- * 
- * @par Remarks:
- *		If you already know the barcode type(s) before performing barcode reading, specifying the barcode type(s) to be read will speed up the recognition process.
- * @sa BarcodeType
- */
-
-
-@property (nonatomic, assign) NSInteger textureDetectionSensitivity;
-/**< ISets the value of sensitivity for texture detection. 
- *
- * @par Value range:
- * 		[0,9]
- * @par Default value:
- * 		5
- * @par Remarks:
- *		If you have an image with texture on it , you can set this property to a larger value. If texture is detected, we will smooth the image to help localize the barcode.
- *		If there is no texture on the image, the value should be set to 0 to disable texture detection; If there is texture on the image, you can set this value to 9 to activate texture detection.
- */
-
-
-@property (nonatomic, assign) NSInteger deblurLevel;
-/**< Sets the degree of blurriness of the barcode.
- * @par Value range:
- * 		[0,9]
- * @par Default value:
- * 		9
- * @par Remarks:
- *		If you have a blurry image, you can set this property to a larger value. The higher value you set, the library will spend more time decoding images which may slow down the overall recognition process.
- */
-
-/**@brief The anti damage level */
-@property (nonatomic, assign) NSInteger antiDamageLevel;
-/**< Sets the degree of anti-damage of the barcode, which decides how many localization algorithms will be used for locating the barcode area.
- * @par Value range:
- * 		[0,9]
- * @par Default Value:
- * 		9
- * @par Remarks:
- * 		- 0 <= N <= 3: one localization algorithm will be used.
- * 
- * 		- 4 <= N <= 5: two localization algorithm will be used.
- * 
- * 		- 6 <= N <= 7: three localization algorithm will be used.
- * 
- * 		- 8 <= N <= 9: four(i.e. all) localization algorithm will be used.
- * 
- * 		If you have a damaged image, you can set this property to a larger value and use it with ExpectedBarcodesCount. 
- *		If the ExpectedBarcodesCount is set to 0 or 1, it's suggested to set AntiDamageLevel to 9 to ensure best decoding efficiency; otherwise, the value of AntiDamageLevel is suggested to be set to 7. For more information about our localization algorithms, please check AlgorithmPriority. 
- * 
- * @sa expectedBarcodeCount
- */
-
-
-@property (nonatomic, assign) NSInteger maxDimOfFullImageAsBarcodeZone;
-/**< Sets the maximum image dimension (in pixels) to localize barcode on the full image. If the image dimension is smaller than the given value, the library will localize barcode on the full image. Otherwise, "FullImageAsBarcodeZone" mode will not be enabled and we will only localize barcodes within the dimension provided.
- * 
- * @par Value range:
- * 		[262144,0x7fffffff]
- * @par Default value:
- * 		262144
- * @par Remarks:
- *		If you have an image whose content is barcode only, you can set this property to a smaller value to decode the whole image. 
- *		If the "FullImageAsBarcodeZone" mode is enabled, the barcode result will be more accurate but will cost more time.
- * @sa localizationAlgorithmPriority
- */
-
-
-@property (nonatomic, assign) NSInteger maxBarcodeCount;
-/**< Sets the maximum number of barcodes to read. This will limit the number of barcodes returned by library.
- * @par Value range:
- * 		[1,0x7fffffff]
- * @par Default value:
- * 		0x7fffffff
- * @par Remarks:
- *		If you want to limit the numbers of barcodes, you can set it to the corresponding value. It will stop localization and decoding once the maximum number is reached.
- */
-
-
-@property (nonatomic, assign) BarcodeInvert barcodeInvert;
-/**< Sets the barcode invert mode which decides whether to invert colour before binarization. 
- * @par Value range:
- * 		BarcodeInvertDarkOnLight, BarcodeInvertLightOnDark
- * @par Default value:
- * 		BarcodeInvertDarkOnLight
- * @par Remarks:
- *		This mode is designed to fit the scenarios with a light barcode located on a dark background. For example, a white QR on a sheet of black paper. 
- *		If the value is BarcodeInvertDarkOnLight, it will work better for dark barcodes on a light background; If the value is BarcodeInvertLightOnDark, it will work better for light barcodes on a dark background. 
- * @sa BarcodeInvert
- */
-
-
+/** Sets the threshold for the image shrinking.
+*
+* @par Value range:
+* 	    [512, 0x7fffffff]
+* @par Default value:
+* 	    2300
+* @par Remarks:
+*	    If the shorter edge size is larger than the given value, the library will calculate the required height and width of the barcode image and shrink the image to that size before localization. Otherwise, it will perform barcode localization on the original image.
+*/
 @property (nonatomic, assign) NSInteger scaleDownThreshold;
-/**< Sets the threshold value an image can be scaled down to. If the shorter edge size is larger than the given value, the library will calculate the required height and width of the barcode image and shrink the image to that size before localization. Otherwise, it will perform barcode localization on the original image.
- * @par Value range:
- * 		[512,0x7fffffff]
- * @par Default value:
- * 		2300
- * @par Remarks:
- *		If you have an image whose shorter edge size is larger than the given value and the barcode is a small part on it, you can set this value to be larger than the shorter edge of this image.
- *		If you have an image whose shorter edge size is larger than the given value and the barcode is clear and big, you can set this value to a smaller one than the default value.
- */
 
+/** Sets the mode and priority for binarization.
+*
+* @par Value range:
+* 	    Each array item can be any one of the BinarizationMode Enumeration items
+* @par Default value:
+* 	    [BM_LOCAL_BLOCK,BM_SKIP,BM_SKIP,BM_SKIP,BM_SKIP,BM_SKIP,BM_SKIP,BM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumBinarizationMode
+*/
+@property (nonatomic, assign) NSArray* binarizationModes;
 
-@property (nonatomic, assign) NSInteger grayEqualizationSensitivity;
-/**< Sets the sensitivity used for gray equalization. May cause adverse effect on images with a high level ofcontrast. The higher the value, the more likely gray equalization will be activated.
- * @par Value range:
- * 		[0,9]
- * @par Default value:
- * 		0
- * @par Remarks:
- *		If you have an image with a low level of contrast,  you can set the property to a larger value. If the value is set to 0, gray equalization will be disabled. If the value is set to 9, gray equalization will be activated.
- *		For better accuracy for images with low camparison, set this property to 9. 
- */
+/** Sets the mode and priority for localization algorithms.
+*
+* @par Value range:
+* 	    Each array item can be any one of the LocalizationMode Enumeration items
+* @par Default value:
+* 	    [LM_CONNECTED_BLOCKS,LM_SCAN_DIRECTLY,LM_STATISTICS,LM_LINES,LM_SKIP,LM_SKIP,LM_SKIP,LM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumLocalizationMode
+*/
+@property (nonatomic, assign) NSArray* localizationModes;
 
+/** Sets the further modes.
+*
+*/
+@property (nonatomic, nonnull) iFurtherModes* furtherModes;
 
-@property (nonatomic, assign) NSInteger enableFillBinaryVacancy;
-/**< Sets whether to enable fill binary vacancy. 
- * @par Value range:
- * 		0, 1 (0 - disable, 1 - enable)
- * @par Default value:
- * 		1
- * @par Remarks:
- *		For barcodes with a large module size there might be a vacant area in the position detection pattern after binarization which may result in a decoding failure. Setting this to true will fill in the vacant area with black and may help to decode it successfully.
- *		Better accuracy for images with a large module size. 
- */
+/** Sets the degree of blurriness of the barcode.
+*
+* @par Value range:
+* 	    [0, 9]
+* @par Default value:
+* 	    9
+* @par Remarks:
+*	    If you have a blurry image, you can set this property to a larger value. The higher value set, the more effort the library will spend to decode images, but it may also slow down the recognition process.
+*/
+@property (nonatomic, assign) NSInteger deblurLevel;
 
+/** Sets which types of intermediate result to be kept for further reference. Intermediate result types can be combined.
+*
+* @par Value range:
+* 	    A combined value of IntermediateResultType Enumeration items
+* @par Default value:
+* 	    0
+* @sa EnumIntermediateResultType
+*/
+@property (nonatomic, assign) NSInteger intermediateResultTypes;
 
-@property (nonatomic, assign) ColourImageConvert colourImageConvert;
-/**< Sets whether to convert colour images to grayscale before processing.
- * @par Value range:
- * 		ColourImageConvertAuto, ColourImageConvertGrayScale
- * @par Default value:
- * 		ColourImageConvertAuto
- * @par Remarks:
- *		If you need to decode the barcode in the region pre-detection mode, it works better with the value ColourImageConvertAuto. There are no effects to the results. It will pass the original image for if you set it to ColourImageConvertAuto and the gray-scale image if you set it otherwise. 
- * @sa ColourImageConvert
- */
+/** Specifies the format for the coordinates returned.
+*
+* @par Value range:
+* 	    Any one of the ResultCoordinateType Enumeration items
+* @par Default value:
+* 	    RCT_PIXEL
+* @sa EnumResultCoordinateType
+*/
+@property (nonatomic, assign) EnumResultCoordinateType resultCoordinateType;
 
+/** Sets the mode and priority for the order of the text results returned.
+*
+* @par Value range:
+* 	    Each array item can be any one of the TextResultOrderMode Enumeration items
+* @par Default value:
+* 	    [TROM_CONFIDENCE,TROM_POSITION,TROM_FORMAT,TROM_SKIP,TROM_SKIP,TROM_SKIP,TROM_SKIP,TROM_SKIP]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumTextResultOrderMode
+*/
+@property (nonatomic, assign) NSArray* textResultOrderModes;
 
-@property (nonatomic, nonnull) NSString * reserved;
-/**< Reserved memory for struct. The length of this array indicates the size of the memory reserved for this struct.*/
+/** Sets the region definition including the regionTop, regionLeft, regionRight, regionBottom and regionMeasuredByPercentage.
+*
+*/
+@property (nonatomic, nonnull) iRegionDefinition* region;
 
+/** Sets the range of barcode text length for barcodes search.
+*
+* @par Value range:
+* 	    [0, 0x7fffffff]
+* @par Default value:
+* 	    0
+* @par Remarks:
+*     0: means no limitation on the barcode text length.
+*/
+@property (nonatomic, assign) NSInteger minBarcodeTextLength;
 
-@property (nonatomic, assign) NSInteger expectedBarcodeCount;
-/**< Sets the expected number of barcodes to read for each image (or each region of the image if you specified barcode regions).
- * @par Value range:
- * 		[0,0x7fffffff]
- * @par Default value:
- * 		0
- * @par Remarks:
- * 		- 0: means Unknown and it will find at least one barcode.
- *
- * 		- 1: try to find one barcode. If one barcode is found, the library will stop the localization process and perform barcode decoding.
- *
- * 		- n: try to find n barcodes. If the library only finds m (m<n) barcode, it will try different algorithms till n barcodes are found or all algorithms are used.
- *
- * 		The value of ExpectedBarcodesCount must be less than or equal to the value of MaxBarcodesCount. To ensure the best performance, the value of AntiDamageLevel is suggested to be set to 9 if the ExpectedBarcodesCount is set to 0 or 1; otherwise, the value of AntiDamageLevel is suggested to be set to 7.
- *		When AntiDamageLevel is larger than 7, the bigger ExpectedBarcodesCount you set, the more localization algorithms will be used which leads to a higher accuracy with slower performance. 
- * @sa maxBarcodeCount antiDamageLevel
- */
-
-
-
-@property (nonatomic, assign) NSInteger binarizationBlockSize;
-/**< Sets the block size for the process of binarization. Block size refers to the size of a pixel neighborhood used to calculate a threshold value for the pixel.
- * @par Value range:
- * 		[0,1000]
- * @par Default:
- * 		0
- * @par Remarks:
- * 		- 0: the block size used for binarization will be set to a value which is calculated automatically.
- * 
- * 		- N:
- * 		 - 1 <= N <= 3: the block size used for binarization will be set to 3.
- * 		 - N > 3: the block size used for binarization will be set to N.
- *
- *		An appropriate value for mBinarizationBlockSize can help generate a high quality binary image to increase the accuracy of barcode localization.  
- */
+/** The minimum confidence of the result.
+*
+* @par Value range:
+* 	    [0, 100]
+* @par Default value:
+* 	    0
+* @par Remarks:
+*     0: means no limitation on the confidence.
+*/
+@property (nonatomic, assign) NSInteger minResultConfidence;
 
 @end
 
-/**
- * @}
- */
-
-/*--------------------------------------------------------------------*/
 
 /**
- * Stores the extended result including the format, the bytes, etc.
- */
-@interface ExtendedResult: NSObject
+* Stores the extended result.
+*
+*/
+@interface iExtendedResult: NSObject
 
+/** Extended result type */
+@property (nonatomic, assign) EnumResultType resultType;
 
-@property (nonatomic, assign) ResultTextType resultType;
-/**< Extended result type */
+/** Barcode type */
+@property (nonatomic, assign) EnumBarcodeFormat barcodeFormat;
 
-@property (nonatomic, assign) BarcodeType barcodeType;
-/**< Barcode type */
+/** Barcode type as string */
+@property (nonatomic, nullable) NSString* barcodeFormatString;
 
+/** The confidence of the result */
 @property (nonatomic, assign) NSInteger confidence;
-/**< The confidence of the result */
 
+/** The content in a byte array */
 @property (nonatomic, nullable) NSData* bytes;
-/**< The content in a byte array */
+
+/** The accompanying text content in a byte array */
+@property (nonatomic, nullable) NSData* accompanyingTextBytes;
+
+/** The deformation value */
+@property (nonatomic, assign) NSInteger deformation;
+
+/** One of the following: @ref QRCodeDetails, @ref PDF417Details, @ref DataMatrixDetails, @ref AztecDetails, @ref OneDCodeDetails */
+@property (nonatomic, nullable) NSObject* detailedResult;
 
 @end
-
-/*--------------------------------------------------------------------*/
 
 
 /**
  * Stores the localization result including the boundary, the angle, the page number, the region name, etc.
  */ 
-@interface LocalizationResult: NSObject
+@interface iLocalizationResult: NSObject
 
-@property (nonatomic, assign) TerminateStatus terminateStatus;
-/**< The stage of localization result. */
+/** The terminate phase of localization result. */
+@property (nonatomic, assign) EnumTerminatePhase terminatePhase;
 
-@property (nonatomic, assign) BarcodeType barcodeType;
-/**< Barcode type. */
+/** Barcode type. */
+@property (nonatomic, assign) EnumBarcodeFormat barcodeFormat;
 
-@property (nonatomic, assign) NSInteger angle;
-/**< The angle of a barcode. Values range from 0 to 360. */
+/** Barcode type as string */
+@property (nonatomic, nullable) NSString* barcodeFormatString;
 
+/** The array which stores the coordinates of four result points. */
 @property (nonatomic, nullable) NSArray* resultPoints;
-/**< The vetices' (x,y) coordinates information of the barcode region. */
+
+/** The angle of a barcode. Values range from 0 to 360. */
+@property (nonatomic, assign) NSInteger angle;
+
+/** The barcode module size (the minimum bar width in pixel) */
+@property (nonatomic, assign) NSInteger moduleSize;
+
+/** The page number the barcode located in. The index is 0-based. */
+@property (nonatomic, assign) NSInteger pageNumber;
+
+/** The region name the barcode located in. */
+@property (nonatomic, nullable) NSString* regionName;
+
+/** The document name. */
+@property (nonatomic, nullable) NSString* documentName;
+
+/** The coordinate type.*/
+@property (nonatomic, assign) EnumResultCoordinateType resultCoordinateType;
+
+/** The accompanying text content in a byte array */
+@property (nonatomic, nullable) NSData* accompanyingTextBytes;
+
+@end
+
+
+/**
+* Stores the text result
+*
+*/
+@interface iTextResult : NSObject
+
+/** The barcode format */
+@property (nonatomic, assign) EnumBarcodeFormat barcodeFormat;
+
+/** Barcode format as string */
+@property (nonatomic, nullable) NSString* barcodeFormatString;
+
+/** The barcode text, ends by '\0' */
+@property (nonatomic, nullable) NSString* barcodeText;
+
+/** The barcode content in a byte array */
+@property (nonatomic, nullable) NSData* barcodeBytes;
+
+/** The corresponding localization result */
+@property (nonatomic, nullable) iLocalizationResult* localizationResult;
+
+/** One of the following: @ref QRCodeDetails, @ref PDF417Details, @ref DataMatrixDetails, @ref AztecDetails, @ref OneDCodeDetails */
+@property (nonatomic, nullable) NSObject* detailedResult;
+
+/** The extended result array */
+@property (nonatomic, nullable) NSArray<iExtendedResult*>* extendedResults;
+
+@end
+
+
+/**
+* Stores the OneD code details
+*
+*/
+@interface iOneDCodeDetails : NSObject
+
+/** The barcode module size (the minimum bar width in pixel) */
+@property (nonatomic, assign) NSInteger moduleSize;
+
+/** The start chars in a byte array */
+@property (nonatomic, nullable) NSData* startCharsBytes;
+
+/** The stop chars in a byte array */
+@property (nonatomic, nullable) NSData* stopCharsBytes;
+
+/** The check digit chars in a byte array */
+@property (nonatomic, nullable) NSData* checkDigitBytes;
+
+@end
+
+
+/**
+* Stores the QRCode details
+*
+*/
+@interface iQRCodeDetails : NSObject
+
+/** The barcode module size (the minimum bar width in pixel) */
+@property (nonatomic, assign) NSInteger moduleSize;
+
+/** The row count of the barcode */
+@property (nonatomic, assign) NSInteger rows;
+
+/** The column count of the barcode */
+@property (nonatomic, assign) NSInteger columns;
+
+/** The error correction level of the barcode */
+@property (nonatomic, assign) EnumQRCodeErrorCorrectionLevel errorCorrectionLevel;
+
+/** The version of the QR Code */
+@property (nonatomic, assign) NSInteger version;
+
+/** Number of the models */
+@property (nonatomic, assign) NSInteger model;
+
+@end
+
+
+/**
+* Stores the PDF417 details
+*
+*/
+@interface iPDF417Details : NSObject
 
 @property (nonatomic, assign) NSInteger moduleSize;
-/**< The barcode module size (the minimum bar width in pixel) */
+/** The barcode module size (the minimum bar width in pixel) */
 
-@property (nonatomic, assign) NSInteger pageNumber;
-/**< The page number the barcode located in. The index is 0-based. */
+@property (nonatomic, assign) NSInteger rows;
+/** The row count of the barcode */
 
-@property (nonatomic, nullable) NSString* regionName;
-/**< The region name the barcode located in. */
+@property (nonatomic, assign) NSInteger columns;
+/** The column count of the barcode */
 
-@property (nonatomic, nullable) NSString* documentName;
-/**< The document name. */
-
-@property (nonatomic, nullable) NSArray<ExtendedResult*>* extendedResults;
-/**< The extended result array */
+@property (nonatomic, assign) NSInteger errorCorrectionLevel;
+/** The error correction level of the barcode */
 
 @end
 
-/*--------------------------------------------------------------------*/
 
 /**
- * Stores the text result including the format, the text, the bytes, the localization result etc.
+* Stores the DataMatrix details
+*
+*/
+@interface iDataMatrixDetails : NSObject
+
+/** The barcode module size (the minimum bar width in pixel) */
+@property (nonatomic, assign) NSInteger moduleSize;
+
+/** The row count of the barcode */
+@property (nonatomic, assign) NSInteger rows;
+
+/** The column count of the barcode */
+@property (nonatomic, assign) NSInteger columns;
+
+/** The data region row count of the barcode */
+@property (nonatomic, assign) NSInteger dataRegionRows;
+
+/** The data region column count of the barcode */
+@property (nonatomic, assign) NSInteger dataRegionColumns;
+
+/** The data region count */
+@property (nonatomic, assign) NSInteger dataRegionNumber;
+
+@end
+
+
+/**
+* Stores the Aztec details
+*
+*/
+@interface iAztecDetails : NSObject
+
+/** The barcode module size (the minimum bar width in pixel) */
+@property (nonatomic, assign) NSInteger moduleSize;
+
+/** The row count of the barcode */
+@property (nonatomic, assign) NSInteger rows;
+
+/** The column count of the barcode */
+@property (nonatomic, assign) NSInteger columns;
+
+/** A negative number (-1, -2, -3, -4) specifies a compact Aztec code.
+*   A positive number (1, 2, .. 32) specifies a normal (full-rang) Aztec code*/
+@property (nonatomic, assign) NSInteger layerNumber;
+
+@end
+
+
+/**
+* Stores the intermediate result
+*
+*/
+@interface iIntermediateResult : NSObject
+
+/**The total result count */
+@property (nonatomic, assign) NSInteger resultsCount;
+
+/**One of the following types: Array of @ref Contour, Array of @ref ImageData, Array of @ref LineSegment, Array of @ref LocalizationResult, Array of @ref RegionOfInterest */
+@property (nonatomic, nonnull) NSObject* results;
+
+/** Intermediate data Type */
+@property (nonatomic, assign) EnumIMResultDataType dataType;
+
+/** Intermediate Result Type */
+@property (nonatomic, assign) EnumIntermediateResultType resultType;
+
+/** The BarcodeComplementMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumBarcodeComplementMode barcodeComplementMode;
+
+/** The array index of current used ColourClusteringMode in ColourClusteringModes setting */
+@property (nonatomic, assign) NSInteger bcmIndex;
+
+/** The DeformationResistingMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumDeformationResistingMode deformationResistingMode;
+
+/** The array index of current used DeformationResistingMode in DeformationResistingModes setting */
+@property (nonatomic, assign) NSInteger drmIndex;
+
+/** The DPMCodeReadingMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumDPMCodeReadingMode dpmCodeReadingMode;
+
+/** The array index of current used DPMCodeReadingMode in DPMCodeReadingModes setting */
+@property (nonatomic, assign) NSInteger dpmcrmIndex;
+
+/**The rotation matrix. */
+@property (nonatomic, nonnull) NSArray* transformationMatrix;
+
+/** The TextFilterMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumTextFilterMode textFilterMode;
+
+/** The array index of current used TextFilterMode in TextFilterModes setting */
+@property (nonatomic, assign) NSInteger tfmIndex;
+
+/** The LocalizationMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumLocalizationMode localizationMode;
+
+/** The array index of current used LocalizationMode in LocalizationModes setting */ 
+@property (nonatomic, assign) NSInteger lmIndex;
+
+/** The BinarizationMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumBinarizationMode binarizationMode;
+
+/** The array index of current used BinarizationMode in BinarizationModes setting */
+@property (nonatomic, assign) NSInteger bmIndex;
+
+/** The ImagePreprocessingMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumImagePreprocessingMode imagePreprocessingMode;
+
+/** The array index of current used ImagePreprocessingMode in ImagePreprocessingModes setting */
+@property (nonatomic, assign) NSInteger ipmIndex;
+
+/** The id of the ROI generated by the SDK */
+@property (nonatomic, assign) NSInteger roiId;
+
+/** The RegionPredetectionMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumRegionPredetectionMode regionPredetectionMode;
+
+/** The array index of current used RegionPredetectionMode in RegionPredetectionModes setting */
+@property (nonatomic, assign) NSInteger rpmIndex;
+
+/** The GrayscaleTransformationMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumGrayscaleTransformationMode grayscaleTransformationMode;
+
+/** The array index of current used GrayscaleTransformationMode in GrayscaleTransformationModes setting */
+@property (nonatomic, assign) NSInteger gtmIndex;
+
+/** The ColourConversionMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumColourConversionMode colourConversionMode;
+
+/** The array index of current used ColourConversionMode in ColourConversionModes setting */
+@property (nonatomic, assign) NSInteger cicmIndex;
+
+/** The ColourClusteringMode used when generating the current Intermediate result */
+@property (nonatomic, assign) EnumColourClusteringMode colourClusteringMode;
+
+/** The array index of current used ColourClusteringMode in ColourClusteringModes setting */
+@property (nonatomic, assign) NSInteger ccmIndex;
+
+/** The scal down ratio */
+@property (nonatomic, assign) NSInteger scaleDownRatio;
+
+/** The id of the operated frame */
+@property (nonatomic, assign) NSInteger frameId;
+
+@end
+
+
+/**
+* Stores the contour
+*
+*/
+@interface iContour : NSObject
+
+/** The total points count of the contour */
+@property (nonatomic, assign) NSInteger pointsCount;
+
+/** The points array */
+@property (nonatomic, nonnull) NSArray* points;
+
+@end
+
+
+/**
+* Stores the image data.
+*
+*/
+@interface iImageData : NSObject
+
+/** The image data content in a byte array */
+@property (nonatomic, nonnull) NSData* bytes;
+
+/** The width of the image in pixels */
+@property (nonatomic, assign) NSInteger width;
+
+/** The height of the image in pixels */
+@property (nonatomic, assign) NSInteger height;
+
+/** The stride of the image (also called scan width) */
+@property (nonatomic, assign) NSInteger stride;
+
+/** The image pixel format used in the image byte array */
+@property (nonatomic, assign) EnumImagePixelFormat format;
+
+@end
+
+
+/**
+* Stores the line segment.
+*
+*/
+@interface iLineSegment : NSObject
+
+@property (nonatomic, assign) CGPoint startPoint;
+/** The start point of the line segment */
+
+@property (nonatomic, assign) CGPoint endPoint;
+/** The end point of the line segment */
+
+@end
+
+
+/**
+* Stores the region of interest
+*
+*/
+@interface iRegionOfInterest : NSObject
+
+/**The id generated by the SDK */
+@property (nonatomic, assign) NSInteger roiId;
+
+/**The left top point of the region */
+@property (nonatomic, assign) CGPoint point;
+
+/**The width of the region */
+@property (nonatomic, assign) NSInteger width;
+
+/**The height of the region */
+@property (nonatomic, assign) NSInteger height;
+
+@end
+
+
+/**
+ * Protocol for a delegate to handle callback when text result return.
  */
-@interface TextResult : NSObject
+@protocol DBRTextResultDelegate <NSObject>
 
-@property (nonatomic, assign) BarcodeType barcodeFormat;
-/**< The barcode format */
-
-@property (nonatomic, nullable) NSString* barcodeFormatString;
-/**< Barcode type as string */
-
-@property (nonatomic, nullable) NSString* barcodeText;
-/**< The barcode text, ends by '\0' */
-
-@property (nonatomic, nullable) NSData* barcodeBytes;
-/**< The barcode content in a byte array */
-
-@property (nonatomic, nullable) LocalizationResult* localizationResult;
-/**< The corresponding localization result */
+@required
+/**
+* Represents the method that will handle the text result array returned by the SDK.
+*
+* @param frameId The id of the frame.
+* @param pResults Recognized barcode results of the frame..
+* @param pUser Arguments pass to your function.
+*
+* @sa TextResultArray
+*/
+- (void)textResultCallback:(NSInteger)frameId results:(NSArray<iTextResult*>*)results userData: (NSObject*)userData;
 
 @end
 
-/*--------------------------------------------------------------------*/
 /**
- * @biref Protocol for a delegate to handle callback when license server return.
+ * Protocol for a delegate to handle callback when intermediate result return.
+ */
+@protocol DBRIntermediateResultDelegate <NSObject>
+
+@required
+/**
+* Represents the method that will handle the intermediate result array returned by the SDK.
+*
+* @param frameId The id of the frame.
+* @param pResults The intermediate results of the frame.
+* @param pUser Arguments pass to your function.
+*
+* @sa IntermediateResultArray
+*/
+- (void)intermediateResultCallback:(NSInteger)frameId results:(NSArray<iIntermediateResult*>*)results userData: (NSObject*)userData;
+
+@end
+
+/**
+ * Protocol for a delegate to handle callback when error return.
+ */
+@protocol DBRErrorDelegate <NSObject>
+
+@required
+/**
+ * Represents the method that will handle the error code returned by the SDK.
+ *
+ * @param frameId The id of the frame.
+ * @param errorCode Error Code generated when decoding the frame.
+ * @param pUser Arguments pass to your function.
+ *
+ * @sa ErrorCode
+ */
+- (void)errorCallback:(NSInteger)frameId errorCode:(NSInteger)errorCode userData: (NSObject*)userData;
+
+@end
+
+/**
+ * Protocol for a delegate to handle callback when license server return.
  */
 @protocol DBRServerLicenseVerificationDelegate <NSObject>
 
 @required
- /**
+/**
   * The callback of license server.
   *
   * @param [in,out] isSuccess The value of whether the license verification was successful.
@@ -784,8 +1639,6 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 
 @end
 
-/*--------------------------------------------------------------------*/
-
 
 /**
 * Defines a class that provides functions for working with extracting barcode data. 
@@ -795,7 +1648,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 * 
 * - Initialize with template: reset runtime settings firstly and replace all parameters in runtime setting with the values specified in given template regardless of the current runtime settings.
 * 
-* - Append template to runtime settings: append template and update runtime settings; the conflicting values will be assigned by the rules shown in PublicSettings.
+* - Append template to runtime settings: append template and update runtime settings; the conflicting values will be assigned by the rules shown in DBRPublicRuntimeSettings.
 * 
 * - Update with struct: update current runtime settings by the values specified in given struct directly; the parameter not be defined in struct will remain its original value.
 * 
@@ -804,7 +1657,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 * More information about public parameters and template file can be found in file DBR_Developer's_Guide.pdf.
 * 
 * 
-* @sa PublicSettings
+* @sa DBRPublicRuntimeSettings
 */
 
 @interface DynamsoftBarcodeReader: NSObject
@@ -815,10 +1668,9 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 @property (nonatomic, nonnull) NSString* license;
 
 /**
- * @name Basic Funcitons
+ * @name Initiation Funcitons
  * @{
  */
-
 
 /**
  * Initialization of DynamsoftBarcodeReader.
@@ -842,17 +1694,10 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 /**
  * Initializes barcode reader license and connects to the specified server for online verification.
  * 
- * @param [in] licenseSeServer The name/IP of the license server, If you set it an empty string (""), it will connect to Dynamsoft License Server for online verification.		   
+ * @param [in] licenseSeServer The name/IP of the license server.		   
  * @param [in] licenseKey The license key of Barcode Reader.
  * @param [in,out] connectionDelegate The delegate to handle callback when license server return.
- * @par Code Snippet:
- * @code
-	@property (nonatomic, retain) DynamsoftBarcodeReader* barcodeReader;
-	self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
-	(void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error {
-       
-	}
- * @endcode
+ *
  * @return The instance of DynamsoftBarcodeReader.
  */
 
@@ -862,20 +1707,25 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 /**
  * Outputs the license content as an encrypted string from the license server to be used for offline license verification.
  *
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  * @return The output string which stores the contents of license.
  *
  */	
 - (NSString *_Nullable)outputLicenseToString:(NSError* _Nullable * _Nullable)error;
 
 /**
+ * @}
+ * @name Basic Setting Funcitons
+ * @{
+ */
+
+/**
  * Gets current settings and save it into a struct.
  *
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @return A PublicSettings storing current runtime settings.
+ * @return A DBRPublicRuntimeSettings storing current runtime settings.
  *
  */
-- (PublicSettings* _Nullable)getRuntimeSettings:(NSError* _Nullable * _Nullable)error;
+- (iPublicRuntimeSettings* _Nullable)getRuntimeSettings:(NSError* _Nullable * _Nullable)error;
 
 /**
  * Update runtime settings with a given struct.
@@ -884,7 +1734,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  *
  */
-- (void)updateRuntimeSettings:(PublicSettings* _Nonnull)settings
+- (void)updateRuntimeSettings:(iPublicRuntimeSettings* _Nonnull)settings
                         error:(NSError* _Nullable * _Nullable)error;
 /**
  * Resets all parameters to default values.
@@ -894,6 +1744,30 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  */
 - (void)resetRuntimeSettings:(NSError* _Nullable * _Nullable)error;
 
+/**
+	 * Sets the optional argument for a specified mode in Modes parameters.
+	 * 
+	 * @param [in] modeName The mode parameter name to set argument.
+	 * @param [in] index The array index of mode parameter to indicate a specific mode.
+	 * @param [in] argumentName The name of the argument to set.
+	 * @param [in] argumentValue The value of the argument to set.
+ 	 * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.			  
+	 *
+	 * @par Remarks:
+	 *		Check @ref ModesArgument for details
+	 *
+	 */
+-(void)SetModeArgument:(NSString* _Nonnull)modeName
+                     index:(NSInteger)index 
+                     argumentName:(NSString* _Nonnull)argumentName
+                     argumentValue:(NSString* _Nonnull)argumentValue
+                     error:(NSError* _Nullable * _Nullable)error;
+
+/**
+ * @}
+ * @name Decoding Funcitons
+ * @{
+ */
 
 /**
  * Decodes barcode from an image file encoded as a base64 string.
@@ -905,7 +1779,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * @return All barcode text results decoded successfully.
  *
  */
-- (NSArray<TextResult*>* _Nullable)decodeBase64:(NSString* _Nonnull)base64
+- (NSArray<iTextResult*>* _Nullable)decodeBase64:(NSString* _Nonnull)base64
                                    withTemplate:(NSString* _Nonnull)templateName
                                           error:(NSError* _Nullable * _Nullable)error;
 
@@ -918,7 +1792,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  *
  * @return All barcode text results decoded successfully.
  */
-- (NSArray<TextResult*>* _Nullable)decodeImage:(UIImage* _Nonnull)image
+- (NSArray<iTextResult*>* _Nullable)decodeImage:(UIImage* _Nonnull)image
                                   withTemplate:(NSString* _Nonnull)templateName
                                          error:(NSError* _Nullable * _Nullable)error;
 
@@ -935,11 +1809,11 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  *
  * @return All barcode text results decoded successfully.
  */
-- (NSArray<TextResult*>* _Nullable)decodeBuffer:(NSData* _Nonnull)buffer
+- (NSArray<iTextResult*>* _Nullable)decodeBuffer:(NSData* _Nonnull)buffer
                                       withWidth:(NSInteger)width
                                          height:(NSInteger)height
                                          stride:(NSInteger)stride
-                                         format:(ImagePixelType)format
+                                         format:(EnumImagePixelFormat)format
                                    templateName:(NSString* _Nonnull)templateName
                                           error:(NSError* _Nullable * _Nullable)error;
 
@@ -953,24 +1827,62 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
   *
   * @return All barcode text results decoded successfully.
   */
-- (NSArray<TextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)name
+- (NSArray<iTextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)name
                                          templateName:(NSString* _Nonnull)templateName
                                                 error:(NSError* _Nullable * _Nullable)error;
 
- /**
-  * Gets all localization barcode results. It contains all recognized barcodes and unrecognized barcodes.
-  *
-  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
-  *
-  * @return All barcodes have been localized. If no barcodes is localized, an array with length 0 will be returned.
-  *
-  */
-- (NSArray<LocalizationResult*>* _Nullable)allLocalizationResults:(NSError* _Nullable * _Nullable)error;
+/**
+ * Starts a new thread to decode barcodes from the inner frame queue.
+ * 
+ * @param [in] maxQueueLength The max count of frames waiting for decoding.
+ * @param [in] maxResultQueueLength The max count of frames whose results (text result/localization result) will be kept for further reference.
+ * @param [in] width The width of the frame image in pixels.
+ * @param [in] height The height of the frame image in pixels.
+ * @param [in] stride The stride of the frame image (also called scan width).
+ * @param [in] format The image pixel format used in the image byte array.
+ * @param [in] templateName (Optional) The template name.
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ */
+-(void)startFrameDecoding:(NSInteger)maxQueueLength
+                     maxResultQueueLength:(NSInteger)maxResultQueueLength
+                     width:(NSInteger)width
+                     height:(NSInteger)height
+                     stride:(NSInteger)stride
+                     format:(EnumImagePixelFormat)format
+                     templateName:(NSString* _Nonnull)templateName
+                     error:(NSError* _Nullable * _Nullable)error;
 
 
 /**
+ * Append a frame image buffer to the inner frame queue.
+ * 
+ * @param [in] bufferBytes The array of bytes which contain the image data.
+ *				   
+ * @return Returns the Id of the appended frame
+ *
+ */	
+-(NSInteger)appendFrame:(NSData*) bufferBytes;
+ 
+ /**
+ * Get current length of the inner frame queue.
+ *				   
+ * @return Returns the length of the inner frame queue.
+ *
+ */	
+-(NSInteger)GetLengthOfFrameQueue;
+
+/**
+ * Stops the frame decoding thread created by StartFrameDecoding.
+ * 
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ */
+-(void)StopFrameDecoding:(NSError* _Nullable * _Nullable)error;
+
+/**
  * @}
- * @name Advanced Functions
+ * @name Advanced Setting Functions
  * @{
  */
 
@@ -980,7 +1892,7 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * @return The template name array.
  *
  */
-- (NSArray<NSString*>* _Nullable)allParameterTemplateNames;
+- (NSArray<NSString*>* _Nullable)allParameterTemplateNames: (NSError *__autoreleasing  _Nullable *)error;
 
 /**
  * Initialize runtime settings with the settings in given JSON file.
@@ -990,10 +1902,10 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * 			  previous template setting or overwrite previous settings and replace by new template.
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  * 
- * @sa DynamsoftBarcodeReader PublicSettings
+ * @sa DynamsoftBarcodeReader DBRPublicRuntimeSettings
  */
 - (void)initRuntimeSettingsWithFile:(NSString* _Nonnull)fileName
-                       conflictMode:(DBRConflictMode)conflictMode
+                       conflictMode:(EnumConflictMode)conflictMode
 	                          error:(NSError* _Nullable * _Nullable)error;
 
 /**
@@ -1004,10 +1916,10 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * 			  previous template setting or overwrite previous settings and replace by new template.
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  *
- * @sa DynamsoftBarcodeReader PublicSettings
+ * @sa DynamsoftBarcodeReader DBRPublicRuntimeSettings
  */
 - (void)initRuntimeSettingsWithString:(NSString* _Nonnull)content
-						  conflictMode:(DBRConflictMode)conflictMode
+						  conflictMode:(EnumConflictMode)conflictMode
 								 error:(NSError* _Nullable * _Nullable)error;
 
 /**
@@ -1018,10 +1930,10 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * 			  previous template setting or overwrite previous settings and replace by new template.
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  *
- * @sa DynamsoftBarcodeReader PublicSettings
+ * @sa DynamsoftBarcodeReader DBRPublicRuntimeSettings
  */
 - (void)appendTplFileToRuntimeSettings:(NSString * _Nonnull)fileName
-					      conflictMode:(DBRConflictMode)conflictMode
+					      conflictMode:(EnumConflictMode)conflictMode
 								 error:(NSError * _Nullable *_Nullable)error;
 
 /**
@@ -1032,10 +1944,10 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
  * 			  previous template setting or overwrite previous settings and replace by new template.
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  *
- * @sa DynamsoftBarcodeReader PublicSettings
+ * @sa DynamsoftBarcodeReader DBRPublicRuntimeSettings
  */
 - (void)appendTplStringToRuntimeSettings:(NSString * _Nonnull)content
-							conflictMode:(DBRConflictMode)conflictMode
+							conflictMode:(EnumConflictMode)conflictMode
 								   error:(NSError *_Nullable *_Nullable)error;
 
 /**
@@ -1065,99 +1977,56 @@ typedef NS_ENUM(NSInteger, ColourImageConvert) {
 
 /**
  * @}
- * @name Compatible Functions
+ * @name Callback Functions
+ * @{
+ */
+
+
+/**
+ * Sets call back function to process errors generated during frame decoding.
+ * 
+ * @param [in] errorDelegate Call back function.
+ * @param [in] userData Customized arguments passed to your function.				 
+ *
+ */
+-(void)setDBRErrorDelegate:(id)errorDelegate userData:(NSObject*)userData;
+
+/**
+ * Sets call back function to process text results generated during frame decoding.
+ * 
+ * @param [in] textResultDelegate Call back function.
+ * @param [in] userData Customized arguments passed to your function.
+ *				   
+ */
+-(void)setDBRTextResultDelegate:(id)textResultDelegate userData:(NSObject*)userData;
+
+/**
+ * Sets call back function to process intermediate results generated during frame decoding.
+ * 
+ * @param [in] intermediateResultDelegate Call back function.
+ * @param [in] userData Customized arguments passed to your function.
+ *
+ */
+-(void)setDBRIntermediateResultDelegate:(id)intermediateResultDelegate userData:(NSObject*)userData;
+
+/**
+ * @}
+ * @name Results Functions
  * @{
  */
 
 /**
- * Ensure compatibility with earlier versions. It is functionally equivalent to appendTplStringToRuntimeSettings with conflict mode DBRECM_Overwrite as default.
- *
- * @deprecated appendParameterTemplate
- *
- * @param [in] content A JSON string that represents the content of the settings.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @sa appendTplStringToRuntimeSettings
+ * Returns intermediate results containing the original image, the colour clustered image, the binarized Image, contours, Lines, TextBlocks, etc.
+ * 
+ * @return Returns  intermediate result array.
  */
--(void)appendParameterTemplate:(NSString* _Nonnull)content
-	                                error:(NSError* _Nullable * _Nullable)error;
+-(NSArray<iIntermediateResult*>* _Nullable)getIntermediateResult:(NSError* _Nullable * _Nullable)error;
 
 /**
- * Ensure compatibility with earlier versions. It is functionally equivalent to appendTplFileToRuntimeSettings with conflict mode DBRECM_Overwrite as default.
- *
- * @deprecated appendParameterTemplateFromFile
- *
- * @param [in] fileName The path of the settings file.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @sa appendTplFileToRuntimeSettings
- */ 
-- (void)appendParameterTemplateFromFile:(NSString* _Nonnull)fileName
-	                              error:(NSError* _Nullable * _Nullable)error;
-
-
-/**
-* Ensure compatibility with earlier versions. It is functionally equivalent to getRuntimeSettings.
-*
-* @deprecated templateSettingsWithName
-*
-* @param [in] templateName The template name.
-* @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
-*
-* @return The struct of template settings.
-*
-*
-* @sa getRuntimeSettings
+* @}
 */
--(PublicSettings* _Nullable)templateSettingsWithName:(NSString* _Nonnull)templateName
-	                                           error:(NSError* _Nullable * _Nullable)error;
-
-/**
- * Ensure compatibility with earlier versions. It is functionally equivalent to initRuntimeSettingsWithString with conflict mode DBRECM_Overwrite as default.
- *
- * @deprecated loadSettings
- *
- * @param [in] content A JSON string that represents the content of the settings.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @sa initRuntimeSettingsWithString 
- */
--(void)loadSettings:(NSString* _Nonnull)content
-	                     error:(NSError* _Nullable * _Nullable)error;
-
-/**
- * Ensure compatibility with earlier versions. It is functionally equivalent to initRuntimeSettingsWithFile with conflict mode DBRECM_Overwrite as default.
- *
- * @deprecated loadSettingsFromFile
- *
- * @param [in] fileName The path of the settings file.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @sa initRuntimeSettingsWithFile
- */
--(void)loadSettingsFromFile:(NSString* _Nonnull)fileName
-	                  error:(NSError* _Nullable * _Nullable)error;
-
-/**
- * Ensure compatibility with earlier versions. It is functionally equivalent to updateRuntimeSettings.
- *
- * @deprecated setTemplateSettings
- *
- * @param [in] settings The struct of template settings.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @sa updateRuntimeSettings
- */
--(void)setTemplateSettings:(PublicSettings* _Nonnull)settings
-	                 error:(NSError* _Nullable * _Nullable)error;
-
-
-
-
-/**
- * @}
- */
 @end
+
 
 /**
  * @}
