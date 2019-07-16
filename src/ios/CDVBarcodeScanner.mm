@@ -516,54 +516,57 @@ parentViewController:(UIViewController*)parentViewController
 }
 
 
-- (NSString*)getBarcodeFormatString:(BarcodeType)barcodeType{
+- (NSString*)getBarcodeFormatString:(EnumBarcodeFormat)barcodeType{
     NSString* format = @"";
     switch(barcodeType)
     {
-        case BarcodeTypeITF:
+        case EnumBarcodeFormatITF:
             format = @"ITF";
             break;
-        case BarcodeTypeEAN8:
+        case EnumBarcodeFormatEAN8:
             format = @"EAN8";
             break;
-        case BarcodeTypeONED:
+        case EnumBarcodeFormatONED:
             format = @"ONED";
             break;
-        case BarcodeTypeUPCA:
+        case EnumBarcodeFormatUPCA:
             format = @"UPCA";
             break;
-        case BarcodeTypeUPCE:
+        case EnumBarcodeFormatUPCE:
             format = @"UPCE";
             break;
-        case BarcodeTypeAZTEC:
+        case EnumBarcodeFormatAZTEC:
             format = @"AZTEC";
             break;
-        case BarcodeTypeEAN13:
+        case EnumBarcodeFormatEAN13:
             format = @"EAN13";
             break;
-        case BarcodeTypeCODE39:
+        case EnumBarcodeFormatCODE39:
             format = @"CODE39";
             break;
-        case BarcodeTypeCODE93:
+        case EnumBarcodeFormatCODE93:
             format = @"CODE93";
             break;
-        case BarcodeTypePDF417:
+        case EnumBarcodeFormatPDF417:
             format = @"PDF417";
             break;
-        case BarcodeTypeQRCODE:
+        case EnumBarcodeFormatQRCODE:
             format = @"QRCODE";
             break;
-        case BarcodeTypeCODABAR:
+        case EnumBarcodeFormatCODABAR:
             format = @"CODABAR";
             break;
-        case BarcodeTypeCODE128:
+        case EnumBarcodeFormatCODE128:
             format = @"CODE128";
             break;
-        case BarcodeTypeDATAMATRIX:
+        case EnumBarcodeFormatDATAMATRIX:
             format = @"DATAMATRIX";
             break;
-        case BarcodeTypeINDUSTRIAL:
+        case EnumBarcodeFormatINDUSTRIAL:
             format = @"INDUSTRIAL";
+            break;
+        case EnumBarcodeFormatCODE39EXTENDED:
+            format = @"CODE39EXTENDED";
             break;
     }
     return format;
@@ -623,7 +626,7 @@ parentViewController:(UIViewController*)parentViewController
         NSData *buffer = [NSData dataWithBytes:baseAddress length:bufferSize];
         NSLog(@"get a frame");
         @try{
-            NSArray<TextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:ImagePixelTypeARGB_8888 templateName:@"" error:nil];
+            NSArray<iTextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:EnumImagePixelFormatARGB_8888 templateName:@"" error:nil];
             if (results!=nil){
                 NSString* barcodeFormat = [self getBarcodeFormatString:results[0].barcodeFormat];
                 [self barcodeScanSucceeded:results[0].barcodeText   barcodeFormat:barcodeFormat];
