@@ -627,10 +627,13 @@ parentViewController:(UIViewController*)parentViewController
         NSLog(@"get a frame");
         @try{
             NSArray<iTextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:EnumImagePixelFormatARGB_8888 templateName:@"" error:nil];
-            if (results!=nil){
-                NSString* barcodeFormat = [self getBarcodeFormatString:results[0].barcodeFormat];
-                [self barcodeScanSucceeded:results[0].barcodeText   barcodeFormat:barcodeFormat];
-                NSLog(@"%@",results[0].barcodeText);
+            NSString *msgText = @"";
+            NSInteger i = 0;
+            if (results.count > 0){
+                for (i = 0; i<[results count]; i++) {
+                    msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, [self getBarcodeFormatString:results[i].barcodeFormat]]];
+                }
+                [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
         }
         @catch(NSException *e){

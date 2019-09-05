@@ -71,9 +71,9 @@ If your cordova-android version >6.3.0, please change  repositories flatDir ``` 
         document.getElementById("scan").onclick = function() {
                         cordova.plugins.barcodeScanner.scan(
                                                             function (result) {
-                                                            alert("We got a barcode\n" +
-                                                                  "Result: " + result.text + "\n" +
-                                                                  "Format: " + result.format + "\n" +
+                                                            alert("Results: \n" +
+                                                                   result.text + "\n" +
+                                                                   result.format + "\n" +
                                                                   "Cancelled: " + result.cancelled);
                                                             },
                                                             function (error) {
