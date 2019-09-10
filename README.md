@@ -10,7 +10,7 @@ You can request for a free trial license online. [Get a trial license >](https:/
 
 ## Installation
 
-1. Install **Cordova** vi **npm**.
+1. Install **Cordova** via **npm**.
 
     ```  
         npm install -g cordova
