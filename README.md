@@ -44,6 +44,13 @@ The following barcode types are currently supported:
 * QRCode
 * DataMatrix
 * PDF417
+* GS1 DataBar
+* Maxicode
+* Micro PDF417
+* Micro QR
+* PatchCode
+* GS1 Composite
+
 ## Others ##
 If your cordova-android version >6.3.0, please change  repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in flie [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle) 
 
