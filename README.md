@@ -50,12 +50,15 @@ The following barcode types are currently supported:
 * QRCode
 * DataMatrix
 * PDF417
+* GS1 DataBar
+* Maxicode
+* Micro PDF417
+* Micro QR
+* PatchCode
+* GS1 Composite
 
-## Notes
-
-If your cordova-android version is greater than 6.3.0, please 
-- change repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` 
-- change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in file [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle)
+## Others ##
+If your cordova-android version >6.3.0, please change  repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in flie [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle) 
 
 
 ## Example
@@ -79,24 +82,24 @@ If your cordova-android version is greater than 6.3.0, please
 ```js
 onDeviceReady: function() {
         document.getElementById("scan").onclick = function() {
-            cordova.plugins.barcodeScanner.scan(
-                function (result) {
-                alert("We got a barcode\n" +
-                        "Result: " + result.text + "\n" +
-                        "Format: " + result.format + "\n" +
-                        "Cancelled: " + result.cancelled);
-                },
-                function (error) {
-                alert("Scanning failed: " + error);
-                },
-                {
-                "preferFrontCamera" : false, // iOS and Android
-                "showFlipCameraButton" : true, // iOS and Android
-                "dynamsoftlicense": "your license ",//set the Dynamsoft Barcode Reader license
-                //"dynamsoftlicenseKey": "", //set the server license key
-                }
-            );
-    }
+                        cordova.plugins.barcodeScanner.scan(
+                                                            function (result) {
+                                                            alert("Results: \n" +
+                                                                   result.text + "\n" +
+                                                                   result.format + "\n" +
+                                                                  "Cancelled: " + result.cancelled);
+                                                            },
+                                                            function (error) {
+                                                            alert("Scanning failed: " + error);
+                                                            },
+                                                            {
+                                                            "preferFrontCamera" : false, // iOS and Android
+                                                            "showFlipCameraButton" : true, // iOS and Android
+                                                            "dynamsoftlicense": "your license ",//set the dynamsoftbarcodereader license
+                                                            //"dynamsoftlicenseKey": "", //set the server license key
+                                                            }
+                                                            );
+                    }
         this.receivedEvent('deviceready');
 },
 ```

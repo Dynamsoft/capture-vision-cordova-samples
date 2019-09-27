@@ -515,63 +515,6 @@ parentViewController:(UIViewController*)parentViewController
     return nil;
 }
 
-
-- (NSString*)getBarcodeFormatString:(EnumBarcodeFormat)barcodeType{
-    NSString* format = @"";
-    switch(barcodeType)
-    {
-        case EnumBarcodeFormatITF:
-            format = @"ITF";
-            break;
-        case EnumBarcodeFormatEAN8:
-            format = @"EAN8";
-            break;
-        case EnumBarcodeFormatONED:
-            format = @"ONED";
-            break;
-        case EnumBarcodeFormatUPCA:
-            format = @"UPCA";
-            break;
-        case EnumBarcodeFormatUPCE:
-            format = @"UPCE";
-            break;
-        case EnumBarcodeFormatAZTEC:
-            format = @"AZTEC";
-            break;
-        case EnumBarcodeFormatEAN13:
-            format = @"EAN13";
-            break;
-        case EnumBarcodeFormatCODE39:
-            format = @"CODE39";
-            break;
-        case EnumBarcodeFormatCODE93:
-            format = @"CODE93";
-            break;
-        case EnumBarcodeFormatPDF417:
-            format = @"PDF417";
-            break;
-        case EnumBarcodeFormatQRCODE:
-            format = @"QRCODE";
-            break;
-        case EnumBarcodeFormatCODABAR:
-            format = @"CODABAR";
-            break;
-        case EnumBarcodeFormatCODE128:
-            format = @"CODE128";
-            break;
-        case EnumBarcodeFormatDATAMATRIX:
-            format = @"DATAMATRIX";
-            break;
-        case EnumBarcodeFormatINDUSTRIAL:
-            format = @"INDUSTRIAL";
-            break;
-        case EnumBarcodeFormatCODE39EXTENDED:
-            format = @"CODE39EXTENDED";
-            break;
-    }
-    return format;
-}
-
 //--------------------------------------------------------------------------
 // this method gets sent the captured frames
 //--------------------------------------------------------------------------
@@ -627,10 +570,13 @@ parentViewController:(UIViewController*)parentViewController
         NSLog(@"get a frame");
         @try{
             NSArray<iTextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:EnumImagePixelFormatARGB_8888 templateName:@"" error:nil];
-            if (results!=nil){
-                NSString* barcodeFormat = [self getBarcodeFormatString:results[0].barcodeFormat];
-                [self barcodeScanSucceeded:results[0].barcodeText   barcodeFormat:barcodeFormat];
-                NSLog(@"%@",results[0].barcodeText);
+            NSString *msgText = @"";
+            NSInteger i = 0;
+            if (results.count > 0){
+                for (i = 0; i<[results count]; i++) {
+                    msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
+                }
+                [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
         }
         @catch(NSException *e){
