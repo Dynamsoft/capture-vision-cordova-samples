@@ -1,23 +1,28 @@
-# Cordova Plugin with Dynamsoft Barcode Reader for iOS and Android
-Use the Cordova plugin to quickly develop mobile barcode reader apps for iOS and Android. For more information, please visit http://www.dynamsoft.com/Products/Dynamic-Barcode-Reader.aspx.
+# Dynamsoft Barcode Reader Cordova Plugin for iOS and Android
+
+Use the Dynamsoft Barcode Reader Cordova Plugin to quickly develop mobile apps for barcode reading (iOS and Android). 
+
+To learn more about Dynamsoft Barcode Reader, please visit http://www.dynamsoft.com/Products/Dynamic-Barcode-Reader.aspx.
 
 ## License
-Get the [trial license](https://www.dynamsoft.com/CustomerPortal/Portal/Triallicense.aspx).
+
+You can request for a free trial license online. [Get a trial license >](https://www.dynamsoft.com/CustomerPortal/Portal/Triallicense.aspx)
 
 ## Installation
-1. Install **Cordova** vi **npm**:
+
+1. Install **Cordova** via **npm**.
 
     ```  
         npm install -g cordova
     ```
 
-2. Download the source code and add the plugin via local path:
+2. Download the source code and add the plugin via local path.
 
     ```
         cordova plugin add <local-path>/cordova-plugin-dbr
     ```
 
-   Or, install the plugin via repo url directly:
+   Or you can install the plugin via repo URL directly.
     ```
         cordova plugin add https://github.com/dynamsoft-dbr/cordova-plugin-dbr.git
     ```
@@ -27,7 +32,8 @@ Get the [trial license](https://www.dynamsoft.com/CustomerPortal/Portal/Triallic
 - iOS
 - Android
 
-## Supported Barcode Types ##
+## Supported Barcode Types
+
 The following barcode types are currently supported:
 
 * Code 39
@@ -61,20 +67,20 @@ If your cordova-android version >6.3.0, please change  repositories flatDir ``` 
 
 ```html
 <body>
-        <div class="app">
-            <div id="deviceready">
-                <button id="scan">scan barcode</button>
-            </div>
+    <div class="app">
+        <div id="deviceready">
+            <button id="scan">scan barcode</button>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
+    </div>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
 ```
 
 **index.js**
 
 ```js
-   onDeviceReady: function() {
+onDeviceReady: function() {
         document.getElementById("scan").onclick = function() {
                         cordova.plugins.barcodeScanner.scan(
                                                             function (result) {
@@ -95,13 +101,15 @@ If your cordova-android version >6.3.0, please change  repositories flatDir ``` 
                                                             );
                     }
         this.receivedEvent('deviceready');
-    },
+},
 ```
 
 ## Technical Support
-support@dynamsoft.com
+
+[Contact Dynamsoft](https://www.dynamsoft.com/Company/Contact.aspx)
 
 ## Screenshots
-![Cordova barcode plugin](http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2911.PNG)
 
-![Cordova barcode plugin for PDF417](http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2913.PNG)
+<kbd><img src="http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2911.PNG" width="50%">
+
+<kbd><img src="http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2913.PNG" width="50%">
