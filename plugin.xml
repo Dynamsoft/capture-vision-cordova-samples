@@ -37,7 +37,7 @@
         <framework src="CoreGraphics.framework" />
         <framework src="CoreImage.framework" />
         <framework src="AudioToolbox.framework" />
-<!--        <framework src="src/ios/DynamsoftBarcodeReader.framework" custom="true"/>-->
+        <framework src="src/ios/DynamsoftBarcodeReader.framework" custom="true"/>
     </platform>
 
   <platform name="android">
