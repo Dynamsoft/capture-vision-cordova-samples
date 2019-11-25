@@ -26,11 +26,6 @@ You can request for a free trial license online. [Get a trial license >](https:/
     ```
         cordova plugin add https://github.com/dynamsoft-dbr/cordova-plugin-dbr.git
     ```
-3. DynamsoftBarcodeReader SDK is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your project Podfile:
-
-    ```
-    pod 'DynamsoftBarcodeReaderFramework'
-    ```
     
 ## Supported Platforms
 
