@@ -21,11 +21,6 @@ You can request for a free trial license online. [Get a trial license >](https:/
     ```
         cordova plugin add <local-path>/cordova-plugin-dbr
     ```
-
-   Or you can install the plugin via repo URL directly.
-    ```
-        cordova plugin add https://github.com/dynamsoft-dbr/cordova-plugin-dbr.git
-    ```
     
 ## Supported Platforms
 
