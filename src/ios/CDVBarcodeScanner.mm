@@ -108,10 +108,12 @@
 // view controller for the ui
 //------------------------------------------------------------------------------
 @interface CDVbcsViewController : UIViewController <CDVBarcodeScannerOrientationDelegate> {}
-@property (nonatomic, retain) CDVbcsProcessor*  processor;
-@property (nonatomic, retain) NSString*        alternateXib;
+@property (nonatomic, retain) CDVbcsProcessor*      processor;
+@property (nonatomic, retain) NSString*          alternateXib;
 @property (nonatomic)         BOOL             shutterPressed;
-@property (nonatomic, retain) IBOutlet UIView* overlayView;
+@property (nonatomic, retain) IBOutlet UIView*    overlayView;
+@property (nonatomic)         BOOL                  isFlashOn;
+@property (nonatomic, retain) UIButton*           flashButton;
 // unsafe_unretained is equivalent to assign - used to prevent retain cycles in the property below
 @property (nonatomic, unsafe_unretained) id orientationDelegate;
 
@@ -120,6 +122,7 @@
 - (UIView*)buildOverlayView;
 - (UIImage*)buildReticleImage;
 - (void)shutterButtonPressed;
+- (void)onFlashButtonClick;
 - (IBAction)cancelButtonPressed:(id)sender;
 
 @end
@@ -730,7 +733,8 @@ parentViewController:(UIViewController*)parentViewController
 @synthesize shutterPressed = _shutterPressed;
 @synthesize alternateXib   = _alternateXib;
 @synthesize overlayView    = _overlayView;
-
+@synthesize isFlashOn      = _isFlashOn;
+@synthesize flashButton    = _flashButton;
 //--------------------------------------------------------------------------
 - (id)initWithProcessor:(CDVbcsProcessor*)processor alternateOverlay:(NSString *)alternateXib {
     self = [super init];
@@ -740,6 +744,8 @@ parentViewController:(UIViewController*)parentViewController
     self.shutterPressed = NO;
     self.alternateXib = alternateXib;
     self.overlayView = nil;
+    self.isFlashOn = NO;
+    self.flashButton = nil;
     return self;
 }
 
@@ -750,7 +756,8 @@ parentViewController:(UIViewController*)parentViewController
     self.shutterPressed = NO;
     self.alternateXib = nil;
     self.overlayView = nil;
-    //    [super dealloc];
+    self.isFlashOn = NO;
+    self.flashButton = nil;
 }
 
 //--------------------------------------------------------------------------
@@ -780,6 +787,8 @@ parentViewController:(UIViewController*)parentViewController
     // this fixes the bug when the statusbar is landscape, and the preview layer
     // starts up in portrait (not filling the whole view)
     self.processor.previewLayer.frame = self.view.bounds;
+    
+    [self turnFlashOn: _isFlashOn];
 }
 
 //--------------------------------------------------------------------------
@@ -890,6 +899,11 @@ parentViewController:(UIViewController*)parentViewController
     
     [overlayView addSubview: toolbar];
     
+    _flashButton = [[UIButton alloc] initWithFrame:CGRectMake(overlayView.bounds.size.width / 2 - 75, overlayView.bounds.size.height * 0.75, 150, 80)];
+    [_flashButton setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
+    [_flashButton addTarget:self action:@selector(onFlashButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [overlayView addSubview:_flashButton];
+    
     UIImage* reticleImage = [self buildReticleImage];
     UIView* reticleView = [[UIImageView alloc] initWithImage: reticleImage];
     CGFloat minAxis = MIN(rootViewHeight, rootViewWidth);
@@ -918,7 +932,37 @@ parentViewController:(UIViewController*)parentViewController
 }
 
 //--------------------------------------------------------------------------
+- (void)onFlashButtonClick {
+    _isFlashOn = _isFlashOn == YES ? NO : YES;
+    [self turnFlashOn: _isFlashOn];
+}
 
+- (void)turnFlashOn: (BOOL) on {
+    // validate whether flashlight is available
+    Class captureDeviceClass = NSClassFromString(@"AVCaptureDevice");
+    if (captureDeviceClass != nil) {
+        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        if (device != nil && [device hasTorch] && [device hasFlash]){
+            [device lockForConfiguration:nil];
+            
+            if (on == YES) {
+                [device setTorchMode:AVCaptureTorchModeOn];
+                [device setFlashMode:AVCaptureFlashModeOn];
+                [_flashButton setImage:[UIImage imageNamed:@"flash_on"] forState:UIControlStateNormal];
+                [_flashButton setTitle:@" Flash on" forState:UIControlStateNormal];
+            } else {
+                [device setTorchMode:AVCaptureTorchModeOff];
+                [device setFlashMode:AVCaptureFlashModeOff];
+                [_flashButton setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
+                [_flashButton setTitle:@" Flash off" forState:UIControlStateNormal];
+            }
+            
+            [device unlockForConfiguration];
+        }
+    }
+}
+
+//--------------------------------------------------------------------------
 #define RETICLE_SIZE    500.0f
 #define RETICLE_WIDTH    10.0f
 #define RETICLE_OFFSET   60.0f
