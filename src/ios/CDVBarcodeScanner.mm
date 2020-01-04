@@ -570,6 +570,9 @@ parentViewController:(UIViewController*)parentViewController
         CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
         
         NSData *buffer = [NSData dataWithBytes:baseAddress length:bufferSize];
+        iPublicRuntimeSettings* settings = [self.barcodeReader getRuntimeSettings:nil];
+        settings.barcodeFormatIds_2 = EnumBarcodeFormat2POSTALCODE | EnumBarcodeFormat2NONSTANDARDBARCODE;
+        [self.barcodeReader updateRuntimeSettings:settings error:nil];
         NSLog(@"get a frame");
         @try{
             NSArray<iTextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:EnumImagePixelFormatARGB_8888 templateName:@"" error:nil];
@@ -577,7 +580,11 @@ parentViewController:(UIViewController*)parentViewController
             NSInteger i = 0;
             if (results.count > 0){
                 for (i = 0; i<[results count]; i++) {
-                    msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
+                    if (results[i].barcodeFormat_2 != 0) {
+                        msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString_2]];
+                    }else{
+                        msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
+                    }
                 }
                 [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
