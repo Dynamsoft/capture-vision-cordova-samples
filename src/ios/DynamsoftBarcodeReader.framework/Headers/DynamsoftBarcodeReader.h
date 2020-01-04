@@ -211,7 +211,25 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat2)
     EnumBarcodeFormat2NULL                   = 0x00,
     
     /** Nonstandard barcode */
-    EnumBarcodeFormat2NONSTANDARDBARCODE     = 0x01
+    EnumBarcodeFormat2NONSTANDARDBARCODE     = 0x01,
+    
+    /** Combined value of EnumBarcodeFormat2USPSINTELLIGENTMAIL, EnumBarcodeFormat2POSTNET, EnumBarcodeFormat2PLANET, EnumBarcodeFormat2AUSTRALIANPOST, EnumBarcodeFormat2RM4SCC. */
+    EnumBarcodeFormat2POSTALCODE             = 0x01F00000,
+    
+    /** USPS Intelligent Mail. */
+    EnumBarcodeFormat2USPSINTELLIGENTMAIL    = 0x00100000,
+    
+    /** Postnet. */
+    EnumBarcodeFormat2POSTNET                = 0x00200000,
+    
+    /** Planet. */
+    EnumBarcodeFormat2PLANET                 = 0x00400000,
+    
+    /** Australian Post. */
+    EnumBarcodeFormat2AUSTRALIANPOST         = 0x00800000,
+    
+    /** Royal Mail 4-State Customer Barcode. */
+    EnumBarcodeFormat2RM4SCC                 = 0x01000000
 };
 
 /**
@@ -282,21 +300,6 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     /** Patch code. */
     EnumBarcodeFormatPATCHCODE           = 0x00040000,
     
-    /**USPS Intelligent Mail. Not supported yet. */
-    EnumBarcodeFormatUSPSINTELLIGENTMAIL = 0x00100000,
-    
-    /**Postnet. Not supported yet. */
-    EnumBarcodeFormatPOSTNET             = 0x00200000,
-    
-    /**Planet. Not supported yet. */
-    EnumBarcodeFormatPLANET              = 0x00400000,
-    
-    /**Australian Post. Not supported yet. */
-    EnumBarcodeFormatAUSTRALIANPOST      = 0x00800000,
-    
-    /**UK Royal Mail. Not supported yet. */
-    EnumBarcodeFormatUKROYALMAIL         = 0x01000000,
-    
 	/** PDF417 */
     EnumBarcodeFormatPDF417     		 = 0x02000000,
 
@@ -320,9 +323,6 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     
     /**GS1 Composite Code*/
     EnumBarcodeFormatGS1COMPOSITE        = -2147483648,
-    
-    /** Combined value of BF_USPSINTELLIGENTMAIL, BF_POSTNET, BF_PLANET, BF_AUSTRALIANPOST, BF_UKROYALMAIL. Not supported yet. */
-    EnumBarcodeFormatPOSTALCODE          = 0x01F00000,
 
     /** Combined value of BF_CODABAR, BF_CODE_128, BF_CODE_39, BF_CODE_39_Extended, BF_CODE_93, BF_EAN_13, BF_EAN_8, INDUSTRIAL_25, BF_ITF, BF_UPC_A, BF_UPC_E */
     EnumBarcodeFormatONED                = 0x000007FF,
@@ -330,7 +330,7 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     /** Combined value of BF_GS1_DATABAR_OMNIDIRECTIONAL, BF_GS1_DATABAR_TRUNCATED, BF_GS1_DATABAR_STACKED, BF_GS1_DATABAR_STACKED_OMNIDIRECTIONAL, BF_GS1_DATABAR_EXPANDED, BF_GS1_DATABAR_EXPANDED_STACKED, BF_GS1_DATABAR_LIMITED */
     EnumBarcodeFormatGS1DATABAR          = 0x0003F800,
     
-	/** All supported formats */
+	/** All supported formats in BarcodeFormat group 1. */
     EnumBarcodeFormatALL                 = -32505857
 
 };
@@ -590,6 +590,9 @@ typedef NS_ENUM(NSInteger, EnumLocalizationMode)
     /** Localizes barcodes by groups of marks.This is optimized for DPM codes. */
     EnumLocalizationModeStatisticsMarks = 0x20,
     
+    /** Localizes barcodes by groups of connected blocks and lines. This is optimized for postal codes.*/
+    EnumLocalizationModeStatisticsPostalCode = 0x40,
+    
 	/** Skips the localization. */
 	EnumLocalizationModeSkip = 0x00
 };
@@ -837,6 +840,41 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
 };
 
 /**
+ *Describes the accompanying text recognition mode.
+ *@enum EnumAccompanyingTextRecognitionMode
+ */
+typedef NS_ENUM(NSInteger,EnumAccompanyingTextRecognitionMode)
+{
+    /** Skips the accompanying text recognition. Check @ref ATRM for available argument settings.*/
+    EnumAccompanyingTextRecognitionModeGeneral      = 0x01,
+    
+    /** Recognizes accompanying texts using the general algorithm.*/
+    EnumAccompanyingTextRecognitionModeSkip         = 0x00
+    
+};
+
+/**
+ *Describes the scale up mode.
+ *@enum EnumScaleUpMode
+ */
+typedef NS_ENUM(NSInteger,EnumScaleUpMode)
+{
+    /** The library choose an interpolation method automatically to scale up. */
+    EnumScaleUpModeAuto                             = 0x01,
+    
+    /** Scales up using the linear interpolation method. Check @ref SUM for available argument settings. */
+    EnumScaleUpModeLinearInterpolation              = 0x02,
+    
+    /** Scales up the barcode using the nearest-neighbour interpolation method. Check @ref SUM for available argument settings. */
+    EnumScaleUpModeNearestNeighbourInterpolation    = 0x04,
+    
+    /** Skip the scale-up process.*/
+    EnumScaleUpModeSkip                             = 0x00
+    
+};
+
+
+/**
  * @} defgroup Enum Enumerations
  */
 
@@ -961,7 +999,7 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
 */
 @property (nonatomic, readwrite, nullable) NSArray* dpmCodeReadingModes;
 
-/** Sets the mode and priority for deformation resisting. Not supported yet.
+/** Sets the mode and priority for deformation resisting.
 *
 * @par Value range:
 * 	    Each array item can be anyone of the DeformationResistingMode Enumeration items
@@ -973,7 +1011,7 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
 */
 @property (nonatomic, readwrite, nullable) NSArray* deformationResistingModes;
 
-/** Sets the mode and priority to complement the missing parts in the barcode. Not supported yet.
+/** Sets the mode and priority to complement the missing parts in the barcode.
 *
 * @par Value range:
 * 	    Each array item can be anyone of the BarcodeComplementMode Enumeration items
@@ -996,6 +1034,18 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
 * @sa EnumBarcodeColourMode
 */
 @property (nonatomic, readwrite, nullable) NSArray* barcodeColourModes;
+
+/** Sets the mode and priority to recognize accompanying text. Not supported yet.
+*
+* @par Value range:
+*         Each array item can be any one of the AccompanyingTextRecognitionMode Enumeration items
+* @par Default value:
+*            [EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip,  EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip, EnumAccompanyingTextRecognitionModeSkip]
+* @par Remarks:
+*     The array index represents the priority of the item. The smaller index is, the higher priority is.
+* @sa EnumAccompanyingTextRecognitionMode
+*/
+@property (nonatomic, readwrite, nullable) NSArray* accompanyingTextRecognitionModes;
 
 @end
 
@@ -1284,6 +1334,18 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
  */
 @property (nonatomic, assign) NSInteger returnBarcodeZoneClarity;
 
+/** Sets the mode and priority to control the sampling methods of scale-up for linear barcodes with small module sizes.
+*
+* @par Value range:
+*         Each array item can be any one of the ScaleUpMode Enumeration items.
+* @par Default value:
+*         [EnumScaleUpModeAuto, EnumScaleUpModeSkip, EnumScaleUpModeSkip, EnumScaleUpModeSkip, EnumScaleUpModeSkip, EnumScaleUpModeSkip, EnumScaleUpModeSkip, EnumScaleUpModeSkip]
+* @par Remarks:
+*        The array index represents the priority of the item. The smaller the index, the higher the priority.
+* @sa EnumScaleUpMode
+*/
+@property (nonatomic, readwrite, nullable) NSArray* scaleUpModes;
+
 @end
 
 
@@ -1376,6 +1438,17 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
  *          0 means the frequency will be calculated automatically by the library.
  */
 @property (nonatomic, assign) NSInteger fps;
+
+/** Sets whether to filter frames automatically.
+*
+* @par Value range:
+*         [0, 1]
+* @par Default value:
+*         1
+* @par Remarks:
+*          0:Disable filtering frames automatically. 1:Enable filtering frames automatically.
+*/
+@property (nonatomic, assign) NSInteger autoFilter;
 
 @end
 
@@ -2039,17 +2112,17 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
  *
  * @par Code Snippet:
  * @code
-      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicenseFromServer:@"" licenseKey:@"C087****" verificationDelegate:self];
-	 NSError __autoreleasing * _Nullable error;
-     NSString* licenseContent = [barcodeReader outputLicenseToString:&error];
-	 
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     NSError __autoreleasing * _Nullable error;
+     [barcodeReader outputLicenseToString:&error];
      - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
      {
          if (!isSuccess) {
-			NSLog(@"Init failed");
-		 }
+             NSLog(@"Init failed");
+         }
      }
+ *
  * @endcode
  */	
 - (NSString *_Nullable)outputLicenseToString:(NSError* _Nullable * _Nullable)error;
@@ -2331,7 +2404,7 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
      parameters.height = 720;
      parameters.stride = 720;
      parameters.imagePixelFormat = EnumImagePixelFormatBinary;
-     [barcodeReader StartFrameDecodingEx:parameters templateName:@"" error:&error];
+     [barcodeReader startFrameDecodingEx:parameters templateName:@"" error:&error];
  * @endcode
  */
 -(void)startFrameDecodingEx:(iFrameDecodingParameters* _Nullable) parameters
