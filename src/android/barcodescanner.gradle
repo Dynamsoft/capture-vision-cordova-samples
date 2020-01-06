@@ -23,7 +23,7 @@ dependencies {
     compile 'com.android.support:support-v4:+'
     compile(name:'dbr', ext:'aar')
 	
-	compile 'com.dynamsoft:dynamsoftbarcodereader:7.1.0@aar'
+	compile 'com.dynamsoft:dynamsoftbarcodereader:7.3.0@aar'
 }
 android {
     packagingOptions {
