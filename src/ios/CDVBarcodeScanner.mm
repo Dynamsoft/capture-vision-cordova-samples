@@ -571,7 +571,7 @@ parentViewController:(UIViewController*)parentViewController
         
         NSData *buffer = [NSData dataWithBytes:baseAddress length:bufferSize];
         iPublicRuntimeSettings* settings = [self.barcodeReader getRuntimeSettings:nil];
-        settings.barcodeFormatIds_2 = EnumBarcodeFormat2POSTALCODE | EnumBarcodeFormat2NONSTANDARDBARCODE;
+        settings.barcodeFormatIds_2 = EnumBarcodeFormat2POSTALCODE | EnumBarcodeFormat2NONSTANDARDBARCODE | EnumBarcodeFormat2DOTCODE;
         [self.barcodeReader updateRuntimeSettings:settings error:nil];
         NSLog(@"get a frame");
         @try{

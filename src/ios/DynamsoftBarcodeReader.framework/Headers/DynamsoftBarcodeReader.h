@@ -185,7 +185,13 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
     EnumErrorCode_GS1_DATABAR_LICENSE_INVALID    = -10058,
     
     /**The GS1 Composite code license is invalid. */
-    EnumErrorCode_GS1_COMPOSITE_LICENSE_INVALID  = -10059
+    EnumErrorCode_GS1_COMPOSITE_LICENSE_INVALID  = -10059,
+    
+    /**The panorama license is invalid*/
+    EnumErrorCode_PANORAMA_LICENSE_INVALID = -10060,
+    
+    /**The DotCode license is invalid*/
+    EnumErrorCode_DOTCODE_LICENSE_INVALID = -10061
 };
 
 /**
@@ -212,6 +218,9 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat2)
     
     /** Nonstandard barcode */
     EnumBarcodeFormat2NONSTANDARDBARCODE     = 0x01,
+    
+    /** DotCode Barcode. */
+    EnumBarcodeFormat2DOTCODE                = 0x00000002,
     
     /** Combined value of EnumBarcodeFormat2USPSINTELLIGENTMAIL, EnumBarcodeFormat2POSTNET, EnumBarcodeFormat2PLANET, EnumBarcodeFormat2AUSTRALIANPOST, EnumBarcodeFormat2RM4SCC. */
     EnumBarcodeFormat2POSTALCODE             = 0x01F00000,
@@ -255,7 +264,7 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
 	/** Codabar */
     EnumBarcodeFormatCODABAR    		 = 0x8,
 
-	/** ITF */
+	/** Interleaved 2 of 5 */
     EnumBarcodeFormatITF        		 = 0x10,
 
 	/** EAN-13 */
@@ -342,36 +351,44 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
 typedef NS_ENUM(NSInteger, EnumImagePixelFormat) 
 {
 
-	/** 0:black, 1:white */
+    /** 0:black, 1:white */
     EnumImagePixelFormatBinary         = 0,
 
-	/** 0:white, 1:black */
+    /** 0:white, 1:black */
     EnumImagePixelFormatBinaryInverted = 1,
 
-	/** 8-bit gray */
+    /** 8-bit gray */
     EnumImagePixelFormatGrayScaled     = 2,
 
-	/** NV21 */
+    /** NV21 */
     EnumImagePixelFormatNV21 		   = 3,
 
-	/** 16bit */
+    /** 16bit with RGB channel order stored in memory from high to low address*/
     EnumImagePixelFormatRGB_565 	   = 4,
 
-	/** 16bit */
+    /** 16bit with RGB channel order stored in memory from high to low address*/
     EnumImagePixelFormatRGB_555 	   = 5,
 
-	/** 24bit */
+    /** 24bit with RGB channel order stored in memory from high to low address*/
     EnumImagePixelFormatRGB_888 	   = 6,
 
-	/** 32bit */
+    /** 32bit with ARGB channel order stored in memory from high to low address*/
     EnumImagePixelFormatARGB_8888      = 7,
 
-    /** 48bit */
+    /** 48bit with RGB channel order stored in memory from high to low address*/
     EnumImagePixelFormatRGB_161616     = 8,
 
-    /** 64bit */
-    EnumImagePixelFormatARGB_16161616  = 9
+    /** 64bit with ARGB channel order stored in memory from high to low address*/
+    EnumImagePixelFormatARGB_16161616  = 9,
 
+    /** 32bit with ABGR channel order stored in memory from high to low address*/
+    EnumImagePixelFormatABGR_8888       = 10,
+    
+    /** 64bit with ABGR channel order stored in memory from high to low address*/
+    EnumImagePixelFormatABGR_16161616   = 11,
+    
+    /** 24bit with BGR channel order stored in memory from high to low address*/
+    EnumImagePixelFormatBGR_888         = 12
 };
 
 /**
@@ -513,8 +530,11 @@ typedef NS_ENUM(NSInteger, EnumImagePreprocessingMode)
 	/** Preprocesses the image using the sharpening and smoothing algorithm. Check @ref IPM for available argument settings.*/
 	EnumImagePreprocessingModeSharpenSmooth = 0x10,
 
+	/** Preprocesses the image using the morphology algorithm. Check @ref IPM for available argument settings.*/
+    	EnumImagePreprocessingModeMorphology    = 0x20,
+
 	/** Skips image preprocessing */
-	EnumImagePreprocessingModeSkip 			= 0x00
+	EnumImagePreprocessingModeSkip 		= 0x00
 };
 
 /**
@@ -563,7 +583,10 @@ typedef NS_ENUM(NSInteger, EnumIntermediateResultType)
 	EnumIntermediateResultTypeSegmentationBlock 			= 0x800,
 
 	/** Typed barcode zone */
-	EnumIntermediateResultTypeTypedBarcodeZone 				= 0x1000
+	EnumIntermediateResultTypeTypedBarcodeZone 				= 0x1000,
+    
+    /** Predetected quadrilateral  */
+    EnumIntermediateResultTypePredetectedQuadrilateral      = 0x2000
 };
 
 /**
@@ -819,7 +842,10 @@ typedef NS_ENUM(NSInteger,EnumIMResultDataType)
     EnumIMResultDataTypeLocalizationResult 	= 0x08,
 	
 	/**Specifies the RegionOfInterest */
-	EnumIMResultDataTypeRegionOfInterest 	= 0x10
+	EnumIMResultDataTypeRegionOfInterest 	= 0x10,
+    
+    /**Specifies the Quadrilateral*/
+    EnumIMResultDataTypeQuadrilateral       = 0x20
 };
 
 /**
@@ -845,10 +871,10 @@ typedef NS_ENUM(NSInteger,EnumIntermediateResultSavingMode)
  */
 typedef NS_ENUM(NSInteger,EnumAccompanyingTextRecognitionMode)
 {
-    /** Skips the accompanying text recognition. Check @ref ATRM for available argument settings.*/
+    /** Recognizes accompanying texts using the general algorithm. Check @ref ATRM for available argument settings.*/
     EnumAccompanyingTextRecognitionModeGeneral      = 0x01,
     
-    /** Recognizes accompanying texts using the general algorithm.*/
+    /** Skips the accompanying text recognition.*/
     EnumAccompanyingTextRecognitionModeSkip         = 0x00
     
 };
@@ -873,7 +899,41 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
     
 };
 
+/**
+* Describes the clarity calculation method.
+* @enum ClarityCalculationMethod
+*/
+typedef NS_ENUM(NSInteger,EnumClarityCalculationMethod)
+{
+    /** Calculates clarity using the contrast method.*/
+    EnumClarityCalculationMethodContrast = 0x01
+};
 
+/**
+*Describes the clarity filter mode.
+*@enum ClarityFilterMode
+*/
+typedef NS_ENUM(NSInteger,EnumClarityFilterMode)
+{
+    /** Filters the frames using the general algorithm based on calculated clarity.*/
+    EnumClarityFilterModeGeneral = 0x01
+};
+
+/**
+*Describes the  PDF reading mode.
+*@enum PDFReadingMode
+*/
+typedef NS_ENUM(NSInteger,EnumPDFReadingMode)
+{
+    /** Lets the library choose the reading mode automatically.*/
+    EnumPDFReadingModeAuto =    0x01,
+    
+    /** Detects barcode from vector data in PDF file.*/
+    EnumPDFReadingModeVector =  0x02,
+    
+    /** Converts the PDF file to image(s) first, then perform barcode recognition.*/
+    EnumPDFReadingModeRaster =  0x04
+};
 /**
  * @} defgroup Enum Enumerations
  */
@@ -1035,7 +1095,7 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
 */
 @property (nonatomic, readwrite, nullable) NSArray* barcodeColourModes;
 
-/** Sets the mode and priority to recognize accompanying text. Not supported yet.
+/** Sets the mode and priority to recognize accompanying text.Not supported yet.
 *
 * @par Value range:
 *         Each array item can be any one of the AccompanyingTextRecognitionMode Enumeration items
@@ -1346,6 +1406,18 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
 */
 @property (nonatomic, readwrite, nullable) NSArray* scaleUpModes;
 
+/** Sets the way to detect barcodes from a PDF file when using the DecodeFile method. Not supported yet.
+*
+* @par Value range:
+*          Any one of the PDFReadingMode Enumeration items.
+* @par Default value:
+*           EnumPDFReadingModeAuto
+* @par Remarks:
+*
+* @sa EnumPDFReadingMode
+*/
+@property (nonatomic, assign) EnumPDFReadingMode pdfReadingMode;
+
 @end
 
 
@@ -1440,15 +1512,35 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
 @property (nonatomic, assign) NSInteger fps;
 
 /** Sets whether to filter frames automatically.
-*
-* @par Value range:
-*         [0, 1]
-* @par Default value:
-*         1
-* @par Remarks:
-*          0:Disable filtering frames automatically. 1:Enable filtering frames automatically.
+ *
+ * @par Value range:
+ *         [0, 1]
+ * @par Default value:
+ *         1
+ * @par Remarks:
+ *          0:Disable filtering frames automatically. 1:Enable filtering frames automatically.
 */
 @property (nonatomic, assign) NSInteger autoFilter;
+
+/** Sets the method used for calculating the clarity of the frames.
+ *
+ * @par Value range:
+ *         Any one of the ClarityCalculationMethod Enumeration items.
+ * @par Default value:
+ *         ECCM_CONTRAST
+ * @sa EnumClarityCalculationMethod
+*/
+@property (nonatomic, assign) EnumClarityCalculationMethod clarityCalculationMethod;
+
+/** Sets the mode used for filtering frames by calculated clarity.
+ *
+ * @par Value range:
+ *         Any one of the ClarityFilterMode Enumeration items.
+ * @par Default value:
+ *         CFM_GENERAL
+ * @sa EnumClarityFilterMode
+*/
+@property (nonatomic, assign) EnumClarityFilterMode clarityFilterMode;
 
 @end
 
@@ -1816,6 +1908,16 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
 
 @end
 
+/**
+* Stores the quadrilateral
+*
+*/
+@interface iQuadrilateral : NSObject
+
+/**Four vertexes in a clockwise direction of a quadrilateral. Index 0 represents the left-most vertex. */
+@property (nonatomic, nonnull) NSArray* points;
+
+@end
 
 /**
 * Stores the contour
