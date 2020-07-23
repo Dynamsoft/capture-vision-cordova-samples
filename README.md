@@ -21,16 +21,6 @@ You can request for a free trial license online. [Get a trial license >](https:/
     ```
         cordova plugin add <local-path>/cordova-plugin-dbr
     ```
-
-   Or you can install the plugin via repo URL directly.
-    ```
-        cordova plugin add https://github.com/dynamsoft-dbr/cordova-plugin-dbr.git
-    ```
-3. DynamsoftBarcodeReader SDK is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your project Podfile:
-
-    ```
-    pod 'DynamsoftBarcodeReaderFramework'
-    ```
     
 ## Supported Platforms
 
@@ -62,9 +52,10 @@ The following barcode types are currently supported:
 * PatchCode
 * GS1 Composite
 * Postal Code
+* Dot Code
 
 ## Others ##
-If your cordova-android version >6.3.0, please change  repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in flie [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle) 
+If your cordova-android version > 6.3.0, please change repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in the file [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle) 
 
 
 ## Example
