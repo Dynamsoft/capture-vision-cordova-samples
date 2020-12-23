@@ -9,7 +9,7 @@ if(cdvMinSdkVersion == null) {
 repositories{
     jcenter()
     flatDir{
-        dirs 'libs'
+        dirs 'src/main/libs'
     }
 }
 
@@ -20,9 +20,10 @@ repositories {
     }
 
 dependencies {
-    implementation 'com.android.support:support-v4:+'
+    //implementation 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:27.1.0'
     implementation(name:'dbr', ext:'aar')
-    implementation 'com.dynamsoft:dynamsoftbarcodereader:7.5.0@aar'
+    implementation 'com.dynamsoft:dynamsoftbarcodereader:latest.release@aar'
 }
 android {
     packagingOptions {

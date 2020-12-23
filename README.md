@@ -78,26 +78,38 @@ If your cordova-android version >6.3.0, please change  repositories flatDir ``` 
 
 ```js
 onDeviceReady: function() {
-        document.getElementById("scan").onclick = function() {
-                        cordova.plugins.barcodeScanner.scan(
-                                                            function (result) {
-                                                            alert("Results: \n" +
-                                                                   result.text + "\n" +
-                                                                   result.format + "\n" +
-                                                                  "Cancelled: " + result.cancelled);
-                                                            },
-                                                            function (error) {
-                                                            alert("Scanning failed: " + error);
-                                                            },
-                                                            {
-                                                            "preferFrontCamera" : false, // iOS and Android
-                                                            "showFlipCameraButton" : true, // iOS and Android
-                                                            "dynamsoftlicense": "your license ",//set the dynamsoftbarcodereader license
-                                                            //"dynamsoftlicenseKey": "", //set the server license key
-                                                            }
-                                                            );
-                    }
-        this.receivedEvent('deviceready');
+    document.getElementById("scan").onclick = function() {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                alert("Results: \n" +
+                       result.text + "\n" +
+                       result.format + "\n" +
+                      "Cancelled: " + result.cancelled);
+            },
+            function (error) {
+                alert("Scanning failed: " + error);
+            },
+            {
+                "preferFrontCamera" : false, // iOS and Android
+                "showFlipCameraButton" : true, // iOS and Android
+                
+                // Please use one of the following three methods to set the license accordingly. If you set one of them, make sure the other two are either empty or commented out.
+                "dynamsoftlicense": "your license",// If you are using a trial license or a long key, please insert your license here.
+                //"dynamsoftlicenseKey": "", // If you purchased a full license and are using version 7.x or below, please insert the full license key here.
+                //"handshakeCode": "your handshakeCode", // If you purchased a full license and are using version 8.x or above, please insert the handshakeCode here.
+                
+                // The following properties are valid only when you use "handshakeCode" to activate the SDK. They are optional and you can leave the commented code there. But if you would like to set these properties, please refer to the API list here https://www.dynamsoft.com/barcode-reader/programming/android/api-reference/class/DMLTSConnectionParameters.html?ver=latest#attributes
+                //"mainServerURL": "", 
+                //"standbyServerURL": "", 
+                //"sessionPassword": "", 
+                //"uuidGenerationMethod": 1, 
+                //"maxBufferDays": 7, 
+                //"chargeWay": 0, 
+                //"limitedLicenseModules": "[1,2,3]"
+            }
+        );
+    }
+    this.receivedEvent('deviceready');
 },
 ```
 

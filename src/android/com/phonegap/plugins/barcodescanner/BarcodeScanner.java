@@ -97,15 +97,53 @@ public class BarcodeScanner extends CordovaPlugin {
 
                 // avoid calling other phonegap apps
                 intentScan.setPackage(that.cordova.getActivity().getApplicationContext().getPackageName());
-				String strLicense ="",strLicenseKey="";
-				try{				
-				JSONObject json = args.getJSONObject(0);				
-                strLicense = json.getString("dynamsoftlicense");
-				strLicenseKey = json.getString("dynamsoftlicenseKey");
+				String strLicense ="",strLicenseKey="",handshakeCode ="",mainServerURL="",standbyServerURL ="",sessionPassword="",limitedLicenseModules="";
+				int uuidGenerationMethod = 1, maxBufferDays = 7, chargeWay = 0;
+				try{
+                    JSONObject json = args.getJSONObject(0);
+                    if (json.has("dynamsoftlicense")){
+                        strLicense = json.getString("dynamsoftlicense");
+                    }
+                    if (json.has("dynamsoftlicenseKey")){
+                        strLicenseKey = json.getString("dynamsoftlicenseKey");
+                    }
+                    if (json.has("handshakeCode")){
+                        handshakeCode = json.getString("handshakeCode");
+                    }
+                    if (json.has("mainServerURL")){
+                        mainServerURL = json.getString("mainServerURL");
+                    }
+                    if (json.has("standbyServerURL")){
+                        standbyServerURL = json.getString("standbyServerURL");
+                    }
+                    if (json.has("sessionPassword")){
+                        sessionPassword = json.getString("sessionPassword");
+                    }
+                    if (json.has("uuidGenerationMethod")){
+                        uuidGenerationMethod = json.getInt("uuidGenerationMethod");
+                    }
+                    if (json.has("maxBufferDays")){
+                        maxBufferDays = json.getInt("maxBufferDays");
+                    }
+                    if (json.has("chargeWay")){
+                        chargeWay = json.getInt("chargeWay");
+                    }
+                    if (json.has("limitedLicenseModules")){
+                        limitedLicenseModules = json.getString("limitedLicenseModules");
+                    }
 				}catch(Exception e){
 					Log.d(LOG_TAG, "dynamsoftlicense:error");
 				}
-                that.cordova.startActivityForResult(that, intentScan.putExtra("barcodeLicense",strLicense).putExtra("barcodeLicenseKey",strLicenseKey), REQUEST_CODE);
+                that.cordova.startActivityForResult(that, intentScan.putExtra("barcodeLicense",strLicense)
+                        .putExtra("barcodeLicenseKey",strLicenseKey)
+                        .putExtra("handshakeCode",handshakeCode)
+                        .putExtra("mainServerURL",mainServerURL)
+                        .putExtra("standbyServerURL",standbyServerURL)
+                        .putExtra("sessionPassword",sessionPassword)
+                        .putExtra("uuidGenerationMethod",uuidGenerationMethod)
+                        .putExtra("maxBufferDays",maxBufferDays)
+                        .putExtra("chargeWay",chargeWay)
+                        .putExtra("limitedLicenseModules",limitedLicenseModules), REQUEST_CODE);
             }
         });
     }
