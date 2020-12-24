@@ -57,7 +57,7 @@
 //------------------------------------------------------------------------------
 // class that does the grunt work
 //------------------------------------------------------------------------------
-@interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate> {}
+@interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate, DBRServerLicenseVerificationDelegate, DMLTSLicenseVerificationDelegate> {}
 @property (nonatomic, retain) CDVBarcodeScanner*           plugin;
 @property (nonatomic, retain) NSString*                   callback;
 @property (nonatomic, retain) UIViewController*           parentViewController;
@@ -74,13 +74,11 @@
 @property (nonatomic)         BOOL                        isFrontCamera;
 @property (nonatomic)         BOOL                        isShowFlipCameraButton;
 @property (nonatomic)         BOOL                        isFlipped;
-@property (nonatomic, retain) DynamsoftBarcodeReader*              barcodeReader;
+@property (nonatomic, retain) DynamsoftBarcodeReader*     barcodeReader;
 @property (nonatomic)         long                        barcodeFormat;
+@property (nonatomic, retain) iDMLTSConnectionParameters* lts;
 
-
-- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib
-             license:(NSString*)license
-          licenseKey:(NSString*)licenseKey;
+- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib license:(NSString*)license licenseKey:(NSString*)licenseKey lts:(iDMLTSConnectionParameters*)lts;
 - (void)scanBarcode;
 - (void)barcodeScanSucceeded:(NSString*)text format:(NSString*)format;
 - (void)barcodeScanFailed:(NSString*)message;
@@ -159,8 +157,62 @@
     }
     BOOL preferFrontCamera = [options[@"preferFrontCamera"] boolValue];
     BOOL showFlipCameraButton = [options[@"showFlipCameraButton"] boolValue];
-    NSString* strDynamsoftLicense   = [options objectForKey:@"dynamsoftlicense"];
-    NSString* strDynamsoftLicenseKey= [options objectForKey:@"dynamsoftlicenseKey"];
+    NSString* strDynamsoftLicense    = [options objectForKey:@"dynamsoftlicense"];
+    NSString* strDynamsoftLicenseKey = [options objectForKey:@"dynamsoftlicenseKey"];
+    
+    iDMLTSConnectionParameters* lts = [[iDMLTSConnectionParameters alloc] init];
+    lts.handshakeCode = [options objectForKey:@"handshakeCode"];
+    lts.mainServerURL = [options objectForKey:@"mainServerURL"];
+    lts.standbyServerURL = [options objectForKey:@"standbyServerURL"];
+    lts.sessionPassword = [options objectForKey:@"sessionPassword"];
+    if ([[options objectForKey:@"uuidGenerationMethod"] integerValue] == 1) {
+        lts.UUIDGenerationMethod = EnumDMUUIDGenerationMethodRandom;
+    }else{
+        lts.UUIDGenerationMethod = EnumDMUUIDGenerationMethodHardware;
+    }
+    
+    lts.maxBufferDays = [[options objectForKey:@"maxBufferDays"] integerValue];
+    switch ([[options objectForKey:@"chargeWay"] integerValue]) {
+        case 0:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 1:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 2:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 3:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 6:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 8:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 9:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        case 10:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+        default:
+            lts.chargeWay = EnumDMChargeWayAuto;
+            break;
+    }
+    if ([options objectForKey:@"limitedLicenseModules"] != nil && ![[options objectForKey:@"limitedLicenseModules"] isEqualToString:@""]) {
+        NSString* module = [options objectForKey:@"limitedLicenseModules"];
+        NSUInteger len = [module substringFromIndex:1].length;
+        NSArray* moduleArr = [[[module substringFromIndex:1] substringToIndex:len-1] componentsSeparatedByString:@","];
+        NSMutableArray* limitedLicenseModules = [NSMutableArray array];
+        if (moduleArr.count > 0) {
+            for (int i = 0; i < moduleArr.count;i++) {
+                [limitedLicenseModules addObject:[NSNumber numberWithInt:[moduleArr[i] intValue]]];
+            }
+        }
+        lts.limitedLicenseModules = limitedLicenseModules;
+    }
     // We allow the user to define an alternate xib file for loading the overlay.
     NSString *overlayXib = [options objectForKey:@"overlayXib"];
     
@@ -177,7 +229,7 @@
                  alterateOverlayXib:overlayXib
                  license:strDynamsoftLicense
                  licenseKey:strDynamsoftLicenseKey
-                 ];
+                 lts:lts];
     // queue [processor scanBarcode] to run on the event loop
     
     if (preferFrontCamera) {
@@ -283,6 +335,7 @@ parentViewController:(UIViewController*)parentViewController
   alterateOverlayXib:(NSString *)alternateXib
              license:(NSString *)license
           licenseKey:(NSString *)licenseKey
+                 lts:(iDMLTSConnectionParameters *)lts
 {
     self = [super init];
     if (!self) return self;
@@ -302,20 +355,31 @@ parentViewController:(UIViewController*)parentViewController
     AudioServicesCreateSystemSoundID(soundFileURLRef, &_soundFileObject);
     CFRelease(soundFileURLRef);
     
-    if(license == nil)
-        license = @"";
-    self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:license];
-    
-    if(licenseKey !=nil && ![licenseKey isEqualToString:@""] ){
-        NSError *err;
-        self.barcodeReader = [[DynamsoftBarcodeReader alloc]initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
+    if(license != nil && ![license isEqualToString:@""]){
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:license];
+    }else if(licenseKey != nil && ![licenseKey isEqualToString:@""]){
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
+    }else if (lts != nil && lts.handshakeCode != nil && ![lts.handshakeCode isEqualToString:@""]) {
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromLTS:lts verificationDelegate:self];
     }
     
     return self;
 }
-//-------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// DBRServerLicenseVerificationDelegate
+//------------------------------------------------------------------------------
 - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error {
-        NSNumber* boolNumber = [NSNumber numberWithBool:isSuccess];
+    //TODO
+    //NSLog(@"succ = %hhd error(code:%ld, info:%@)", isSuccess,(long)error.code,error.userInfo);
+}
+
+//------------------------------------------------------------------------------
+// DMLTSLicenseVerificationDelegate
+//------------------------------------------------------------------------------
+- (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError *)error{
+    //TODO
+    //NSLog(@"succ = %hhd error(code:%ld, info:%@)", isSuccess,(long)error.code,error.userInfo);
 }
 
 //--------------------------------------------------------------------------
@@ -544,36 +608,29 @@ parentViewController:(UIViewController*)parentViewController
      }
      ];
     
-    //         [self dumpImage: [[self getImageFromSample:sampleBuffer] autorelease]];
+    //[self dumpImage: [[self getImageFromSample:sampleBuffer] autorelease]];
 #endif
     
     // Dynamsoft Barcode Reader SDK
     @autoreleasepool {
-        
         CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        
         OSType pixelFormat = CVPixelBufferGetPixelFormatType(imageBuffer);
-        
         //if (!(pixelFormat == '420v' || pixelFormat == '420f'))
         //{
         //return;
         //}
-        
         CVPixelBufferLockBaseAddress(imageBuffer, 0);
         int bufferSize = (int)CVPixelBufferGetDataSize(imageBuffer);
         int imgWidth = (int)CVPixelBufferGetWidth(imageBuffer);
         int imgHeight = (int)CVPixelBufferGetHeight(imageBuffer);
         int stride = (int) CVPixelBufferGetBytesPerRow(imageBuffer);
-        
         void *baseAddress = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-        
         CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
-        
         NSData *buffer = [NSData dataWithBytes:baseAddress length:bufferSize];
+        
         iPublicRuntimeSettings* settings = [self.barcodeReader getRuntimeSettings:nil];
         settings.barcodeFormatIds_2 = EnumBarcodeFormat2POSTALCODE | EnumBarcodeFormat2NONSTANDARDBARCODE | EnumBarcodeFormat2DOTCODE;
         [self.barcodeReader updateRuntimeSettings:settings error:nil];
-        NSLog(@"get a frame");
         @try{
             NSArray<iTextResult *> *results = [self.barcodeReader decodeBuffer:buffer withWidth:imgWidth height:imgHeight stride:stride format:EnumImagePixelFormatARGB_8888 templateName:@"" error:nil];
             NSString *msgText = @"";
@@ -592,10 +649,7 @@ parentViewController:(UIViewController*)parentViewController
         @catch(NSException *e){
             
         }
-        
     }
-    
-    
 }
 
 //--------------------------------------------------------------------------
@@ -949,21 +1003,18 @@ parentViewController:(UIViewController*)parentViewController
     Class captureDeviceClass = NSClassFromString(@"AVCaptureDevice");
     if (captureDeviceClass != nil) {
         AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-        if (device != nil && [device hasTorch] && [device hasFlash]){
+        if (device != nil && [device hasTorch]){
             [device lockForConfiguration:nil];
             
             if (on == YES) {
                 [device setTorchMode:AVCaptureTorchModeOn];
-                [device setFlashMode:AVCaptureFlashModeOn];
                 [_flashButton setImage:[UIImage imageNamed:@"flash_on"] forState:UIControlStateNormal];
                 [_flashButton setTitle:@" Flash on" forState:UIControlStateNormal];
             } else {
                 [device setTorchMode:AVCaptureTorchModeOff];
-                [device setFlashMode:AVCaptureFlashModeOff];
                 [_flashButton setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
                 [_flashButton setTitle:@" Flash off" forState:UIControlStateNormal];
             }
-            
             [device unlockForConfiguration];
         }
     }
