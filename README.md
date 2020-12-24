@@ -119,6 +119,6 @@ onDeviceReady: function() {
 
 ## Screenshots
 
-<kbd><img src="http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2911.PNG" width="50%">
+<kbd><img src="https://www.dynamsoft.com/codepool/img/2018/04/IMG_2911.PNG" width="50%">
 
-<kbd><img src="http://www.codepool.biz/wp-content/uploads/2018/04/IMG_2913.PNG" width="50%">
+<kbd><img src="https://www.dynamsoft.com/codepool/img/2018/04/IMG_2911.PNG" width="50%">
