@@ -1,9 +1,7 @@
 //
-//  DynamsoftBarcodeSDK.h
-//  DynamsoftBarcodeSDK
+//  Dynamsoft Barcode Reader SDK
 //
-//  Created by Dynamsoft on 2018/6/7.
-//  Copyright © 2018 Dynamsoft. All rights reserved.
+//  Copyright © 2021 Dynamsoft. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

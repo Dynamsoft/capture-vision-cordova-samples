@@ -1,5 +1,10 @@
-#import <UIKit/UIKit.h>
+//
+//  Dynamsoft Barcode Reader SDK
+//
+//  Copyright © 2021 Dynamsoft. All rights reserved.
+//
 
+#import <UIKit/UIKit.h>
 
 static NSString* _Nonnull const DBRErrorDomain = @"com.dynamsoft.barcodereader.error";
 /**
@@ -193,6 +198,9 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
     /**The DotCode license is invalid*/
     EnumErrorCode_DOTCODE_LICENSE_INVALID        = -10061,
     
+    /**No license.*/
+    EnumErrorCode_NO_LICENSE                     = -20000,
+    
     /**The handshake code is invalid. */
     EnumErrorCode_HANDSHAKE_CODE_INVALID         = -20001,
     
@@ -209,7 +217,22 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
     EnumErrorCode_BIND_DEVICE_FAILED             = -20005,
     
     /**Interface InitLicenseFromLTS can not be used together with other license initiation interfaces. */
-    EnumErrorCode_LICENSE_INTERFACE_CONFLICT     = -20006
+    EnumErrorCode_LICENSE_INTERFACE_CONFLICT     = -20006,
+    
+    /**License Client dll is missing.*/
+    EnumErrorCode_LICENSE_CLIENT_DLL_MISSING     = -20007,
+
+    /**Instance count is over limited.*/
+    EnumErrorCode_INSTANCE_COUNT_OVER_LIMITED    = -20008,
+
+    /**Interface InitLicenseFromLTS has to be called before creating any SDK objects. */
+    EnumErrorCode_LICENSE_INIT_SEQUENCE_FAILED   = -20009,
+    
+    /**Trial License*/
+    EnumErrorCode_TRIAL_LICENSE                  = -20010,
+
+    /**Failed to reach License Tracking Server.*/
+    EnumErrorCode_FAILED_TO_REACH_LTS            = -20200
 };
 
 /**
@@ -309,6 +332,9 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
 
     /** CODE39 Extended */
     EnumBarcodeFormatCODE39EXTENDED 	 = 0x400,
+    
+    /** MSI Code */
+    EnumBarcodeFormatMSICODE             = 0x100000,
 
     /**DataBar Omnidirectional*/
     EnumBarcodeFormatGS1DATABAROMNIDIRECTIONAL     = 0x800,
@@ -358,14 +384,14 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     /**GS1 Composite Code*/
     EnumBarcodeFormatGS1COMPOSITE        = -2147483648,
 
-    /** Combined value of BF_CODABAR, BF_CODE_128, BF_CODE_39, BF_CODE_39_Extended, BF_CODE_93, BF_EAN_13, BF_EAN_8, INDUSTRIAL_25, BF_ITF, BF_UPC_A, BF_UPC_E */
-    EnumBarcodeFormatONED                = 0x000007FF,
+    /** Combined value of BF_CODABAR, BF_CODE_128, BF_CODE_39, BF_CODE_39_Extended, BF_CODE_93, BF_EAN_13, BF_EAN_8, INDUSTRIAL_25, BF_ITF, BF_UPC_A, BF_UPC_E, BF_MSI_CODE*/
+    EnumBarcodeFormatONED                = 0x001007FF,
     
     /** Combined value of BF_GS1_DATABAR_OMNIDIRECTIONAL, BF_GS1_DATABAR_TRUNCATED, BF_GS1_DATABAR_STACKED, BF_GS1_DATABAR_STACKED_OMNIDIRECTIONAL, BF_GS1_DATABAR_EXPANDED, BF_GS1_DATABAR_EXPANDED_STACKED, BF_GS1_DATABAR_LIMITED */
     EnumBarcodeFormatGS1DATABAR          = 0x0003F800,
     
 	/** All supported formats in BarcodeFormat group 1. */
-    EnumBarcodeFormatALL                 = -32505857
+    EnumBarcodeFormatALL                 = -31457281
 
 };
 
@@ -1648,6 +1674,16 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 */
 @property (nonatomic, readwrite, nullable) NSArray* deblurModes;
 
+/** Sets the minimum distance (in pixels) between the barcode zone and image borders.
+ * @par Value range:
+ *      [0, 0x7fffffff]
+ * @par Default value:
+ *      0
+ * @par Remarks:
+ *
+ */
+@property (nonatomic, assign) NSInteger barcodeZoneMinDistanceToImageBorders;
+
 @end
 
 
@@ -1918,6 +1954,9 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 
 /** The extended result array */
 @property (nonatomic, nullable) NSArray<iExtendedResult*>* extendedResults;
+
+/** Exception*/
+@property (nonatomic, nullable) NSString* exception;
 
 @end
 
@@ -2726,16 +2765,15 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @code
     DynamsoftBarcodeReader *barcodeReader;
     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-    iTextResult *result;
     NSError __autoreleasing * _Nullable error;
     [barcodeReader getRuntimeSettings:&error];
     settings.intermediateResultTypes = EnumIntermediateResultTypeOriginalImage | EnumIntermediateResultTypeTypedBarcodeZone;
     settings.intermediateResultSavingMode = EnumIntermediateResultSavingModeMemory;
     [barcodeReader updateRuntimeSettings:settings error:&error];
-    result = [barcodeReader decodeFileWithName:@"your file path" templateName:@"" error:&error];
-
+ 
+    NSArray<iTextResult*>* resultbyfile = [barcodeReader decodeFileWithName:@"your file path" templateName:@"" error:&error];
     NSArray<iIntermediateResult*>* array = [barcodeReader getIntermediateResult:&error];
-    result = [barcodeReader decodeIntermediateResults:array withTemplate:@"" error:&error];
+    NSArray<iTextResult*>* result = [barcodeReader decodeIntermediateResults:array withTemplate:@"" error:&error];
  * @endcode
  */
 - (NSArray<iTextResult*>* _Nullable)decodeIntermediateResults:(NSArray<iIntermediateResult*>* _Nullable)array
@@ -2755,9 +2793,8 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @code
      DynamsoftBarcodeReader *barcodeReader;
      barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     iTextResult *result;
      NSError __autoreleasing * _Nullable error;
-     result = [barcodeReader decodeBase64:@"file in base64 string" withTemplate:@"" error:&error];
+     NSArray<iTextResult*>* result = [barcodeReader decodeBase64:@"file in base64 string" withTemplate:@"" error:&error];
  * @endcode
  */
 - (NSArray<iTextResult*>* _Nullable)decodeBase64:(NSString* _Nonnull)base64
@@ -2777,10 +2814,9 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @code
      DynamsoftBarcodeReader *barcodeReader;
      barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     iTextResult *result;
-     UIImage *image;
+     UIImage *image = [[UIImage alloc] init];
      NSError __autoreleasing * _Nullable error;
-     result = [barcodeReader decodeImage:image withTemplate:@"" error:&error];
+     NSArray<iTextResult*>* result = [barcodeReader decodeImage:image withTemplate:@"" error:&error];
  * @endcode
  */
 - (NSArray<iTextResult*>* _Nullable)decodeImage:(UIImage* _Nonnull)image
@@ -2804,14 +2840,13 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @code
      DynamsoftBarcodeReader *barcodeReader;
      barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     iTextResult *result;
-     NSData *bufferBytes;
+     NSData *bufferBytes = [[NSData alloc] init];
      NSInteger iWidth = 0;
      NSInteger iHeight = 0;
      NSInteger iStride = 0;
      NSInteger format;
      NSError __autoreleasing * _Nullable error;
-     result = [barcodeReader decodeBuffer:bufferBytes withWidth:iWidth height:iHeight stride:iStride format:format templateName:@"" error:&error];
+     NSArray<iTextResult*>* result = [barcodeReader decodeBuffer:bufferBytes withWidth:iWidth height:iHeight stride:iStride format:format templateName:@"" error:&error];
  * @endcode
  */
 - (NSArray<iTextResult*>* _Nullable)decodeBuffer:(NSData* _Nonnull)buffer
@@ -2836,9 +2871,8 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
   * @code
       DynamsoftBarcodeReader *barcodeReader;
       barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-      iTextResult *result;
       NSError __autoreleasing * _Nullable error;
-      result = [barcodeReader decodeFileWithName:@"your file path" templateName:@"" error:&error];
+      NSArray<iTextResult*>* result = [barcodeReader decodeFileWithName:@"your file path" templateName:@"" error:&error];
   * @endcode
   */
 - (NSArray<iTextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)name
@@ -2929,9 +2963,8 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
      DynamsoftBarcodeReader *barcodeReader;
      barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
      NSError __autoreleasing * _Nullable error;
-     NSInteger *frameId;
      [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:&error];
-     frameId = [barcodeReader appendFrame:bufferBytes];
+     NSInteger frameId = [barcodeReader appendFrame:bufferBytes];
  * @endcode
  */	
 -(NSInteger)appendFrame:(NSData* _Nullable) bufferBytes;
@@ -2946,8 +2979,7 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
     DynamsoftBarcodeReader *barcodeReader;
     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
     NSError __autoreleasing * _Nullable error;
-    NSInteger *length;
-    length = [barcodeReader getLengthOfFrameQueue];
+    NSInteger length = [barcodeReader getLengthOfFrameQueue];
  * @endcode
  */	
 -(NSInteger)getLengthOfFrameQueue;

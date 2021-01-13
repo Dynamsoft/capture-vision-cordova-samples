@@ -1,0 +1,44 @@
+# OSX
+#
+.DS_Store
+Pods/
+Libraries/Pods/
+xcuserdata/
+xcshareddata/
+# Android
+# Built application files
+*.apk
+*.ap_
+*.iml
+node_modules/
+.gradle
+/local.properties
+.idea/
+build/
+/captures
+.externalNativeBuild
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log Files
+*.log
+
+# node.js
+#
+node_modules/
+npm-debug.log
