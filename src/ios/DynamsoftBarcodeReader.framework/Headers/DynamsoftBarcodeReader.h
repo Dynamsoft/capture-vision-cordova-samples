@@ -2021,6 +2021,18 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 /** Number of the models */
 @property (nonatomic, assign) NSInteger model;
 
+/** Identify the first data encoding mode */
+@property (nonatomic, assign) NSInteger mode;
+
+/** Identify the position of the particular symbol */
+@property (nonatomic, assign) NSInteger page;
+
+/** Identify the total number of symbols to be concatenated int the Structured Append format */
+@property (nonatomic, assign) NSInteger totalPage;
+
+/** The Parity Data shall be an 8 bit byte following the Symbol Sequence Indicator.The parity data is a value obtained by XORing byte by the ASCII/JIS values of all the original input data before division into symbol blocks */
+@property (nonatomic, assign) Byte parityData;
+
 @end
 
 
