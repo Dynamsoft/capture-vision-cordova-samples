@@ -75,9 +75,6 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
 	/** The 1D Barcode license is invalid. */
     EnumErrorCode_1D_License_Invalid         = -10017,
 
-	/** The DIB (device-independent bitmaps) buffer is invalid. */
-    EnumErrorCode_DIB_Buffer_Invalid         = -10018,
-
 	/** The PDF417 license is invalid. */
     EnumErrorCode_PDF417_License_Invalid     = -10019,
 
@@ -2411,7 +2408,6 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  */
 - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
-
 @end
 
 /**
@@ -2441,7 +2437,6 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  */
 - (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
-
 @end
 
 /**
@@ -2455,6 +2450,9 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 
 /** standbyServerURL */
 @property (nonatomic, nullable) NSString* standbyServerURL;
+
+/** organization */
+@property (nonatomic, nullable) NSString* organizationID;
 
 /** handshakeCode */
 @property (nonatomic, nullable) NSString* handshakeCode;
@@ -2523,7 +2521,7 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @endcode
  */
 - (instancetype _Nonnull)init;
- 
+
  /**
   * Initializes DynamsoftBarcodeReader with a license.
   *
