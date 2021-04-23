@@ -75,9 +75,6 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
 	/** The 1D Barcode license is invalid. */
     EnumErrorCode_1D_License_Invalid         = -10017,
 
-	/** The DIB (device-independent bitmaps) buffer is invalid. */
-    EnumErrorCode_DIB_Buffer_Invalid         = -10018,
-
 	/** The PDF417 license is invalid. */
     EnumErrorCode_PDF417_License_Invalid     = -10019,
 
@@ -2021,6 +2018,18 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 /** Number of the models */
 @property (nonatomic, assign) NSInteger model;
 
+/** Identify the first data encoding mode */
+@property (nonatomic, assign) NSInteger mode;
+
+/** Identify the position of the particular symbol */
+@property (nonatomic, assign) NSInteger page;
+
+/** Identify the total number of symbols to be concatenated int the Structured Append format */
+@property (nonatomic, assign) NSInteger totalPage;
+
+/** The Parity Data shall be an 8 bit byte following the Symbol Sequence Indicator.The parity data is a value obtained by XORing byte by the ASCII/JIS values of all the original input data before division into symbol blocks */
+@property (nonatomic, assign) Byte parityData;
+
 @end
 
 
@@ -2399,7 +2408,6 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  */
 - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
-
 @end
 
 /**
@@ -2429,7 +2437,6 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  */
 - (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
-
 @end
 
 /**
@@ -2443,6 +2450,9 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 
 /** standbyServerURL */
 @property (nonatomic, nullable) NSString* standbyServerURL;
+
+/** organization */
+@property (nonatomic, nullable) NSString* organizationID;
 
 /** handshakeCode */
 @property (nonatomic, nullable) NSString* handshakeCode;
@@ -2511,7 +2521,7 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @endcode
  */
 - (instancetype _Nonnull)init;
- 
+
  /**
   * Initializes DynamsoftBarcodeReader with a license.
   *
