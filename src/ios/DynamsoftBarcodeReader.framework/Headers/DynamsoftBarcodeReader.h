@@ -1174,6 +1174,31 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
     EnumDMChargeWayConcurrentInstanceCount = 10
 };
 
+/**
+* @enum EnumProduct
+*
+* Describes the Product.
+*/
+typedef NS_ENUM(NSInteger,EnumProduct)
+{
+    /**Dynamsoft Barcode Reader.*/
+    EnumProductDBR = 0x01,
+
+    /**Dynamsoft Label Recognition.*/
+    EnumProductDLR = 0x02,
+    
+    /**Dynamic Web Twain.*/
+    EnumProductDWT = 0x04,
+
+    /**Dynamsoft Camera Enhancer.*/
+    EnumProductDCE = 0x08,
+
+    /**Dynamsoft Panorama.*/
+    EnumProductDPS = 0x10,
+    
+    /**All Product.*/
+    EnumProductALL = 0xffff
+};
 
 /**
  * @} defgroup Enum Enumerations
@@ -1959,6 +1984,20 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 
 
 /**
+* Stores the text result
+*
+*/
+@interface iTextResultEx : iTextResult
+
+/** DPM mark*/
+@property (nonatomic, assign) NSInteger isDPM;
+
+/** Mirror flag*/
+@property (nonatomic, assign) NSInteger isMirrored;
+
+@end
+
+/**
 * Stores the OneD code details
 *
 */
@@ -2445,32 +2484,54 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 */
 @interface iDMLTSConnectionParameters : NSObject
 
-/** mainServerURL */
+/** The URL of the  license tracking server. */
 @property (nonatomic, nullable) NSString* mainServerURL;
 
-/** standbyServerURL */
+/** The URL of the  standby license tracking server. */
 @property (nonatomic, nullable) NSString* standbyServerURL;
 
-/** organization */
+/** Set the organization ID. */
 @property (nonatomic, nullable) NSString* organizationID;
 
-/** handshakeCode */
+/** The handshake code. */
 @property (nonatomic, nullable) NSString* handshakeCode;
 
-/** sessionPassword */
+/** The session password of the handshake code set in license tracking server. */
 @property (nonatomic, nullable) NSString* sessionPassword;
 
-/** EnumDMChargeWay */
+/** Set the charge way. */
 @property (nonatomic, assign) EnumDMChargeWay chargeWay;
 
-/** EnumDMUUIDGenerationMethod */
+/** Set the method to generate UUID. */
 @property (nonatomic, assign) EnumDMUUIDGenerationMethod UUIDGenerationMethod;
 
-/** maxBufferDays */
+/** Set the max days to buffer the license info. */
 @property (nonatomic, assign) NSInteger maxBufferDays;
 
-/** limitedLicenseModules */
+/** Set the count of license modules to use. */
 @property (nonatomic, nullable) NSArray* limitedLicenseModules;
+
+/** Set the products. A combined value of Product Enumration items. */
+@property (nonatomic, assign) NSInteger products;
+
+@end
+
+/**
+ * DCESettingParameters
+ *
+*/
+
+@interface iDCESettingParameters : NSObject
+
+@property (nonatomic, assign, nullable) id cameraInstance;
+
+@property (nonatomic, weak, nullable) id<DBRTextResultDelegate> textResultDelegate;
+
+@property (nonatomic, weak, nullable) id<DBRIntermediateResultDelegate> intermediateResultDelegate;
+
+@property (nonatomic, assign, nullable) NSObject* textResultData;
+
+@property (nonatomic, assign, nullable) NSObject* intermediateResultData;
 
 @end
 
@@ -2521,6 +2582,8 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @endcode
  */
 - (instancetype _Nonnull)init;
+
+- (void)setCameraEnhancerPara:(iDCESettingParameters* _Nonnull)parameters;
 
  /**
   * Initializes DynamsoftBarcodeReader with a license.
@@ -3273,13 +3336,10 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
  * @par Code Snippet:
  * @code]
      DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
-     iDMLTSConnectionParameters* lts = [[iDMLTSConnectionParameters alloc] init];
-     lts.handshakeCode = @"*****-hs-****";
-     lts.sessionPassword = @"******";
-     BOOL res = [barcodeReader clearCache:lts];
+     BOOL res = [barcodeReader clearCache];
  * @endcode
  */
-- (BOOL)clearCache:(iDMLTSConnectionParameters *_Nonnull)lts;
+- (BOOL)clearCache;
 /**
 * @}
 */
