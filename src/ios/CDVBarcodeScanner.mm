@@ -57,7 +57,6 @@
 //------------------------------------------------------------------------------
 // class that does the grunt work
 //------------------------------------------------------------------------------
-//extern NSString* const CDVbcsViewWillDisappearNotification;
 @interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate, DBRServerLicenseVerificationDelegate, DMLTSLicenseVerificationDelegate> {}
 @property (nonatomic, retain) CDVBarcodeScanner*           plugin;
 @property (nonatomic, retain) NSString*                   callback;
