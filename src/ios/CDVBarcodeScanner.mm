@@ -57,6 +57,7 @@
 //------------------------------------------------------------------------------
 // class that does the grunt work
 //------------------------------------------------------------------------------
+//extern NSString* const CDVbcsViewWillDisappearNotification;
 @interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate, DBRServerLicenseVerificationDelegate, DMLTSLicenseVerificationDelegate> {}
 @property (nonatomic, retain) CDVBarcodeScanner*           plugin;
 @property (nonatomic, retain) NSString*                   callback;
@@ -77,6 +78,7 @@
 @property (nonatomic, retain) DynamsoftBarcodeReader*     barcodeReader;
 @property (nonatomic)         long                        barcodeFormat;
 @property (nonatomic, retain) iDMLTSConnectionParameters* lts;
+@property (nonatomic)         BOOL                        isDecodeSuccess;
 
 - (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib license:(NSString*)license licenseKey:(NSString*)licenseKey lts:(iDMLTSConnectionParameters*)lts;
 - (void)scanBarcode;
@@ -105,6 +107,7 @@
 //------------------------------------------------------------------------------
 // view controller for the ui
 //------------------------------------------------------------------------------
+NSString* const CDVbcsViewWillDisappearNotification = @"CDVbcsViewWillDisappearNotification";
 @interface CDVbcsViewController : UIViewController <CDVBarcodeScannerOrientationDelegate> {}
 @property (nonatomic, retain) CDVbcsProcessor*      processor;
 @property (nonatomic, retain) NSString*          alternateXib;
@@ -348,6 +351,7 @@ parentViewController:(UIViewController*)parentViewController
     
     self.is1D      = YES;
     self.is2D      = YES;
+    self.isDecodeSuccess = false;
     self.capturing = NO;
     self.results = [NSMutableArray new];
     
@@ -362,6 +366,8 @@ parentViewController:(UIViewController*)parentViewController
     }else if (lts != nil && lts.handshakeCode != nil && ![lts.handshakeCode isEqualToString:@""]) {
         self.barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromLTS:lts verificationDelegate:self];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCDVbcsViewListener:) name:CDVbcsViewWillDisappearNotification object:nil];
     
     return self;
 }
@@ -397,9 +403,10 @@ parentViewController:(UIViewController*)parentViewController
     
     AudioServicesRemoveSystemSoundCompletion(_soundFileObject);
     AudioServicesDisposeSystemSoundID(_soundFileObject);
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:CDVbcsViewWillDisappearNotification object:nil];
     //    [super dealloc];
 }
+
 
 //--------------------------------------------------------------------------
 - (void)scanBarcode {
@@ -496,6 +503,14 @@ parentViewController:(UIViewController*)parentViewController
     }];
     if (self.isFlipped) {
         self.isFlipped = NO;
+    }
+}
+
+- (void)addCDVbcsViewListener:(NSNotification *)noti{
+    NSDictionary* dic = [noti object];
+    bool CDVbcsView = [[dic valueForKey:@"CDVbcsView"] boolValue];
+    if (CDVbcsView && !self.isDecodeSuccess) {
+        [self barcodeScanCancelled];
     }
 }
 
@@ -643,6 +658,7 @@ parentViewController:(UIViewController*)parentViewController
                         msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
                     }
                 }
+                self.isDecodeSuccess = true;
                 [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
         }
@@ -819,6 +835,7 @@ parentViewController:(UIViewController*)parentViewController
     self.overlayView = nil;
     self.isFlashOn = NO;
     self.flashButton = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:CDVbcsViewWillDisappearNotification object:nil];
 }
 
 //--------------------------------------------------------------------------
@@ -850,6 +867,13 @@ parentViewController:(UIViewController*)parentViewController
     self.processor.previewLayer.frame = self.view.bounds;
     
     [self turnFlashOn: _isFlashOn];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    NSDictionary* dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:true] forKey:@"CDVbcsView"];
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVbcsViewWillDisappearNotification object:dic]];
 }
 
 //--------------------------------------------------------------------------
