@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 #import <AudioToolbox/AudioToolbox.h>
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@
 //------------------------------------------------------------------------------
 // class that does the grunt work
 //------------------------------------------------------------------------------
-@interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate, DBRServerLicenseVerificationDelegate, DMLTSLicenseVerificationDelegate> {}
+@interface CDVbcsProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate, DBRServerLicenseVerificationDelegate, DMDLSLicenseVerificationDelegate> {}
 @property (nonatomic, retain) CDVBarcodeScanner*           plugin;
 @property (nonatomic, retain) NSString*                   callback;
 @property (nonatomic, retain) UIViewController*           parentViewController;
@@ -76,12 +76,12 @@
 @property (nonatomic)         BOOL                        isFlipped;
 @property (nonatomic, retain) DynamsoftBarcodeReader*     barcodeReader;
 @property (nonatomic)         long                        barcodeFormat;
-@property (nonatomic, retain) iDMLTSConnectionParameters* lts;
+@property (nonatomic, retain) iDMDLSConnectionParameters* dls;
 @property (nonatomic)         BOOL                        isDecodeSuccess;
 
-- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib license:(NSString*)license licenseKey:(NSString*)licenseKey lts:(iDMLTSConnectionParameters*)lts;
+- (id)initWithPlugin:(CDVBarcodeScanner*)plugin callback:(NSString*)callback parentViewController:(UIViewController*)parentViewController alterateOverlayXib:(NSString *)alternateXib license:(NSString*)license licenseKey:(NSString*)licenseKey dls:(iDMDLSConnectionParameters*)dls;
 - (void)scanBarcode;
-- (void)barcodeScanSucceeded:(NSString*)text format:(NSString*)format;
+- (void)barcodeScanSucceeded:(NSString*)result barcodeFormat:(NSString*)format;
 - (void)barcodeScanFailed:(NSString*)message;
 - (void)barcodeScanCancelled;
 - (void)openDialog;
@@ -162,45 +162,45 @@ NSString* const CDVbcsViewWillDisappearNotification = @"CDVbcsViewWillDisappearN
     NSString* strDynamsoftLicense    = [options objectForKey:@"dynamsoftlicense"];
     NSString* strDynamsoftLicenseKey = [options objectForKey:@"dynamsoftlicenseKey"];
     
-    iDMLTSConnectionParameters* lts = [[iDMLTSConnectionParameters alloc] init];
-    lts.handshakeCode = [options objectForKey:@"handshakeCode"];
-    lts.mainServerURL = [options objectForKey:@"mainServerURL"];
-    lts.standbyServerURL = [options objectForKey:@"standbyServerURL"];
-    lts.sessionPassword = [options objectForKey:@"sessionPassword"];
+    iDMDLSConnectionParameters* dls = [[iDMDLSConnectionParameters alloc] init];
+    dls.handshakeCode = [options objectForKey:@"handshakeCode"];
+    dls.mainServerURL = [options objectForKey:@"mainServerURL"];
+    dls.standbyServerURL = [options objectForKey:@"standbyServerURL"];
+    dls.sessionPassword = [options objectForKey:@"sessionPassword"];
     if ([[options objectForKey:@"uuidGenerationMethod"] integerValue] == 1) {
-        lts.UUIDGenerationMethod = EnumDMUUIDGenerationMethodRandom;
+        dls.UUIDGenerationMethod = EnumDMUUIDGenerationMethodRandom;
     }else{
-        lts.UUIDGenerationMethod = EnumDMUUIDGenerationMethodHardware;
+        dls.UUIDGenerationMethod = EnumDMUUIDGenerationMethodHardware;
     }
     
-    lts.maxBufferDays = [[options objectForKey:@"maxBufferDays"] integerValue];
+    dls.maxBufferDays = [[options objectForKey:@"maxBufferDays"] integerValue];
     switch ([[options objectForKey:@"chargeWay"] integerValue]) {
         case 0:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 1:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 2:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 3:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 6:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 8:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 9:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         case 10:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
         default:
-            lts.chargeWay = EnumDMChargeWayAuto;
+            dls.chargeWay = EnumDMChargeWayAuto;
             break;
     }
     if ([options objectForKey:@"limitedLicenseModules"] != nil && ![[options objectForKey:@"limitedLicenseModules"] isEqualToString:@""]) {
@@ -213,7 +213,7 @@ NSString* const CDVbcsViewWillDisappearNotification = @"CDVbcsViewWillDisappearN
                 [limitedLicenseModules addObject:[NSNumber numberWithInt:[moduleArr[i] intValue]]];
             }
         }
-        lts.limitedLicenseModules = limitedLicenseModules;
+        dls.limitedLicenseModules = limitedLicenseModules;
     }
     // We allow the user to define an alternate xib file for loading the overlay.
     NSString *overlayXib = [options objectForKey:@"overlayXib"];
@@ -231,7 +231,7 @@ NSString* const CDVbcsViewWillDisappearNotification = @"CDVbcsViewWillDisappearN
                  alterateOverlayXib:overlayXib
                  license:strDynamsoftLicense
                  licenseKey:strDynamsoftLicenseKey
-                 lts:lts];
+                 dls:dls];
     // queue [processor scanBarcode] to run on the event loop
     
     if (preferFrontCamera) {
@@ -337,7 +337,7 @@ parentViewController:(UIViewController*)parentViewController
   alterateOverlayXib:(NSString *)alternateXib
              license:(NSString *)license
           licenseKey:(NSString *)licenseKey
-                 lts:(iDMLTSConnectionParameters *)lts
+                 dls:(iDMDLSConnectionParameters *)dls
 {
     self = [super init];
     if (!self) return self;
@@ -362,12 +362,12 @@ parentViewController:(UIViewController*)parentViewController
         self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:license];
     }else if(licenseKey != nil && ![licenseKey isEqualToString:@""]){
         self.barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicenseFromServer:@"" licenseKey:licenseKey verificationDelegate:self];
-    }else if (lts != nil && lts.handshakeCode != nil && ![lts.handshakeCode isEqualToString:@""]) {
-        self.barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromLTS:lts verificationDelegate:self];
+    }else if (dls != nil && dls.handshakeCode != nil && ![dls.handshakeCode isEqualToString:@""]) {
+        self.barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromDLS:dls verificationDelegate:self];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCDVbcsViewListener:) name:CDVbcsViewWillDisappearNotification object:nil];
-    
+
     return self;
 }
 
@@ -380,11 +380,18 @@ parentViewController:(UIViewController*)parentViewController
 }
 
 //------------------------------------------------------------------------------
-// DMLTSLicenseVerificationDelegate
+// DMDLSLicenseVerificationDelegate
 //------------------------------------------------------------------------------
-- (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError *)error{
-    //TODO
-    //NSLog(@"succ = %hhd error(code:%ld, info:%@)", isSuccess,(long)error.code,error.userInfo);
+
+- (void)DLSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error {
+    NSString* msg = @"";
+    if(error != nil) {
+         msg = error.userInfo[NSUnderlyingErrorKey];
+         if(msg == nil)
+         {
+             msg = [error localizedDescription];
+         }
+     }
 }
 
 //--------------------------------------------------------------------------
@@ -402,10 +409,11 @@ parentViewController:(UIViewController*)parentViewController
     
     AudioServicesRemoveSystemSoundCompletion(_soundFileObject);
     AudioServicesDisposeSystemSoundID(_soundFileObject);
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CDVbcsViewWillDisappearNotification object:nil];
+
     //    [super dealloc];
 }
-
 
 //--------------------------------------------------------------------------
 - (void)scanBarcode {
@@ -478,7 +486,7 @@ parentViewController:(UIViewController*)parentViewController
 
 //--------------------------------------------------------------------------
 - (void)barcodeScanSucceeded:(NSString*)result barcodeFormat:(NSString*)format {
-	self.isDecodeSuccess = true;
+    self.isDecodeSuccess = true;
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self barcodeScanDone:^{
             [self.plugin returnSuccess:result barcodeFormat:format cancelled:FALSE flipped:FALSE callback:self.callback];
@@ -489,7 +497,7 @@ parentViewController:(UIViewController*)parentViewController
 
 //--------------------------------------------------------------------------
 - (void)barcodeScanFailed:(NSString*)message {
-	self.isDecodeSuccess = true;
+    self.isDecodeSuccess = true;
     [self barcodeScanDone:^{
         [self.plugin returnError:message callback:self.callback];
     }];
@@ -499,8 +507,6 @@ parentViewController:(UIViewController*)parentViewController
 - (void)barcodeScanCancelled {
     [self barcodeScanDone:^{
         [self.plugin returnSuccess:@"" barcodeFormat:@"" cancelled:TRUE flipped:self.isFlipped callback:self.callback];
-        
-        
     }];
     if (self.isFlipped) {
         self.isFlipped = NO;
@@ -535,7 +541,11 @@ parentViewController:(UIViewController*)parentViewController
     AVCaptureDevice* __block device = nil;
     if (self.isFrontCamera) {
         
-        NSArray* devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+        AVCaptureDeviceDiscoverySession *captureDeviceDiscoverySession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera]
+            mediaType:AVMediaTypeVideo
+            position:AVCaptureDevicePositionFront];
+        
+        NSArray *devices = [captureDeviceDiscoverySession devices];
         [devices enumerateObjectsUsingBlock:^(AVCaptureDevice *obj, NSUInteger idx, BOOL *stop) {
             if (obj.position == AVCaptureDevicePositionFront) {
                 device = obj;
@@ -554,19 +564,12 @@ parentViewController:(UIViewController*)parentViewController
     AVCaptureVideoDataOutput* output = [[AVCaptureVideoDataOutput alloc] init];
     if (!output) return @"unable to obtain video capture output";
     
-    //NSDictionary* videoOutputSettings = [NSDictionary
-    //                                     dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32ARGB]
-    //                                     forKey:(id)kCVPixelBufferPixelFormatTypeKey
-    //                                     ];
-    
     output.alwaysDiscardsLateVideoFrames = YES;
     //    output.videoSettings = videoOutputSettings;
     [output setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
     
     [output setSampleBufferDelegate:self queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    
-    //    [output setSampleBufferDelegate:self queue:dispatch_queue_create("dbrCameraQueue", NULL)];
-    
+        
     if ([captureSession canSetSessionPreset:AVCaptureSessionPresetHigh]) {
         captureSession.sessionPreset = AVCaptureSessionPresetHigh;
     } else if ([captureSession canSetSessionPreset:AVCaptureSessionPresetMedium]) {
@@ -630,11 +633,7 @@ parentViewController:(UIViewController*)parentViewController
     // Dynamsoft Barcode Reader SDK
     @autoreleasepool {
         CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        OSType pixelFormat = CVPixelBufferGetPixelFormatType(imageBuffer);
-        //if (!(pixelFormat == '420v' || pixelFormat == '420f'))
-        //{
-        //return;
-        //}
+
         CVPixelBufferLockBaseAddress(imageBuffer, 0);
         int bufferSize = (int)CVPixelBufferGetDataSize(imageBuffer);
         int imgWidth = (int)CVPixelBufferGetWidth(imageBuffer);
@@ -658,7 +657,7 @@ parentViewController:(UIViewController*)parentViewController
                     }else{
                         msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
                     }
-                }               
+                }
                 [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
         }
@@ -711,7 +710,25 @@ parentViewController:(UIViewController*)parentViewController
 //--------------------------------------------------------------------------
 - (void)dumpImage:(UIImage*)image {
     NSLog(@"writing image to library: %dx%d", (int)image.size.width, (int)image.size.height);
-    ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
+    // Conversion to PHPhotoLibrary since ALAssetsLibrary is deprecated
+    __block PHObjectPlaceholder *placeholder;
+    //PHPhotoLibrary *sharedPhotoLibrary = [[PHPhotoLibrary alloc] init];
+
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+        placeholder = [createAssetRequest placeholderForCreatedAsset];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if (success)
+        {
+           NSLog(@"Successfully saved the image so that it can be used for debugging  - success for ios9");
+        }
+        else
+        {
+            NSLog(@"%@", error);
+        }
+    }];
+    
+    /*ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
     [assetsLibrary
      writeImageToSavedPhotosAlbum:image.CGImage
      orientation:ALAssetOrientationUp
@@ -719,7 +736,7 @@ parentViewController:(UIViewController*)parentViewController
          if (error) NSLog(@"   error writing image to library");
          else       NSLog(@"   wrote image to library %@", assetURL);
      }
-     ];
+     ];*/
 }
 
 @end
@@ -836,6 +853,7 @@ parentViewController:(UIViewController*)parentViewController
     self.isFlashOn = NO;
     self.flashButton = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CDVbcsViewWillDisappearNotification object:nil];
+
 }
 
 //--------------------------------------------------------------------------
@@ -860,7 +878,7 @@ parentViewController:(UIViewController*)parentViewController
 - (void)viewWillAppear:(BOOL)animated {
     
     // set video orientation to what the camera sees
-    self.processor.previewLayer.connection.videoOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    self.processor.previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation) [[UIApplication sharedApplication] statusBarOrientation];
     
     // this fixes the bug when the statusbar is landscape, and the preview layer
     // starts up in portrait (not filling the whole view)
@@ -869,6 +887,7 @@ parentViewController:(UIViewController*)parentViewController
     [self turnFlashOn: _isFlashOn];
 }
 
+//--------------------------------------------------------------------------
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];

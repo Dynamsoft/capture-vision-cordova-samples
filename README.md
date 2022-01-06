@@ -16,11 +16,18 @@ To learn more about Dynamsoft Barcode Reader, please visit http://www.dynamsoft.
         npm install -g cordova
     ```
 
-2. Download the source code and add the plugin via local path.
+2. Create the Cordova app and add the mobile platform(s) that you would like. Please note that the DBR Cordova Plugin does not support a browser implementation. For more info on how to create a Cordova app, please refer to the [Cordova documentation](https://cordova.apache.org/docs/en/latest/guide/cli/index.html)
+
+3. Download the plugin's source code by cloning this repo or downloading it as a ZIP. 
+
+4. Add the plugin via the local path of the source code you just downloaded.
 
     ```
         cordova plugin add <local-path>/cordova-plugin-dbr
     ```
+5. Now for the implementation in the `www` folder, which should include a `index.html` file as well as a `js/index.js` file, please see the example below for reference.
+
+6. For the `iOS` platform, the DynamsoftBarcodeReader.framework that is included in the `platforms/ios/<project name>.xcodeproj` must be set to `Embed & Sign` in the General settings of the xcodeproj. This is important or it will result in an error.
     
 ## Supported Platforms
 
@@ -54,9 +61,8 @@ The following barcode types are currently supported:
 * Postal Code
 * Dot Code
 
-## Others ##
-If your cordova-android version > 6.3.0, please change repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in the file [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle) 
-
+## Important Notes ##
+- If your cordova-android version > 6.3.0, please change repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in the file [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle)
 
 ## Example
 
