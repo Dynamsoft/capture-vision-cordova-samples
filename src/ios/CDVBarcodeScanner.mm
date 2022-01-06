@@ -478,6 +478,7 @@ parentViewController:(UIViewController*)parentViewController
 
 //--------------------------------------------------------------------------
 - (void)barcodeScanSucceeded:(NSString*)result barcodeFormat:(NSString*)format {
+	self.isDecodeSuccess = true;
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self barcodeScanDone:^{
             [self.plugin returnSuccess:result barcodeFormat:format cancelled:FALSE flipped:FALSE callback:self.callback];
@@ -488,6 +489,7 @@ parentViewController:(UIViewController*)parentViewController
 
 //--------------------------------------------------------------------------
 - (void)barcodeScanFailed:(NSString*)message {
+	self.isDecodeSuccess = true;
     [self barcodeScanDone:^{
         [self.plugin returnError:message callback:self.callback];
     }];
@@ -656,8 +658,7 @@ parentViewController:(UIViewController*)parentViewController
                     }else{
                         msgText = [msgText stringByAppendingString:[NSString stringWithFormat:@"\nResult: %@\nFormat: %@\n", results[i].barcodeText, results[i].barcodeFormatString]];
                     }
-                }
-                self.isDecodeSuccess = true;
+                }               
                 [self barcodeScanSucceeded:msgText barcodeFormat:@""];
             }
         }
