@@ -64,6 +64,8 @@ The following barcode types are currently supported:
 ## Important Notes ##
 - If your cordova-android version > 6.3.0, please change repositories flatDir ``` dirs 'libs'  ``` to   ```dirs 'src/main/libs'  ``` and change  dependencies ``` compile 'com.android.support:support-v4:+'   ``` to   ```compile 'com.android.support:support-v4:27.1.0'  ```in the file [cordova-plugin-dbr/src/android/barcodescanner.gradle](https://github.com/dynamsoft-dbr/cordova-plugin-dbr/blob/master/src/android/barcodescanner.gradle)
 
+- If you encounter an error while deploying your Cordova application to the App Store (iOS), please note that it could be related to a known issue regarding unsupported architectures. This is because the DBR Cordova Plugin currently uses the `.framework` instead of the newly created `.xcframework`. To resolve this error currently, please refer to this [page](https://www.dynamsoft.com/barcode-reader/programming/objectivec-swift/user-guide.html?ver=latest#unsupported-architectures-error-when-building-and-releasing-the-application-for-the-app-store). 
+
 ## Example
 
 **index.html**
