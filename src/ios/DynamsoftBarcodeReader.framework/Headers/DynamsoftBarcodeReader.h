@@ -6,7 +6,8 @@
 
 #import <UIKit/UIKit.h>
 
-static NSString* _Nonnull const DBRErrorDomain = @"com.dynamsoft.barcodereader.error";
+@class DynamsoftCameraEnhancer;
+
 /**
  * @defgroup IOSAPI iOS APIs
  * @{
@@ -1210,6 +1211,32 @@ typedef NS_ENUM(NSInteger,EnumProduct)
 };
 
 /**
+* @enum EnumPresetTemplate
+*
+* Describes the PresetTemplate.
+*/
+typedef NS_ENUM(NSInteger,EnumPresetTemplate)
+{
+    /**Default Template.*/
+    EnumPresetTemplateDefault = 0,
+    
+    /**VideoSingleBarcode Template.*/
+    EnumPresetTemplateVideoSingleBarcode = 1,
+    
+    /**VideoSpeedFirst Template.*/
+    EnumPresetTemplateVideoSpeedFirst = 2,
+    
+    /**VideoReadRateFirst Template.*/
+    EnumPresetTemplateVideoReadRateFirst = 3,
+    
+    /**ImageSpeedFirst Template.*/
+    EnumPresetTemplateImageSpeedFirst = 4,
+    
+    /**ImageReadRateFirst Template.*/
+    EnumPresetTemplateImageReadRateFirst = 5
+};
+
+/**
  * @} defgroup Enum Enumerations
  */
 
@@ -1384,7 +1411,8 @@ typedef NS_ENUM(NSInteger,EnumProduct)
 
 @end
 
-
+#if !defined(regionDefinition)
+#define regionDefinition
 /**
 *Stores the region info.
 */
@@ -1444,7 +1472,7 @@ typedef NS_ENUM(NSInteger,EnumProduct)
 @property (nonatomic, assign) NSInteger regionMeasuredByPercentage;
 
 @end
-
+#endif
 
 /**
 * Defines a struct to configure the runtime settings for barcode reading.
@@ -2591,6 +2619,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectio
  *
 */
 
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
 @interface iDCESettingParameters : NSObject
 
 @property (nonatomic, assign, nullable) id cameraInstance;
@@ -2632,8 +2661,28 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectio
   */
 @property (nonatomic, nonnull) NSString* license;
 
+/**
+ * Verify the correctness of the barcode results before they are output
+ *
+ * @par Code Snippet:
+ * @code
+    DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+
+    [barcodeReader setEnableResultVerification:true];
+ * @endcode
+ */
 @property (nonatomic, assign) BOOL enableResultVerification;
 
+/**
+ * The duplicated results will be filtered and output only once for every 3 seconds.
+ *
+ * @par Code Snippet:
+ * @code
+    DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+
+    [barcodeReader setEnableDuplicateFilter:true];
+ * @endcode
+ */
 @property (nonatomic, assign) BOOL enableDuplicateFilter;
 
 /**
@@ -3443,7 +3492,64 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectio
      [barcodeReader setCameraEnhancerPara:parameters];
  * @endcode
  */
-- (void)setCameraEnhancerPara:(iDCESettingParameters* _Nonnull)parameters;
+- (void)setCameraEnhancerPara:(iDCESettingParameters* _Nonnull)parameters
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use setCameraEnhancer: instead.");
+
+/**
+ * Bind the CameraEnhancer instance to the Barcode Reader.
+ *
+ * @param [in] cameraInstance The instance of Dynamsoft Camera Enhancer.
+ * 
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     DCECameraView *cameraView = [DCECameraView cameraWithFrame:self.view.bounds];
+     DynamsoftCameraEnhancer *cameraEnhancer = [[DynamsoftCameraEnhancer alloc] initWithView:cameraView];
+
+     [barcodeReader setCameraEnhancer:cameraEnhancer];
+ * @endcode
+*/
+- (void)setCameraEnhancer:(DynamsoftCameraEnhancer* _Nonnull)cameraInstance;
+
+/**
+ * Start the video streaming barcode decoding thread.
+ *
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+
+     [barcodeReader startScanning];
+ * @endcode
+*/
+- (void)startScanning;
+
+/**
+ * Stop the video streaming barcode decoding thread.
+ *
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+
+     [barcodeReader stopScanning];
+ * @endcode
+*/
+- (void)stopScanning;
+
+/**
+ * Update the runtime settings from a preset template.
+ *
+ * @param [in] tpl One of the preset template in EnumPresetTemplate.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+
+     [barcodeReader updateRuntimeSettings:EnumPresetTemplate.EnumPresetTemplateVideoSingleBarcode]
+ * @endcode
+*/
+- (void)updateRuntimeSettings:(EnumPresetTemplate)tpl;
 
 /**
 * @}
