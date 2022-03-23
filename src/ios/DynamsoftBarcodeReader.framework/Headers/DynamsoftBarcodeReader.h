@@ -196,6 +196,9 @@ typedef NS_ENUM(NSInteger, EnumErrorCode)
     /**The DotCode license is invalid*/
     EnumErrorCode_DOTCODE_LICENSE_INVALID        = -10061,
     
+    /**The PHARMACODE license is invalid*/
+    EnumErrorCode_PHARMACODE_LICENSE_INVALID        = -10062,
+    
     /**No license.*/
     EnumErrorCode_NO_LICENSE                     = -20000,
     
@@ -257,6 +260,15 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat2)
     
     /** Nonstandard barcode */
     EnumBarcodeFormat2NONSTANDARDBARCODE     = 0x01,
+    
+    /** PHARMACODE_ONE_TRACK */
+    EnumBarcodeFormat2PHARMACODE_ONE_TRACK    = 0x04,
+    
+    /** PHARMACODE_ONE_TRACK */
+    EnumBarcodeFormat2PHARMACODE_TWO_TRACK    = 0x08,
+    
+    /** PHARMACODE */
+    EnumBarcodeFormat2PHARMACODE              = 0x0C,
     
     /** DotCode Barcode.
      When you set this barcode format, the library will automatically add EnumLocalizationModeStatisticsMarks to EnumLocalizationMode if you don't set it,*/
@@ -358,6 +370,9 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     /** Patch code. */
     EnumBarcodeFormatPATCHCODE           = 0x00040000,
     
+    /** CODE_11 . */
+    EnumBarcodeFormatCODE_11             = 0x200000,
+    
 	/** PDF417 */
     EnumBarcodeFormatPDF417     		 = 0x02000000,
 
@@ -383,13 +398,13 @@ typedef NS_OPTIONS(NSInteger , EnumBarcodeFormat)
     EnumBarcodeFormatGS1COMPOSITE        = -2147483648,
 
     /** Combined value of BF_CODABAR, BF_CODE_128, BF_CODE_39, BF_CODE_39_Extended, BF_CODE_93, BF_EAN_13, BF_EAN_8, INDUSTRIAL_25, BF_ITF, BF_UPC_A, BF_UPC_E, BF_MSI_CODE*/
-    EnumBarcodeFormatONED                = 0x001007FF,
+    EnumBarcodeFormatONED                = 0x003007FF,
     
     /** Combined value of BF_GS1_DATABAR_OMNIDIRECTIONAL, BF_GS1_DATABAR_TRUNCATED, BF_GS1_DATABAR_STACKED, BF_GS1_DATABAR_STACKED_OMNIDIRECTIONAL, BF_GS1_DATABAR_EXPANDED, BF_GS1_DATABAR_EXPANDED_STACKED, BF_GS1_DATABAR_LIMITED */
     EnumBarcodeFormatGS1DATABAR          = 0x0003F800,
     
 	/** All supported formats in BarcodeFormat group 1. */
-    EnumBarcodeFormatALL                 = -31457281
+    EnumBarcodeFormatALL                 = -29360129
 
 };
 
@@ -761,6 +776,12 @@ typedef NS_ENUM(NSInteger, EnumDeformationResistingMode)
 
 	/** Resists deformation using the general algorithm. Check @ref DRM for available argument settings.*/
 	EnumDeformationResistingModeGeneral = 0x02,
+    
+    EnumDeformationResistingModeBroadWrap = 0x04,
+    
+    EnumDeformationResistingModeLocalReference = 0x08,
+    
+    EnumDeformationResistingModeDewrinkle = 0x10,
 
 	/** Skips the deformation resisting operation. */
 	EnumDeformationResistingModeSkip 	= 0x00,
@@ -795,22 +816,22 @@ typedef NS_ENUM(NSInteger, EnumResultType)
 typedef NS_ENUM(NSInteger, EnumTerminatePhase) 
 {
 	/** Exits the barcode reading algorithm after the region predetection is done. */
-    EnumTerminatePhasePredetected 	 = 0x01,
+    EnumTerminatePhasePredetected NS_SWIFT_NAME(Predetected)    = 0x01,
 
 	/** Exits the barcode reading algorithm after the region predetection and image pre-processing is done. */
-    EnumTerminatePhasePreprocecessed = 0x02,
+    EnumTerminatePhasePreprocecessed NS_SWIFT_NAME(Preprocecessed) = 0x02,
 
 	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, and image binarization are done. */
-    EnumTerminatePhaseBinarized 	 = 0x04,
+    EnumTerminatePhaseBinarized NS_SWIFT_NAME(Binarized)	 = 0x04,
 
 	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization, and barcode localization are done. */
-    EnumTerminatePhasesLocalized  	 = 0x08,
+    EnumTerminatePhaseLocalized NS_SWIFT_NAME(Localized) 	 = 0x08,
 
 	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization, barcode localization, and barcode type determining are done. */
-    EnumTerminatePhaseDetermined 	 = 0x10,
+    EnumTerminatePhaseDetermined NS_SWIFT_NAME(Determined)	 = 0x10,
 
 	/** Exits the barcode reading algorithm after the region predetection, image pre-processing, image binarization, barcode localization, barcode type determining, and barcode recognition are done. */
-    EnumTerminatePhaseRecognized 	 = 0x20
+    EnumTerminatePhaseRecognized NS_SWIFT_NAME(Recognized)	 = 0x20
 };
 
 /**
@@ -1013,26 +1034,6 @@ typedef NS_ENUM(NSInteger,EnumScaleUpMode)
 };
 
 /**
-* Describes the clarity calculation method.
-* @enum ClarityCalculationMethod
-*/
-typedef NS_ENUM(NSInteger,EnumClarityCalculationMethod)
-{
-    /** Calculates clarity using the contrast method.*/
-    EnumClarityCalculationMethodContrast = 0x01
-};
-
-/**
-*Describes the clarity filter mode.
-*@enum ClarityFilterMode
-*/
-typedef NS_ENUM(NSInteger,EnumClarityFilterMode)
-{
-    /** Filters the frames using the general algorithm based on calculated clarity.*/
-    EnumClarityFilterModeGeneral = 0x01
-};
-
-/**
 *Describes the  PDF reading mode.
 *@enum PDFReadingMode
 */
@@ -1095,6 +1096,7 @@ typedef NS_ENUM(NSInteger,EnumDeblurMode)
  * Describes UUID generation method.
  * @enum DMUUIDGenerationMethod
 */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 typedef NS_ENUM(NSInteger, EnumDMUUIDGenerationMethod)
 {
     /**Generates UUID with random values.*/
@@ -1108,6 +1110,7 @@ typedef NS_ENUM(NSInteger, EnumDMUUIDGenerationMethod)
  *Describes Dynamsoft license modules.
  *@enum DMLicenseModule
 */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 typedef NS_ENUM(NSInteger, EnumDMLicenseModule)
 {
     /**One-D barcodes license module.*/
@@ -1157,6 +1160,7 @@ typedef NS_ENUM(NSInteger, EnumDMLicenseModule)
 * Describes the charge way.
 * @enum DMChargeWay
 */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 {
     /**The charge way automatically determined by the license server.*/
@@ -1189,6 +1193,7 @@ typedef NS_ENUM(NSInteger,EnumDMChargeWay)
 *
 * Describes the Product.
 */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 typedef NS_ENUM(NSInteger,EnumProduct)
 {
     /**Dynamsoft Barcode Reader.*/
@@ -1233,7 +1238,10 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
     EnumPresetTemplateImageSpeedFirst = 4,
     
     /**ImageReadRateFirst Template.*/
-    EnumPresetTemplateImageReadRateFirst = 5
+    EnumPresetTemplateImageReadRateFirst = 5,
+
+    /**ImageDefault Template.*/
+    EnumPresetTemplateImageDefault = 6
 };
 
 /**
@@ -1745,130 +1753,6 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
 
 @end
 
-
-/**
- * Defines a struct to configure the frame decoding Parameters.
- */
-@interface iFrameDecodingParameters : NSObject
-
-/**The max count of frames waiting for decoding.
- *
- * @par Value range:
- *         [0,0x7fffffff]
- * @par Default value:
- *         3
- */
-@property (nonatomic, assign) NSInteger maxQueueLength;
-
-/**The max count of frames whose decoding results (text result/localization result) to be kept for further reference.
- *
- * @par Value range:
- *         [0, 0x7fffffff]
- * @par Default value:
- *         10
- */
-@property (nonatomic, assign) NSInteger maxResultQueueLength;
-
-/**The width of the frame image in pixels.
- *
- * @par Value range:
- *         [0, 0x7fffffff]
- * @par Default value:
- *         0
- */
-@property (nonatomic, assign) NSInteger width;
-
-/**The height of the frame image in pixels.
- *
- * @par Value range:
- *         [0, 0x7fffffff]
- * @par Default value:
- *         0
- */
-@property (nonatomic, assign) NSInteger height;
-
-/**The stride (or scan width) of the frame image.
- *
- * @par Value range:
- *         [0,0x7fffffff]
- * @par Default value:
- *         0
- */
-@property (nonatomic, assign) NSInteger stride;
-
-/**The image pixel format used in the image byte array.
- *
- * @par Value range:
- *         A value of ImagePixelFormat Enumeration items
- * @par Default value:
- *         EnumImagePixelFormatGrayScaled
- * @sa EnumImagePixelFormat
- */
-@property (nonatomic, assign) EnumImagePixelFormat imagePixelFormat;
-
-/**The region definition of the frame for calculating the internal indicator.
- *
- * @sa iRegionDefinition
- */
-@property (nonatomic, nonnull) iRegionDefinition* region;
-
-/**The threshold used for filtering frames.
- *
- * @par Value range:
- *         [0, 1]
- * @par Default value:
- *         0.1
- * @par Remarks:
- *         The library will calculate an inner indicator for each frame coming from AppendFrame. If the change rate of the indicators
- *         between the current frame and the history frames is larger than the given threshold, 
- *         the current frame will not be added to the inner frame queue waiting for decoding.
- */
-@property (nonatomic, assign) float threshold;
-
-/**The frequency of calling method AppendFrame per second.
- *
- * @par Value range:
- *         [0,0x7fffffff]
- * @par Default value:
- *         0
- * @par Remarks:
- *          0 means the frequency will be calculated automatically by the library.
- */
-@property (nonatomic, assign) NSInteger fps;
-
-/** Sets whether to filter frames automatically.
- *
- * @par Value range:
- *         [0, 1]
- * @par Default value:
- *         1
- * @par Remarks:
- *          0:Disable filtering frames automatically. 1:Enable filtering frames automatically.
-*/
-@property (nonatomic, assign) NSInteger autoFilter;
-
-/** Sets the method used for calculating the clarity of the frames.
- *
- * @par Value range:
- *         Any one of the ClarityCalculationMethod Enumeration items.
- * @par Default value:
- *         EnumClarityCalculationMethodContrast
- * @sa EnumClarityCalculationMethod
-*/
-@property (nonatomic, assign) EnumClarityCalculationMethod clarityCalculationMethod;
-
-/** Sets the mode used for filtering frames by calculated clarity.
- *
- * @par Value range:
- *         Any one of the ClarityFilterMode Enumeration items.
- * @par Default value:
- *         EnumClarityFilterModeGeneral
- * @sa EnumClarityFilterMode
-*/
-@property (nonatomic, assign) EnumClarityFilterMode clarityFilterMode;
-
-@end
-
 /**
  * Stores the sampling image data.
  *
@@ -2370,6 +2254,7 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
 /**
  * Protocol for a delegate to handle callback when text result returned.
  */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 @protocol DBRTextResultDelegate <NSObject>
 
 @required
@@ -2389,16 +2274,41 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
      - (void)textResultCallback:(NSInteger)frameId results:(NSArray<iTextResult*>*)results userData: (NSObject*)userData {
         //TODO add your code for using test results
     }
-    [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:nil];
 * @endcode
 */
 - (void)textResultCallback:(NSInteger)frameId results:(NSArray<iTextResult*>* _Nullable)results userData: (NSObject* _Nullable)userData;
 
 @end
 
+@protocol DBRTextResultListener <NSObject>
+
+@required
+/**
+* Represents the method to handle the text result array returned by the library.
+*
+* @param frameId The ID of the frame.
+* @param imageData The image data of the frame.
+* @param results Recognized barcode results of the frame.
+*
+* @sa TextResultArray
+*
+* @par Code Snippet:
+* @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     - (void)textResultCallback:(NSInteger)frameId imageData:(iImageData *)imageData results:(NSArray<iTextResult*>*)results{
+        //TODO add your code for using test results
+    }
+* @endcode
+*/
+- (void)textResultCallback:(NSInteger)frameId imageData:(iImageData *_Nonnull)imageData results:(NSArray<iTextResult*>* _Nullable)results;
+
+@end
+
 /**
  * Protocol for a delegate to handle callback when intermediate result returned.
  */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 @protocol DBRIntermediateResultDelegate <NSObject>
 
 @required
@@ -2418,43 +2328,41 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
      - (void)intermediateResultCallback:(NSInteger)frameId results:(NSArray<iIntermediateResult*>* _Nullable)results userData: (NSObject* _Nullable)userData {
          //TODO add your code for using intermediate results
      }
-     [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:nil];
  * @endcode
  */
 - (void)intermediateResultCallback:(NSInteger)frameId results:(NSArray<iIntermediateResult*>* _Nullable)results userData: (NSObject* _Nullable)userData;
 
 @end
 
-/**
- * Protocol for a delegate to handle callback when an error returned.
- */
-@protocol DBRErrorDelegate <NSObject>
+@protocol DBRIntermediateResultListener <NSObject>
 
 @required
 /**
- * Represents the method to handle the error code returned by the library.
+ * Represents the method to handle the intermediate result array returned by the library.
  *
  * @param frameId The ID of the frame.
- * @param errorCode Error Code generated when decoding the frame.
- * @param userData Arguments to pass to your function.
+ * @param imageData The image data of the frame.
+ * @param results The intermediate results of the frame.
  *
- * @sa ErrorCode
+ * @sa IntermediateResultArray
  *
  * @par Code Snippet:
  * @code
-     - (void)errorCallback:(NSInteger)frameId errorCode:(NSInteger)errorCode userData:(NSObject* _Nullable)userData
-     {
-        //TODO add your code for using error results
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     - (void)intermediateResultCallback:(NSInteger)frameId imageData:(iImageData *)imageData results:(NSArray<iIntermediateResult*>* _Nullable)results{
+         //TODO add your code for using intermediate results
      }
  * @endcode
  */
-- (void)errorCallback:(NSInteger)frameId errorCode:(NSInteger)errorCode userData: (NSObject* _Nullable)userData;
+- (void)intermediateResultCallback:(NSInteger)frameId imageData:(iImageData *_Nonnull)imageData results:(NSArray<iIntermediateResult*>* _Nullable)results;
 
 @end
 
 /**
  * Protocol for a delegate to handle callback when license verification message returned.
  */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 @protocol DBRServerLicenseVerificationDelegate <NSObject>
 
 @required
@@ -2474,44 +2382,14 @@ typedef NS_ENUM(NSInteger,EnumPresetTemplate)
      }
  * @endcode
  */
-- (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
+- (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
 @end
 
 /**
  * Protocol for a delegate to handle callback when license verification message returned.
  */
-
-DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use DMDLSLicenseVerificationDelegate instead.")
-@protocol DMLTSLicenseVerificationDelegate <NSObject>
-
-@required
-/**
- * The callback of license server.
- *
- * @param [in,out] isSuccess Whether the license verification was successful.
- * @param [in,out] error The error message from license server.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     iDMLTSConnectionParameters* lts = [[iDMLTSConnectionParameters alloc] init];
-     lts.handshakeCode = @"*****-hs-****";
-     lts.sessionPassword = @"******";
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromLTS:lts verificationDelegate:self];
-     - (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
-     {
-         //TODO add your code for license verification
-     }
- * @endcode
- */
-- (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use DLSLicenseVerificationCallback: instead.");
-
-@end
-
-/**
- * Protocol for a delegate to handle callback when license verification message returned.
- */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release, use initLicense instead.")
 @protocol DMDLSLicenseVerificationDelegate <NSObject>
 
 @required
@@ -2533,46 +2411,29 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use DMDLSLicenseVer
      }
  * @endcode
  */
-- (void)DLSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
+- (void)DLSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release, use initLicense instead.");
 
 @end
 
+@protocol DBRLicenseVerificationListener <NSObject>
+
+@required
 /**
-* iDMLTSConnectionParameters
-*
-*/
-DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectionParameters: instead.")
-@interface iDMLTSConnectionParameters : NSObject
-
-/** The URL of the  license tracking server. */
-@property (nonatomic, nullable) NSString* mainServerURL;
-
-/** The URL of the  standby license tracking server. */
-@property (nonatomic, nullable) NSString* standbyServerURL;
-
-/** Set the organization ID. */
-@property (nonatomic, nullable) NSString* organizationID;
-
-/** The handshake code. */
-@property (nonatomic, nullable) NSString* handshakeCode;
-
-/** The session password of the handshake code set in license tracking server. */
-@property (nonatomic, nullable) NSString* sessionPassword;
-
-/** Set the charge way. */
-@property (nonatomic, assign) EnumDMChargeWay chargeWay;
-
-/** Set the method to generate UUID. */
-@property (nonatomic, assign) EnumDMUUIDGenerationMethod UUIDGenerationMethod;
-
-/** Set the max days to buffer the license info. */
-@property (nonatomic, assign) NSInteger maxBufferDays;
-
-/** Set the count of license modules to use. */
-@property (nonatomic, nullable) NSArray* limitedLicenseModules;
-
-/** Set the products. A combined value of Product Enumration items. */
-@property (nonatomic, assign) EnumProduct products;
+ * The callback of license server when using method initLicense.
+ *
+ * @param [in,out] isSuccess Whether the license verification was successful.
+ * @param [in,out] error The error message from license server.
+ *
+ * @par Code Snippet:
+ * @code
+     [DynamsoftBarcodeReader initLicense:@"Put your license here" verificationDelegate:self];
+     - (void)DBRLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
+     {
+         //TODO add your code for license verification
+     }
+ * @endcode
+ */
+- (void)DBRLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error;
 
 @end
 
@@ -2580,6 +2441,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectio
 * iDMDLSConnectionParameters
 *
 */
+DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.")
 @interface iDMDLSConnectionParameters : NSObject
 
 /** The URL of the  license tracking server. */
@@ -2615,26 +2477,6 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use iDMDLSConnectio
 @end
 
 /**
- * DCESettingParameters
- *
-*/
-
-DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
-@interface iDCESettingParameters : NSObject
-
-@property (nonatomic, assign, nullable) id cameraInstance;
-
-@property (nonatomic, weak, nullable) id<DBRTextResultDelegate> textResultDelegate;
-
-@property (nonatomic, weak, nullable) id<DBRIntermediateResultDelegate> intermediateResultDelegate;
-
-@property (nonatomic, assign, nullable) NSObject* textResultData;
-
-@property (nonatomic, assign, nullable) NSObject* intermediateResultData;
-
-@end
-
-/**
 * Defines a class that provides functions for working with extracting barcode data. 
 * 
 * Four methods are now supported for editing runtime settings - reset, initialize, append, and update.
@@ -2655,11 +2497,6 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
 */
 
 @interface DynamsoftBarcodeReader: NSObject
-
- /**
-  * Stores the license used in DynamsoftBarcodeReader.
-  */
-@property (nonatomic, nonnull) NSString* license;
 
 /**
  * Verify the correctness of the barcode results before they are output
@@ -2706,6 +2543,23 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  */
 - (instancetype _Nonnull)init;
 
+/**
+ * Static license activation method.
+ *
+ * @param [in] license The license key.
+ * @param [in,out] verificationDelegate DBRLicenseVerificationListener.
+ *
+ * @par Code Snippet:
+ * @code
+     [DynamsoftBarcodeReader initLicense:@"Put your license here" verificationDelegate:self];
+     - (void)DBRLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
+     {
+         //TODO add your code for license verification
+     }
+ * @endcode
+ */
++ (void)initLicense:(nonnull NSString *)license verificationDelegate:(nonnull id<DBRLicenseVerificationListener>)listener NS_SWIFT_NAME(initLicense(_:verificationDelegate:));
+
  /**
   * Initializes DynamsoftBarcodeReader with a license.
   *
@@ -2719,7 +2573,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
       barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
   * @endcode
   */
-- (instancetype _Nonnull)initWithLicense:(NSString* _Nonnull)license;
+- (instancetype _Nonnull)initWithLicense:(NSString* _Nonnull)license DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
 /**
  * Initializes DynamsoftBarcodeReader with a license and connects to the specified server for online verification.
@@ -2747,33 +2601,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
 
 - (instancetype _Nonnull)initWithLicenseFromServer:(NSString* _Nullable)licenseServer
                                         licenseKey:(NSString* _Nonnull)licenseKey
-                              verificationDelegate:(id _Nullable)connectionDelegate;
-
-/**
- * Initializes the barcode reader license and connects to the specified server for online verification.
- *
- * @param [in] ltsConnectionParameters The struct DMLTSConnectionParameters with customized settings.
- * @param [in,out] connectionDelegate The delegate to handle callback when license server returns.
- *
- * @return The instance of DynamsoftBarcodeReader.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     iDMLTSConnectionParameters* lts = [[iDMLTSConnectionParameters alloc] init];
-     lts.handshakeCode = @"*****-hs-****";
-     lts.sessionPassword = @"******";
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initLicenseFromLTS:lts verificationDelegate:self];
- 
-     - (void)LTSLicenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
-     {
-         //TODO add your code for license verification
-     }
- * @endcode
- */
-
-- (instancetype _Nonnull)initLicenseFromLTS:(iDMLTSConnectionParameters* _Nullable)ltsConnectionParameters
-                       verificationDelegate:(id _Nullable)connectionDelegate DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use initLicenseFromDLS: instead.");
+                              verificationDelegate:(id _Nullable)connectionDelegate DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
 /**
  * Initializes the barcode reader license and connects to the specified server for online verification.
@@ -2796,9 +2624,8 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      }
  * @endcode
  */
-
 - (instancetype _Nonnull)initLicenseFromDLS:(iDMDLSConnectionParameters* _Nullable)dlsConnectionParameters
-                       verificationDelegate:(id _Nullable)connectionDelegate;
+                       verificationDelegate:(id _Nullable)connectionDelegate DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
 /**
  * Outputs the license content as an encrypted string from the license server to be used for offline license verification.
@@ -2809,7 +2636,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader outputLicenseToString:&error];
      - (void)licenseVerificationCallback:(bool)isSuccess error:(NSError * _Nullable)error
@@ -2821,7 +2648,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  *
  * @endcode
  */	
-- (NSString *_Nullable)outputLicenseToString:(NSError* _Nullable * _Nullable)error;
+- (NSString *_Nullable)outputLicenseToString:(NSError* _Nullable * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
 /**
  * Destroys an instance of Dynamsoft Barcode Reader.
@@ -2829,7 +2656,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
        DynamsoftBarcodeReader *barcodeReader;
-       barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+       barcodeReader = [[DynamsoftBarcodeReader alloc] init];
        [barcodeReader dispose];
  * @endcode
  */
@@ -2843,7 +2670,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
         DynamsoftBarcodeReader *barcodeReader;
-        barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+        barcodeReader = [[DynamsoftBarcodeReader alloc] init];
         NSString* version = [barcodeReader getVersion];
  * @endcode
  */
@@ -2863,7 +2690,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader getRuntimeSettings:&error];
  * @endcode
@@ -2880,15 +2707,15 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      iPublicRuntimeSettings *settings;
  
      [barcodeReader updateRuntimeSettings:settings error:&error];
  * @endcode
  */
-- (void)updateRuntimeSettings:(iPublicRuntimeSettings* _Nonnull)settings
-                        error:(NSError* _Nullable * _Nullable)error;
+- (BOOL)updateRuntimeSettings:(iPublicRuntimeSettings* _Nonnull)settings
+                        error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(updateRuntimeSettings(_:));
 
 /**
  * Resets all parameters to default values.
@@ -2898,13 +2725,13 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
  
      [barcodeReader resetRuntimeSettings:&error];
  * @endcode
  */
-- (void)resetRuntimeSettings:(NSError* _Nullable * _Nullable)error;
+- (BOOL)resetRuntimeSettings:(NSError* _Nullable * _Nullable)error;
 
 /**
  * Sets the optional argument for a specified mode in Modes parameters.
@@ -2921,7 +2748,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      iPublicRuntimeSettings *settings;
      NSError __autoreleasing * _Nullable error;
      NSMutableArray *mArray = [NSMutableArray arrayWithArray:settings.binarizationModes];
@@ -2932,7 +2759,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      [barcodeReader setModeArgument:@"BinarizationModes" index:0 argumentName:@"EnableFillBinaryVacancy" argumentValue:"1" error:&error];
  * @endcode
  */
--(void)setModeArgument:(NSString* _Nonnull)modeName
+-(BOOL)setModeArgument:(NSString* _Nonnull)modeName
                  index:(NSInteger)index
           argumentName:(NSString* _Nonnull)argumentName
          argumentValue:(NSString* _Nonnull)argumentValue
@@ -2950,7 +2777,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      iPublicRuntimeSettings *settings;
      NSError __autoreleasing * _Nullable error;
      NSString *argumentValue;
@@ -2963,7 +2790,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      argumentValue = [barcodeReader getModeArgument:@"BinarizationModes" index:0 argumentName:@"EnableFillBinaryVacancy" error:&error];
  * @endcode
  */
--(NSString* _Nonnull)getModeArgument:(NSString* _Nonnull)modeName
+-(NSString *)getModeArgument:(NSString* _Nonnull)modeName
                                index:(NSInteger)index
                         argumentName:(NSString* _Nonnull)argumentName
                                error:(NSError* _Nullable * _Nullable)error;
@@ -3000,12 +2827,38 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  */
 - (NSArray<iTextResult*>* _Nullable)decodeIntermediateResults:(NSArray<iIntermediateResult*>* _Nullable)array
                                                  withTemplate:(NSString* _Nonnull)templateName
-                                                        error:(NSError *_Nullable *_Nullable)error;
+                                                        error:(NSError *_Nullable *_Nullable)error NS_SWIFT_NAME(decodeIntermediateResults(_:templateName:)) DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
+
+/**
+ * Decodes barcodes from intermediate results.
+ *
+ * @param [in] array The intermediate result array for decoding.
+ * @param [in] templateName The template name.
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ * @return All barcode text results decoded successfully.
+ *
+ * @par Code Snippet:
+ * @code
+    DynamsoftBarcodeReader *barcodeReader;
+    barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+    NSError __autoreleasing * _Nullable error;
+    [barcodeReader getRuntimeSettings:&error];
+    settings.intermediateResultTypes = EnumIntermediateResultTypeOriginalImage | EnumIntermediateResultTypeTypedBarcodeZone;
+    settings.intermediateResultSavingMode = EnumIntermediateResultSavingModeMemory;
+    [barcodeReader updateRuntimeSettings:settings error:&error];
+ 
+    NSArray<iTextResult*>* resultbyfile = [barcodeReader decodeFileWithName:@"your file path" error:&error];
+    NSArray<iIntermediateResult*>* array = [barcodeReader getIntermediateResult:&error];
+    NSArray<iTextResult*>* result = [barcodeReader decodeIntermediateResults:array error:&error];
+ * @endcode
+ */
+- (NSArray<iTextResult*>* _Nullable)decodeIntermediateResults:(NSArray<iIntermediateResult*>* _Nullable)array error:(NSError *_Nullable *_Nullable)error  NS_SWIFT_NAME(decodeIntermediateResults(_:));
+
 /**
  * Decodes barcodes from an image file encoded as a base64 string.
  *
  * @param [in] base64 A base64 encoded string that represents an image.
- * @param [in] templateName The template name.
  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
  *
  * @return All barcode text results decoded successfully.
@@ -3020,6 +2873,24 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  */
 - (NSArray<iTextResult*>* _Nullable)decodeBase64:(NSString* _Nonnull)base64
                                     withTemplate:(NSString* _Nonnull)templateName
+                                           error:(NSError* _Nullable * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
+/**
+ * Decodes barcodes from an image file encoded as a base64 string.
+ *
+ * @param [in] base64 A base64 encoded string that represents an image.
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ * @return All barcode text results decoded successfully.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     NSError __autoreleasing * _Nullable error;
+     NSArray<iTextResult*>* result = [barcodeReader decodeBase64:@"file in base64 string" error:&error];
+ * @endcode
+ */
+- (NSArray<iTextResult*>* _Nullable)decodeBase64:(NSString* _Nonnull)base64
                                            error:(NSError* _Nullable * _Nullable)error;
 
 /**
@@ -3042,7 +2913,27 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  */
 - (NSArray<iTextResult*>* _Nullable)decodeImage:(UIImage* _Nonnull)image
                                    withTemplate:(NSString* _Nonnull)templateName
-                                          error:(NSError* _Nullable * _Nullable)error;
+                                          error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(decodeImage(_:templateName:)) DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
+
+/**
+ * Decodes barcodes from an image file in memory.
+ *
+ * @param [in] image The image file in memory.
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ * @return All barcode text results decoded successfully.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     UIImage *image = [[UIImage alloc] init];
+     NSError __autoreleasing * _Nullable error;
+     NSArray<iTextResult*>* result = [barcodeReader decodeImage:image error:&error];
+ * @endcode
+ */
+- (NSArray<iTextResult*>* _Nullable)decodeImage:(UIImage* _Nonnull)image
+                                          error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(decodeImage(_:));
 
 /**
  * Decodes barcodes from the memory buffer containing image pixels in the defined format.
@@ -3076,13 +2967,44 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
                                           stride:(NSInteger)stride
                                           format:(EnumImagePixelFormat)format
                                     templateName:(NSString* _Nonnull)templateName
-                                           error:(NSError* _Nullable * _Nullable)error;
+                                           error:(NSError* _Nullable * _Nullable)error DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
+/**
+ * Decodes barcodes from the memory buffer containing image pixels in the defined format.
+ *
+ * @param [in] buffer The array of bytes which contain the image data.
+ * @param [in] width The width of the image in pixels.
+ * @param [in] height The height of the image in pixels.
+ * @param [in] stride The stride (or scan width) of the image.
+ * @param [in] format The image pixel format used in the image byte array.
+ * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+ *
+ * @return All barcode text results decoded successfully.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     NSData *bufferBytes = [[NSData alloc] init];
+     NSInteger iWidth = 0;
+     NSInteger iHeight = 0;
+     NSInteger iStride = 0;
+     NSInteger format;
+     NSError __autoreleasing * _Nullable error;
+     NSArray<iTextResult*>* result = [barcodeReader decodeBuffer:bufferBytes withWidth:iWidth height:iHeight stride:iStride format:format error:&error];
+ * @endcode
+ */
+- (NSArray<iTextResult*>* _Nullable)decodeBuffer:(NSData* _Nonnull)buffer
+                                       withWidth:(NSInteger)width
+                                          height:(NSInteger)height
+                                          stride:(NSInteger)stride
+                                          format:(EnumImagePixelFormat)format
+                                           error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(decodeBuffer(_:width:height:stride:format:));
 
  /**
   * Decodes barcodes in a specified local image.
   *
-  * @param [in] name The local path of the file.
+  * @param [in] path The local path of the file.
   * @param [in] templateName The template name.
   * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
   *
@@ -3096,130 +3018,28 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
       NSArray<iTextResult*>* result = [barcodeReader decodeFileWithName:@"your file path" templateName:@"" error:&error];
   * @endcode
   */
-- (NSArray<iTextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)name
+- (NSArray<iTextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)path
                                           templateName:(NSString* _Nonnull)templateName
-                                                 error:(NSError* _Nullable * _Nullable)error;
+                                                 error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(decodeFileWithName(_:templateName:)) DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
 
-/**
- * Starts a new thread to decode barcodes from the inner frame queue.
- * 
- * @param [in] maxQueueLength The max count of frames waiting for decoding.
- * @param [in] maxResultQueueLength The max count of frames whose results (text result/localization result) will be kept for further reference.
- * @param [in] width The width of the frame image in pixels.
- * @param [in] height The height of the frame image in pixels.
- * @param [in] stride The stride (or scan width) of the frame image.
- * @param [in] format The image pixel format used in the image byte array.
- * @param [in] templateName (Optional) The template name.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     NSError __autoreleasing * _Nullable error;
-     [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:&error];
- * @endcode
- */
--(void)startFrameDecoding:(NSInteger)maxQueueLength
-     maxResultQueueLength:(NSInteger)maxResultQueueLength
-                    width:(NSInteger)width
-                   height:(NSInteger)height
-                   stride:(NSInteger)stride
-                   format:(EnumImagePixelFormat)format
-             templateName:(NSString* _Nonnull)templateName
-                    error:(NSError* _Nullable * _Nullable)error;
-
-/**
- * Starts a new thread to decode barcodes from the inner frame queue.
- *
- * @param [in] parameters The frame decoding parameters.
- * @param [in] templateName The template name.
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     NSError __autoreleasing * _Nullable error;
-     iFrameDecodingParameters *parameters = [barcodeReader getFrameDecodingParameters:nil];
-     parameters.maxQueueLength = 2;
-     parameters.maxResultQueueLength = 10;
-     parameters.width = 1024;
-     parameters.height = 720;
-     parameters.stride = 720;
-     parameters.imagePixelFormat = EnumImagePixelFormatBinary;
-     [barcodeReader startFrameDecodingEx:parameters templateName:@"" error:&error];
- * @endcode
- */
--(void)startFrameDecodingEx:(iFrameDecodingParameters* _Nullable) parameters
-               templateName:(NSString* _Nonnull)templateName
-                      error:(NSError* _Nullable __autoreleasing* _Nullable)error;
-
-
-/**
- * Inits frame decoding parameters.
- *
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- * @return Returns frame decoding parameters.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     iFrameDecodingParameters *parameters = [barcodeReader getFrameDecodingParameters:nil];
- * @endcode
- */
--(iFrameDecodingParameters*_Nullable)getFrameDecodingParameters:(NSError* _Nullable * _Nullable)error;
-
-/**
- * Appends a frame image buffer to the inner frame queue.
- * 
- * @param [in] bufferBytes The array of bytes which contain the image data.
- *				   
- * @return Returns the ID of the appended frame.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     NSError __autoreleasing * _Nullable error;
-     [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:&error];
-     NSInteger frameId = [barcodeReader appendFrame:bufferBytes];
- * @endcode
- */	
--(NSInteger)appendFrame:(NSData* _Nullable) bufferBytes;
- 
-/**
- * Gets current length of the inner frame queue.
- *				   
- * @return Returns the length of the inner frame queue.
- *
- * @par Code Snippet:
- * @code
-    DynamsoftBarcodeReader *barcodeReader;
-    barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-    NSError __autoreleasing * _Nullable error;
-    NSInteger length = [barcodeReader getLengthOfFrameQueue];
- * @endcode
- */	
--(NSInteger)getLengthOfFrameQueue;
-
-/**
- * Stops the frame decoding thread created by StartFrameDecoding.
- * 
- * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     NSError __autoreleasing * _Nullable error;
-     [barcodeReader startFrameDecoding:2 maxResultQueueLength:10 width:1024 height:720 stride:720 format:EnumImagePixelFormatBinary templateName:@"" error:&error];
-     [barcodeReader stopFrameDecoding:&error];
- * @endcode
- */
--(void)stopFrameDecoding:(NSError* _Nullable * _Nullable)error;
+ /**
+  * Decodes barcodes in a specified local image.
+  *
+  * @param [in] path The local path of the file.
+  * @param [in,out] error Input a pointer to an error object. If an error occurs, this pointer is set to an actual error object containing the error information. You may specify nil for this parameter if you do not want the error information.
+  *
+  * @return All barcode text results decoded successfully.
+  *
+  * @par Code Snippet:
+  * @code
+      DynamsoftBarcodeReader *barcodeReader;
+      barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+      NSError __autoreleasing * _Nullable error;
+      NSArray<iTextResult*>* result = [barcodeReader decodeFileWithName:@"your file path" error:&error];
+  * @endcode
+  */
+- (NSArray<iTextResult*>* _Nullable)decodeFileWithName:(NSString* _Nonnull)path
+                                                 error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(decodeFileWithName(_:));
 
 /**
  * @}
@@ -3235,7 +3055,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
  
      [barcodeReader allParameterTemplateNames:&error];
@@ -3256,14 +3076,14 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader initRuntimeSettingsWithFile:@"your template file path" conflictMode:EnumConflictModeOverwrite error:&error];
  * @endcode
  */
-- (void)initRuntimeSettingsWithFile:(NSString* _Nonnull)fileName
+- (BOOL)initRuntimeSettingsWithFile:(NSString* _Nonnull)fileName
                        conflictMode:(EnumConflictMode)conflictMode
-                              error:(NSError* _Nullable * _Nullable)error;
+                              error:(NSError* _Nullable * _Nullable)error  NS_SWIFT_NAME(initRuntimeSettingsWithFile(_:conflictMode:));
 
 /**
  * Initialize runtime settings with the _Nullable settings in the given JSON string.
@@ -3278,14 +3098,14 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader initRuntimeSettingsWithString:@"{\"Version\":\"3.0\", \"ImageParameter\":{\"Name\":\"IP1\", \"BarcodeFormatIds\":[\"BF_QR_CODE\"], \"ExpectedBarcodesCount\":10}}" conflictMode:EnumConflictModeOverwrite error:&error];
  * @endcode
  */
-- (void)initRuntimeSettingsWithString:(NSString* _Nonnull)content
+- (BOOL)initRuntimeSettingsWithString:(NSString* _Nonnull)content
                          conflictMode:(EnumConflictMode)conflictMode
-                                error:(NSError* _Nullable * _Nullable)error;
+                                error:(NSError* _Nullable * _Nullable)error NS_SWIFT_NAME(initRuntimeSettingsWithString(_:conflictMode:));
 
 /**
  * Appends a new template file to the current runtime settings.
@@ -3300,14 +3120,14 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader appendTplFileToRuntimeSettings:@"your template file path" conflictMode:EnumConflictModeIgnore error:&error];
  * @endcode
  */
-- (void)appendTplFileToRuntimeSettings:(NSString * _Nonnull)fileName
+- (BOOL)appendTplFileToRuntimeSettings:(NSString * _Nonnull)fileName
 					      conflictMode:(EnumConflictMode)conflictMode
-                                 error:(NSError * _Nullable *_Nullable)error;
+                                 error:(NSError * _Nullable *_Nullable)error  NS_SWIFT_NAME(appendTplFileToRuntimeSettings(_:conflictMode:));
 
 /**
  * Appends a new template string to the current runtime settings.
@@ -3322,15 +3142,15 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @par Code Snippet:
  * @code
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      [barcodeReader initRuntimeSettingsWithString:@"{\"Version\":\"3.0\", \"ImageParameter\":{\"Name\":\"IP1\", \"BarcodeFormatIds\":[\"BF_QR_CODE\"], \"ExpectedBarcodesCount\":10}}" conflictMode:EnumConflictModeOverwrite error:&error];
      [barcodeReader appendTplStringToRuntimeSettings:@"{\"Version\":\"3.0\", \"ImageParameter\":{\"Name\":\"IP1\", \"BarcodeFormatIds\":[\"BF_OneD\"], \"ExpectedBarcodesCount\":20}}" conflictMode:EnumConflictModeIgnore error:&error];
  * @endcode
  */
-- (void)appendTplStringToRuntimeSettings:(NSString * _Nonnull)content
+- (BOOL)appendTplStringToRuntimeSettings:(NSString * _Nonnull)content
 							conflictMode:(EnumConflictMode)conflictMode
-                                   error:(NSError *_Nullable *_Nullable)error;
+                                   error:(NSError *_Nullable *_Nullable)error   NS_SWIFT_NAME(appendTplStringToRuntimeSettings(_:conflictMode:));
 
 /**
  * Outputs runtime settings to a string.
@@ -3344,14 +3164,14 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @code
      DynamsoftBarcodeReader *barcodeReader;
      NSString *settingsName;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      settingsName = [barcodeReader outputSettingsToString:@"currentRuntimeSettings" error:&error];
  * @endcode
  *
  */
 - (NSString *_Nullable)outputSettingsToString:(NSString*_Nonnull)settingsName 
-                                        error:(NSError* _Nullable * _Nullable)error;
+                                        error:(NSError* _Nullable * _Nullable)error  NS_SWIFT_NAME(outputSettingsToString(_:));
 
 /**
  * Outputs runtime settings and save it into a settings file (JSON file).
@@ -3365,36 +3185,14 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  * @code
      DynamsoftBarcodeReader *barcodeReader;
      NSString *settingsName;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
      NSError __autoreleasing * _Nullable error;
      settingsName = [barcodeReader outputSettingsToFile:@"your saving file path" settingsName:@"currentRuntimeSettings" error:&error];
  * @endcode
  */
-- (void)outputSettingsToFile:(NSString *_Nullable)filePath 
+- (BOOL)outputSettingsToFile:(NSString *_Nullable)filePath 
 				settingsName:(NSString*_Nonnull)settingsName 
-                       error:(NSError*_Nullable *_Nullable)error;
-
-/**
- * @}
- * @name Callback Functions
- * @{
- */
-
-
-/**
- * Sets callback function to process errors generated during frame decoding.
- * 
- * @param [in] errorDelegate Callback function.
- * @param [in] userData Customized arguments passed to your function.				 
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
-     [barcodeReader setDBRErrorDelegate:self userData:nil];
- * @endcode
- */
--(void)setDBRErrorDelegate:(id _Nullable)errorDelegate userData:(NSObject* _Nullable)userData;
+                       error:(NSError*_Nullable *_Nullable)error   NS_SWIFT_NAME(outputSettingsToFile(_:settingsName:));
 
 /**
  * Sets callback function to process text results generated during frame decoding.
@@ -3409,7 +3207,21 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      [barcodeReader setDBRTextResultDelegate:self userData:nil];
  * @endcode
  */
--(void)setDBRTextResultDelegate:(id _Nullable)textResultDelegate userData:(NSObject* _Nullable)userData;
+-(void)setDBRTextResultDelegate:(id _Nullable)textResultDelegate userData:(NSObject* _Nullable)userData DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
+
+/**
+ * Sets callback function to process text results generated during frame decoding.
+ * 
+ * @param [in] textResultDelegate Callback function.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     [barcodeReader setDBRTextResultListener:self];
+ * @endcode
+ */
+-(void)setDBRTextResultListener:(id<DBRTextResultListener> _Nullable)textResultDelegate;
 
 /**
  * Sets callback function to process intermediate results generated during frame decoding.
@@ -3424,7 +3236,21 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      [barcodeReader setDBRIntermediateResultDelegate:self userData:nil];
  * @endcode
  */
--(void)setDBRIntermediateResultDelegate:(id _Nullable)intermediateResultDelegate userData:(NSObject* _Nullable)userData;
+-(void)setDBRIntermediateResultDelegate:(id _Nullable)intermediateResultDelegate userData:(NSObject* _Nullable)userData DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr10.0 release.");
+
+/**
+ * Sets callback function to process intermediate results generated during frame decoding.
+ * 
+ * @param [in] intermediateResultDelegate Callback function.
+ *
+ * @par Code Snippet:
+ * @code
+     DynamsoftBarcodeReader *barcodeReader;
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
+     [barcodeReader setDBRIntermediateResultDelegate:self];
+ * @endcode
+ */
+-(void)setDBRIntermediateResultListener:(id<DBRIntermediateResultListener> _Nullable)intermediateResultDelegate;
 
 /**
  * @}
@@ -3444,7 +3270,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      NSArray<iTextResult *> *result;
      NSArray<iIntermediateResult *> *irResult;
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
  
      [barcodeReader getRuntimeSettings:&error];
      settings.intermediateResultTypes = EnumIntermediateResultTypeColourConvertedGrayScaleImage|EnumIntermediateResultTypeOriginalImage|EnumIntermediateResultTypeColourClusteredImage;
@@ -3465,7 +3291,7 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
      NSError __autoreleasing * _Nullable error;
      iIntermediateResult *irResult;
      DynamsoftBarcodeReader *barcodeReader;
-     barcodeReader = [[DynamsoftBarcodeReader alloc] initWithLicense:@"t0260NwAAAHV***************"];
+     barcodeReader = [[DynamsoftBarcodeReader alloc] init];
  
      iPublicRuntimeSettings *settings = [barcodeReader getRuntimeSettings:&error];
      settings.intermediateResultTypes = EnumIntermediateResultTypeOriginalImage;
@@ -3475,25 +3301,6 @@ DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release.")
  */
 - (iIntermediateResult *_Nullable)createIntermediateResult:(EnumIntermediateResultType)type
                                                      error:(NSError *_Nullable *_Nullable)error;
-
-/**
- * Set camera enhancer to DynamsoftBarcodeReader, get the barcode results in callback `textResultCallback:results:userData: `
- *
- *
- * @par Code Snippet:
- * @code
-     DynamsoftBarcodeReader *barcodeReader = [[DynamsoftBarcodeReader alloc] init];
-    
-     DCECameraView *scanView = [DCECameraView cameraWithFrame:self.view.bounds];
-     DynamsoftCameraEnhancer *cameraEnhancer = [[DynamsoftCameraEnhancer alloc] initWithView:scanView];
-     iDCESettingParameters *parameters = [[iDCESettingParameters alloc] init];
-     para.cameraInstance = cameraEnhancer;
-     para.textResultDelegate = self;
-     [barcodeReader setCameraEnhancerPara:parameters];
- * @endcode
- */
-- (void)setCameraEnhancerPara:(iDCESettingParameters* _Nonnull)parameters
-DEPRECATED_MSG_ATTRIBUTE("Will be removed in dbr9.0 release, use setCameraEnhancer: instead.");
 
 /**
  * Bind the CameraEnhancer instance to the Barcode Reader.

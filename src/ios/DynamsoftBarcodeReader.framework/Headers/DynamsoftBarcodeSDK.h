@@ -6,10 +6,4 @@
 
 #import <UIKit/UIKit.h>
 
-//! Project version number for DynamsoftBarcodeSDK.
-FOUNDATION_EXPORT double DynamsoftBarcodeSDKVersionNumber;
-
-//! Project version string for DynamsoftBarcodeSDK.
-FOUNDATION_EXPORT const unsigned char DynamsoftBarcodeSDKVersionString[];
-
 #import <DynamsoftBarcodeReader/DynamsoftBarcodeReader.h>
