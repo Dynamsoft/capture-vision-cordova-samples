@@ -28,6 +28,13 @@ To learn more about Dynamsoft Barcode Reader, please visit http://www.dynamsoft.
 5. Now for the implementation in the `www` folder, which should include a `index.html` file as well as a `js/index.js` file, please see the example below for reference.
 
 6. For the `iOS` platform, the DynamsoftBarcodeReader.framework that is included in the `platforms/ios/<project name>.xcodeproj` must be set to `Embed & Sign` in the General settings of the xcodeproj. This is important or it will result in an error.
+> Please note that when using Cordova 10 or higher on iOS, the following extra steps are required:
+> - `Photos.framework` must be manually added in the xcworkspace project under platforms/iOS
+> - Info.plist must be updated with the Privacy Camera and Privacy Photo properties to allow for camera usage and photo library access.
+> - You might need to manually change C++ language dialect of the build settings (in the xcworkspace) to GNU+11 if it is not the default.
+> - Once all these changes are done, the app successfully deploys via `cordova run ios --device` given that your test device is connected to your Mac machine.
+
+> IMPORTANT NOTE: Our SDK is not compatible with simulators as it requires the camera to operate. If you attempt to emulate the Cordova app on a simulator, you will most likely be faced with errors, which is the expected outcome.
     
 ## Supported Platforms
 
