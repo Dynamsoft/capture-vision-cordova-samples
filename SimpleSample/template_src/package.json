@@ -17,11 +17,11 @@
   "devDependencies": {
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",
-    "dynamsoft_cordova_plugin": "file:C:/Users/Allen/WorkplaceForALL/workpalce/ForCordova/CodeOnGithub/DynamsoftCordovaPlugin"
+    "henry-capture-vision-cordova": "^1.0.0"
   },
   "cordova": {
     "plugins": {
-      "dynamsoft_cordova_plugin": {}
+      "henry-capture-vision-cordova": {}
     },
     "platforms": [
       "android",
