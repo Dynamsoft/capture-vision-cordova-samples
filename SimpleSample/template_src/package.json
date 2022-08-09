@@ -16,6 +16,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^10.1.2",
+    "cordova-ios": "^6.2.0",
     "dynamsoft_cordova_plugin": "file:C:/Users/Allen/WorkplaceForALL/workpalce/ForCordova/CodeOnGithub/DynamsoftCordovaPlugin"
   },
   "cordova": {
@@ -23,7 +24,8 @@
       "dynamsoft_cordova_plugin": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
