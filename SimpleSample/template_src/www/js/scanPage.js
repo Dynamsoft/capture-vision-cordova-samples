@@ -36,7 +36,6 @@ async function onDeviceReady() {
         document.querySelector('#camera_view').appendChild(resultElement)
     })
 
-    var dce
     dce = await Dynamsoft.DCVCameraEnhancer.createInstance()
     
     dce.setScanRegion({
