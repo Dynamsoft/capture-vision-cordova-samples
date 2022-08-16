@@ -21,7 +21,7 @@ async function onDeviceReady() {
 
     dbr.updateRuntimeSettings(Dynamsoft.EnumDBRPresetTemplate.VIDEO_SPEED_FIRST)
 
-    dbr.setTextResultListener((results) => {
+    dbr.addResultListener((results) => {
         const resultElement = document.getElementById('show_result');
         var resultStr = ""
         if (results && results.length > 0) {
