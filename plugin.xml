@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="dynamsoft-capture-vision-cordova" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>DynamsoftCordovaPlugin</name>
+    <js-module name="DCVBarcodeReader" src="www/DCVBarcodeReader.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="DCVCameraEnhancer" src="www/DCVCameraEnhancer.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="DCVCameraView" src="www/DCVCameraView.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="BarcodeSettings" src="www/BarcodeSettings.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="BarcodeResult" src="www/BarcodeResult.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="BasicStructures" src="www/BasicStructures.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <js-module name="CameraSettings" src="www/CameraSettings.js">
+        <merges target="Dynamsoft" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="DynamsoftCordovaPlugin"><param name="android-package" value="com.dynamsoft.cordova.DynamsoftCordovaPlugin" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml" />
+        <source-file src="src/android/com/dynamsoft/cordova/DynamsoftCordovaPlugin.java" target-dir="src/com/dynamsoft/cordova" />
+        <source-file src="src/android/com/dynamsoft/cordova/TorchButtonState.java" target-dir="src/com/dynamsoft/cordova" />
+        <source-file src="src/android/com/dynamsoft/cordova/util/BitmapUtil.java" target-dir="src/com/dynamsoft/cordova/util" />
+        <source-file src="src/android/com/dynamsoft/cordova/handlers/BarcodeReaderHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
+        <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraEnhancerHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
+        <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraViewHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
+        <source-file src="src/android/com/dynamsoft/cordova/handlers/CommonHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
+        <framework custom="true" src="src/android/barcodereader.gradle" type="gradleReference" />
+    </platform>
+    <!--    ios-->
+    <!--    ios-->
+        <platform name="ios">
+            <config-file parent="/*" target="config.xml">
+                <feature name="DynamsoftCordovaPlugin">
+                    <param name="ios-package" value="DynamsoftCordovaPlugin" />
+                </feature>
+            </config-file>
+            
+            <!-- Declare Camera Usage for iOS 10+ -->
+            <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
+                <string>To scan barcodes.</string>
+            </config-file>
+            
+            <source-file src="src/ios/DynamsoftCordovaPlugin.m" />
+            <header-file src="src/ios/DynamsoftSDKManager.h" />
+            <source-file src="src/ios/DynamsoftSDKManager.m" />
+            <header-file src="src/ios/DynamsoftToolsManager.h" />
+            <source-file src="src/ios/DynamsoftToolsManager.m" />
+            <header-file src="src/ios/DynamsoftConvertManager.h" />
+            <source-file src="src/ios/DynamsoftConvertManager.m" />
+            <header-file src="src/ios/DynamsoftCameraView.h" />
+            <source-file src="src/ios/DynamsoftCameraView.m" />
+
+            <podspec>
+                <config>
+                    <source url="https://github.com/CocoaPods/Specs.git" />
+                </config>
+                <pods use-frameworks="true">
+
+                    <pod name="DynamsoftBarcodeReader" spec="9.2.10" />
+                    <pod name="DynamsoftCameraEnhancer" spec="2.3.2" />
+                </pods>
+            </podspec>
+
+        </platform>
+</plugin>

@@ -1,0 +1,35 @@
+{
+  "name": "dynamsoft-capture-vision-cordova",
+  "version": "1.0.0",
+  "description": "Dynamsoft Capture Vision Cordova SDK",
+  "homepage": "https://www.dynamsoft.com/capture-vision/docs/introduction",
+  "main": "./www/index.js",
+  "types": "./www/index.d.ts",
+  "license": "SEE LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dynamsoft/capture-vision-cordova.git"
+  },
+  "cordova": {
+    "id": "dynamsoft-capture-vision-cordova",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "barcode",
+    "PDF417",
+    "QR Code",
+    "DataMatrix",
+    "Linear barcode",
+    "1D barcode"
+  ],
+  "author": {
+    "name": "Dynamsoft",
+    "url": "https://www.dynamsoft.com",
+    "email": "support@dynamsoft.com"
+  }
+}
