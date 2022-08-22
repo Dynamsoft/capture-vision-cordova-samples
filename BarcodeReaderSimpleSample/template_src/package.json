@@ -1,0 +1,31 @@
+{
+  "name": "com.dynamsoft.barcodereadersimplesample",
+  "displayName": "BarcodeReaderSimpleSample",
+  "version": "1.0.0",
+  "description": "BarcodeReaderSimpleSample for Dynamsoft Capture Vision Cordova SDK.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "commonjs",
+  "types": "",
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Dynamsoft",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^10.1.2",
+    "cordova-ios": "^6.2.0",
+    "dynamsoft-capture-vision-cordova": "^1.0.0"
+  },
+  "cordova": {
+    "plugins": {
+      "dynamsoft-capture-vision-cordova": {}
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
+}
