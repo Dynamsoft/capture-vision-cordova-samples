@@ -2,6 +2,7 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 document.addEventListener('resume', onResume, false);
 document.addEventListener('pause', onPause, false);
+document.getElementById('icon_back').onclick = () => history.back()
 
 var dbr
 var dce
@@ -9,20 +10,13 @@ var dce
 const cameraViewElement = document.getElementById("camera_view")
 
 async function onDeviceReady() {
-    console.log("onDeviceReady")
-
-    try {
-        await Dynamsoft.DCVBarcodeReader.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
-    } catch (e) {
-        console.log(e)
-    }
 
     dbr = await Dynamsoft.DCVBarcodeReader.createInstance()
 
     dbr.updateRuntimeSettings(Dynamsoft.EnumDBRPresetTemplate.VIDEO_SPEED_FIRST)
 
     dbr.addResultListener((results) => {
-        const resultElement = document.getElementById('show_result');
+        let resultElement = document.getElementById('show_result');
         var resultStr = ""
         if (results && results.length > 0) {
             for (i = 0; i < results.length; i++) {
@@ -48,7 +42,7 @@ async function onDeviceReady() {
 
    var cameraView = new Dynamsoft.DCVCameraView()
 
-   cameraView.bindCameraViewToElement(cameraViewElement)
+   cameraView.bindToHtmlElement(cameraViewElement)
 
     cameraView.setTorchButton({
         visible:true
@@ -62,13 +56,11 @@ async function onDeviceReady() {
 }
 
 function onResume() {
-    console.log("onResume")
     dce.open()
     dbr.startScanning()
 }
 
 function onPause() {
-    console.log("onPause")
     dce.close()
     dbr.stopScanning()
 }

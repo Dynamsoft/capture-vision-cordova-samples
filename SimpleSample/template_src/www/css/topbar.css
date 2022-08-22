@@ -1,0 +1,34 @@
+.top-bar {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    margin: 0;
+    display: flex;
+}
+.top-ui {
+    width: 100%;
+    height: 50px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.top-ui li{
+    text-transform: none;
+    width: fit-content;;
+    float: left;
+    padding-left: 10px;
+    height: 100%;
+    text-align: center;
+    font-size: 25px;
+    line-height: 50px;
+    align-items: center;
+    vertical-align: middle;
+}
+.top-ui li img{
+    height: 30px;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline;
+    position: relative;
+}

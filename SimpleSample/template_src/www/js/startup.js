@@ -1,10 +1,15 @@
 document.addEventListener('deviceready', onDeviceReady, false)
 
-function onDeviceReady() { 
+async function onDeviceReady() { 
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     document.getElementById('deviceready').classList.add('ready');
-    const btnStartScanning = document.getElementById("btn_start_scanning")
-    btnStartScanning.onclick = () => {
-        window.location.href = 'scanPage.html'
+
+    if (!window.localStorage.initLicense) { 
+        try {
+            await Dynamsoft.DCVBarcodeReader.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
+        } catch (e) {
+            console.log(e)
+        }
+        window.localStorage.initLicense = true;
     }
 }

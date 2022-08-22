@@ -16,18 +16,26 @@
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <meta name="color-scheme" content="light dark">
         <link rel="stylesheet" href="css/startup.css">
+        <link rel="stylesheet" href="css/topbar.css">
         <title>Hello World</title>
     </head>
     <body style="margin: 0;">
+        <header class="top-bar">
+            <ul class="top-ui">
+                <li>Home</li>
+            </ul>
+        </header>
         <div class="app">
             <h1>Apache Cordova</h1>
             <div id="deviceready" class="blink">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
-            <button id="btn_start_scanning" style="font-size: 20sp;">
-                Start Scanning
-            </button>
+            <a href="scanPage.html">
+                <button style="font-size: 30sp; padding: 5px;">
+                    Start Scanning
+                </button>
+            </a>
         </div>
         <script src="cordova.js"></script>
         <script src="js/startup.js"></script>
