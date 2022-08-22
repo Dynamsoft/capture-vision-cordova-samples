@@ -13,13 +13,15 @@
     <body style="margin: 0;">
         <header class="top-bar">
             <ul class="top-ui">
-                <li id="icon_back">
-                    <img src="img/arrow_back.png">
-                </li>
+                <a href="startup.html">
+                    <li>
+                        <img src="img/arrow_back.png">
+                    </li>
+                </a>
                 <li>Barcode</li>
             </ul>
         </header>
-        <div id="camera_view" style="width: 100vw; height: 100vh; z-index: -1;">
+        <div id="camera_view" style="width: 100vw; height: calc(100vh-50px); z-index: -1;">
             <div id="show_result" style="position: fixed; width: 100vw; bottom: 10vh;  text-align:center; color: white; "/>
         </div>
         <script src="cordova.js"></script>

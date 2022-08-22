@@ -2,7 +2,6 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 document.addEventListener('resume', onResume, false);
 document.addEventListener('pause', onPause, false);
-document.getElementById('icon_back').onclick = () => history.back()
 
 var dbr
 var dce

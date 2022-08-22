@@ -12,6 +12,9 @@
     margin: 0;
     padding: 0;
 }
+.top-ui a{
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
 .top-ui li{
     text-transform: none;
     width: fit-content;;
