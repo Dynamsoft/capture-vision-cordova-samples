@@ -20,7 +20,6 @@ Dynamsoft Capture Vision (DCV) is an aggregating SDK of a series of specific fun
   - [Initialize the License](#initialize-the-license)
   - [Initialize the Camera Module](#initialize-the-camera-module)
   - [Configure the Barcode Reader Module](#configure-the-barcode-reader-module)
-  - [Configure Camera Permissions](#configure-camera-permissions)
   - [Run the Project](#run-the-project)
 - [Samples](#samples)
 - [API References](#api-references)
