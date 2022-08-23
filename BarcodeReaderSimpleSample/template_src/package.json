@@ -1,8 +1,8 @@
 {
-  "name": "com.example.hellodcvcordova",
-  "displayName": "HelloDcvCordova",
+  "name": "com.dynamsoft.barcodereadersimplesample",
+  "displayName": "BarcodeReaderSimpleSample",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "BarcodeReaderSimpleSample for Dynamsoft Capture Vision Cordova SDK.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,12 +12,12 @@
   "keywords": [
     "ecosystem:cordova"
   ],
-  "author": "Apache Cordova Team",
+  "author": "Dynamsoft",
   "license": "Apache-2.0",
   "devDependencies": {
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",
-    "henry-capture-vision-cordova": "^1.0.1"
+    "henry-capture-vision-cordova": "^1.0.3"
   },
   "cordova": {
     "plugins": {
