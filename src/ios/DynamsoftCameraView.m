@@ -29,7 +29,7 @@
 }
 
 - (void)layoutSubviews {
-    self.dceView.frame = self.frame;
+    self.dceView.frame = self.bounds;
 }
 
 @end
