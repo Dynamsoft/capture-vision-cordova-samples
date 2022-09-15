@@ -159,7 +159,16 @@ public class CameraViewHandler {
     }
 
     public void setCameraViewVisible(JSONArray args) throws JSONException {
-        mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void setOverlayVisible(JSONArray args) throws JSONException {
@@ -196,20 +205,23 @@ public class CameraViewHandler {
                     : torchButton.getString("torchOffImage");
             Drawable torchOnDrawable = null;
             Drawable torchOffDrawable = null;
-            try {
-                InputStream is = cordova.getContext().getAssets().open("www/" + torchOnImage);
-                torchOnDrawable = BitmapUtil.InputStreamToDrawable(is);
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (torchOnImage != null) {
+                try {
+                    InputStream is = cordova.getContext().getAssets().open("www/" + torchOnImage);
+                    torchOnDrawable = BitmapUtil.InputStreamToDrawable(is);
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
-            try {
-                InputStream is = cordova.getContext().getAssets().open("www/" + torchOffImage);
-                torchOffDrawable = BitmapUtil.InputStreamToDrawable(is);
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (torchOffImage != null) {
+                try {
+                    InputStream is = cordova.getContext().getAssets().open("www/" + torchOffImage);
+                    torchOffDrawable = BitmapUtil.InputStreamToDrawable(is);
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             mTorchButtonState.setLocationInCameraView(startPoint.x * mDensity, startPoint.y * mDensity,

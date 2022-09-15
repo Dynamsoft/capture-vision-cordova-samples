@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="dynamsoft-capture-vision-cordova" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="dynamsoft-capture-vision-cordova" version="1.0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>DynamsoftCordovaPlugin</name>
     <js-module name="DCVBarcodeReader" src="www/DCVBarcodeReader.js">
         <merges target="Dynamsoft" />
@@ -35,6 +35,7 @@
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraEnhancerHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraViewHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CommonHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
+        <source-file src="src/android/libs/dce.aar" target-dir="../../../libs" />
         <framework custom="true" src="src/android/barcodereader.gradle" type="gradleReference" />
     </platform>
     <!--    ios-->
