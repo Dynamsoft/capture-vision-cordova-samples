@@ -35,7 +35,6 @@
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraEnhancerHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CameraViewHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
         <source-file src="src/android/com/dynamsoft/cordova/handlers/CommonHandler.java" target-dir="src/com/dynamsoft/cordova/handlers" />
-        <source-file src="src/android/libs/dce.aar" target-dir="../../../libs" />
         <framework custom="true" src="src/android/barcodereader.gradle" type="gradleReference" />
     </platform>
     <!--    ios-->
