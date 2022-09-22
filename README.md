@@ -30,7 +30,7 @@ Dynamsoft Capture Vision (DCV) is an aggregating SDK of a series of specific fun
 
 ### Cordova Platforms
 
-- Cordova Android: 9.0.0+ (10.1.1+ recommended)
+- Cordova Android: 10.1.1+
 - Cordova iOS: 6.2.0
 
 ### Android
