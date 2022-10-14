@@ -292,6 +292,10 @@
         return;
     }
     
+    if ([DynamsoftSDKManager manager].dynamsoftCameraEnhancerState ==  DynamsoftCameraEnhancerStateClose) {
+        return;
+    }
+    
     iRegionDefinition *scanRegion = [[DynamsoftConvertManager manager] aynlyzeiRegionDefinitionWithArguments:command.arguments];
     NSError *error = nil;
     [[DynamsoftSDKManager manager].cameraEnhancer setScanRegion:scanRegion error:&error];
@@ -355,7 +359,15 @@
 }
 
 - (void)setCameraViewVisible:(CDVInvokedUrlCommand *)command {
-    // Nothing should to do.
+    if (![[DynamsoftConvertManager manager] judgeArgumentsIsAvaiable:command.arguments]) {
+        return;
+    }
+    
+    BOOL isVisible = [command.arguments.firstObject boolValue];
+    
+    if (self.dynamsoftCameraView.dceView != nil) {
+        self.dynamsoftCameraView.dceView.hidden = !isVisible;
+    }
 }
 
 // MARK: - DCECameraView methods
