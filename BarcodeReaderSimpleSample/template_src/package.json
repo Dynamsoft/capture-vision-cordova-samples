@@ -17,11 +17,11 @@
   "devDependencies": {
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",
-    "henry-capture-vision-cordova": "^1.0.3"
+    "dynamsoft-capture-vision-cordova": "^1.0.1"
   },
   "cordova": {
     "plugins": {
-      "henry-capture-vision-cordova": {}
+      "dynamsoft-capture-vision-cordova": {}
     },
     "platforms": [
       "android",
