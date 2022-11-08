@@ -15,10 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /// Vertify the operation is success or failure.
-- (BOOL)vertifyOperationResultWithError:(NSError *)error;
+- (BOOL)vertifyOperationResultWithError:(NSError * _Nullable)error;
 
 /// Return  the error string if error is not nil.
-- (NSString *)getErrorMsgWithError:(NSError *)error;
+- (NSString *)getErrorMsgWithError:(NSError * _Nullable)error;
 
 /// Checks if the string is empty.
 - (BOOL)stringIsEmptyOrNull:(NSString*)string;
