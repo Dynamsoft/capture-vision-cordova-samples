@@ -76,7 +76,7 @@ public class CameraViewHandler {
     }
 
     public void bindCameraViewToElement(JSONArray args) throws JSONException {
-        setBackGroundView();
+        // setBackGroundView();
         JSONObject viewElementState = ((JSONObject) args.get(0));
         JSONObject viewPosition = viewElementState.getJSONObject("position");
         mIsCameraViewUnderWebView = viewElementState.getBoolean("underWebView");

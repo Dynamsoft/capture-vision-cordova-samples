@@ -112,7 +112,7 @@ export class DCVCameraView {
     }
 
     private updateCameraViewPosition():void {
-        if (!this.htmlElementProp || !this.htmlElementProp.isValid) {
+        if (!this.htmlElementProp || !this.htmlElementProp.isValid()) {
             return;
         }
         exec(null, null, 'DynamsoftCordovaPlugin', 'updateCameraViewPosition', [this.htmlElementProp.position]);
