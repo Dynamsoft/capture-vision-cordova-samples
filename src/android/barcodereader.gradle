@@ -9,8 +9,8 @@ repositories{
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.dynamsoft:dynamsoftbarcodereader:9.2.10@aar'
-    implementation 'com.dynamsoft:dynamsoftcameraenhancer:2.3.4@aar'
+    implementation 'com.dynamsoft:dynamsoftbarcodereader:9.4.0@aar'
+    implementation 'com.dynamsoft:dynamsoftcameraenhancer:2.3.5@aar'
 }
 android {
     packagingOptions {
