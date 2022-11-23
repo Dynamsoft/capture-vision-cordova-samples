@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="dynamsoft-capture-vision-cordova" version="1.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="dynamsoft-capture-vision-cordova" version="1.0.2" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>DynamsoftCordovaPlugin</name>
     <js-module name="DCVBarcodeReader" src="www/DCVBarcodeReader.js">
         <merges target="Dynamsoft" />
@@ -67,8 +67,8 @@
                 </config>
                 <pods use-frameworks="true">
 
-                    <pod name="DynamsoftBarcodeReader" spec="9.2.10" />
-                    <pod name="DynamsoftCameraEnhancer" spec="2.3.3" />
+                    <pod name="DynamsoftBarcodeReader" spec="9.4.0" />
+                    <pod name="DynamsoftCameraEnhancer" spec="2.3.5" />
                 </pods>
             </podspec>
 

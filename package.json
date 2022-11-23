@@ -1,6 +1,6 @@
 {
   "name": "dynamsoft-capture-vision-cordova",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Dynamsoft Capture Vision Cordova SDK",
   "homepage": "https://www.dynamsoft.com/capture-vision/docs/introduction",
   "main": "./www/index.js",
