@@ -5,12 +5,13 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover, user-scalable = 0">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover, user-scalable = no">
         <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/scanpage.css">
         <link rel="stylesheet" href="css/topbar.css">
         <title>Hello World</title>
     </head>
-    <body style="margin: 0;">
+    <body >
         <header class="top-bar">
             <ul class="top-ui">
                 <a href="startup.html">
@@ -21,8 +22,8 @@
                 <li>Barcode</li>
             </ul>
         </header>
-        <div id="camera_view" style="width: 100vw; height: calc(100vh - 50px); z-index: -1;">
-            <div id="show_result" style="position: fixed; width: 100vw; bottom: 10vh;  text-align:center; color: white; "/>
+        <div id="camera_view" style="width: 100vw; height: calc(100vh - env(safe-area-inset-top) - 50px); z-index: -1;">
+            <div id="show_result" style="position: fixed; width: 100vw; bottom: 10vh;  text-align:center; color: white; "></div>
         </div>
         <script src="cordova.js"></script>
         <script src="js/scanPage.js"></script>

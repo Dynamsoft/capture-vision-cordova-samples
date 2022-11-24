@@ -6,7 +6,7 @@ This repository contains multiple samples that demonstrate how to use the [Dynam
 
 ### Cordova Platforms
 
-- Cordova Android: 9.0.0+ (10.1.1+ recommended)
+- Cordova Android: 10.1.1+
 - Cordova iOS: 6.2.0
 
 ### Android
@@ -70,7 +70,7 @@ cordova plugin add dynamsoft-capture-vision-cordova
 
 ## License
 
-- You can also request an extension for your trial license in the [customer portal](https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github)
+- You can request a trial license in the [customer portal](https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github)
 
 ## Contact
 

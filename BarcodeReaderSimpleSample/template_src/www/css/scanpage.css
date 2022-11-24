@@ -1,0 +1,17 @@
+body {
+    margin:0px;
+    font-size:12px;
+}
+
+@media screen and (orientation: portrait) {
+    body {
+        padding-top: env(safe-area-inset-top, 0px);
+        
+    }
+}
+
+@media screen and (orientation: landscape) {
+    body {
+        padding-left: 0px;
+    }
+}

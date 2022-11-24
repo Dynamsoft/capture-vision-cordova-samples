@@ -17,7 +17,7 @@
   "devDependencies": {
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",
-    "dynamsoft-capture-vision-cordova": "^1.0.0"
+    "dynamsoft-capture-vision-cordova": "^1.0.2"
   },
   "cordova": {
     "plugins": {
