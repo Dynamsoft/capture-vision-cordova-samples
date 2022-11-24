@@ -11,7 +11,7 @@ Dynamsoft Capture Vision (DCV) is an aggregating SDK of a series of specific fun
 
 ## Getting Started
 
-In <a href="https://www.dynamsoft.com/capture-vision/docs/programming/react-native/user-guide/barcode-reader.html" target="_blank">this guide</a>, you will learn step by step how to integrate the barcode reading capabilities of Dynamsoft Capture Vision Cordova SDK into your App.
+In <a href="https://www.dynamsoft.com/capture-vision/docs/programming/cordova/user-guide/barcode-reader.html" target="_blank">this guide</a>, you will learn step by step how to integrate the barcode reading capabilities of Dynamsoft Capture Vision Cordova SDK into your App.
 
 ## Samples
 
