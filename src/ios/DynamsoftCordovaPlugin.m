@@ -366,6 +366,7 @@
     BOOL isVisible = [command.arguments.firstObject boolValue];
     
     if (self.dynamsoftCameraView.dceView != nil) {
+        self.dynamsoftCameraView.hidden = !isVisible;
         self.dynamsoftCameraView.dceView.hidden = !isVisible;
     }
 }
