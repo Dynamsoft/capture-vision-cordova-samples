@@ -8,6 +8,9 @@ const exec_1 = __importDefault(require("cordova/exec"));
 class DCVBarcodeReader {
     constructor() {
     }
+    /**
+    * Create an instance of the DCVBarcode reader.
+    */
     static createInstance() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => {
@@ -18,6 +21,9 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Initialize the license with a license key.
+    */
     static initLicense(license) {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (error) => {
@@ -26,6 +32,9 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Get the version of the barcode reader library.
+    */
     static getVersion() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)((version) => {
@@ -34,15 +43,27 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Start barcode decoding from the video streaming.
+    */
     startScanning() {
         (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'startScanning', []);
     }
+    /**
+    * Stop barcode decoding from the video streaming.
+    */
     stopScanning() {
         (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'stopScanning', []);
     }
+    /**
+    * Register a listener to receive callback when barcode result is output.
+    */
     addResultListener(listener) {
         (0, exec_1.default)(listener, null, 'DynamsoftCordovaPlugin', 'setTextResultListener', []);
     }
+    /**
+    * Get the current runtime settings as a DBRRuntimeSettings object.
+    */
     getRuntimeSettings() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)((settings) => {
@@ -53,6 +74,9 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Output the current runtime settings as a string.
+    */
     outputSettingsToString() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)((msg) => {
@@ -63,6 +87,9 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Update the current runtime settings with a DBRRuntimeSettings object / a preset template / a JSON string.
+    */
     updateRuntimeSettings(settings) {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (msg) => {
@@ -71,6 +98,9 @@ class DCVBarcodeReader {
         });
         return promise;
     }
+    /**
+    * Reset the runtime settings.
+    */
     resetRuntimeSettings() {
         (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'resetRuntimeSettings', []);
     }
