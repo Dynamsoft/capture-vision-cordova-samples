@@ -13,6 +13,9 @@ export class DCVCameraEnhancer {
         
     }
 
+    /**
+    * Create an instance of DCVCameraEnhancer.
+    */
     static createInstance(): Promise<DCVCameraEnhancer> {
         let promise: Promise<DCVCameraEnhancer> = new Promise(function (resolve, reject) {
             exec(() => {
@@ -22,8 +25,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
-    
-
+    /**
+    * Open the camera.
+    */
     open(): Promise<void> {
         let promise: Promise<void> = new Promise(function (resolve, reject) {
             exec(()=>resolve(), (error:String)=>reject(error), 'DynamsoftCordovaPlugin', 'open', []);
@@ -31,6 +35,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
+    /**
+    * Close the camera.
+    */
     close(): Promise<void> {
         let promise: Promise<void> = new Promise(function (resolve, reject) {
             exec(()=>resolve(), (error:String)=>reject(error), 'DynamsoftCordovaPlugin', 'close', []);
@@ -38,8 +45,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
-    
-
+    /**
+    * Trun on the torch.
+    */
     turnOnTorch(): Promise<void> {
         let promise: Promise<void> = new Promise(function (resolve, reject) {
             exec(()=>resolve(), (error:String)=>reject(error), 'DynamsoftCordovaPlugin', 'setTorchState', [EnumTorchState.ON]);
@@ -47,6 +55,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
+    /**
+    * Trun off the torch.
+    */
     turnOffTorch(): Promise<void> {
         let promise: Promise<void> = new Promise(function (resolve, reject) {
             exec(()=>resolve(), (error:String)=>reject(error), 'DynamsoftCordovaPlugin', 'setTorchState', [EnumTorchState.OFF]);
@@ -54,8 +65,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
-    
-
+    /**
+    * Specify a region of interest with a region object.
+    */
     setScanRegion(region: Region): Promise<void> {
         if (region) {
             region.regionMeasuredByPercentage = region.regionMeasuredByPercentage ? 1 : 0;
@@ -66,6 +78,9 @@ export class DCVCameraEnhancer {
         return promise
     }
 
+    /**
+    * Set whether to display the scan region.
+    */
     setScanRegionVisible(isVisible: boolean) {
         exec(null, null, 'DynamsoftCordovaPlugin', 'setScanRegionVisible', [isVisible]);
     }
