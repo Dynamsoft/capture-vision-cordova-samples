@@ -13,6 +13,9 @@ var EnumTorchState;
 class DCVCameraEnhancer {
     constructor() {
     }
+    /**
+    * Create an instance of DCVCameraEnhancer.
+    */
     static createInstance() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => {
@@ -21,30 +24,45 @@ class DCVCameraEnhancer {
         });
         return promise;
     }
+    /**
+    * Open the camera.
+    */
     open() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (error) => reject(error), 'DynamsoftCordovaPlugin', 'open', []);
         });
         return promise;
     }
+    /**
+    * Close the camera.
+    */
     close() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (error) => reject(error), 'DynamsoftCordovaPlugin', 'close', []);
         });
         return promise;
     }
+    /**
+    * Trun on the torch.
+    */
     turnOnTorch() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (error) => reject(error), 'DynamsoftCordovaPlugin', 'setTorchState', [EnumTorchState.ON]);
         });
         return promise;
     }
+    /**
+    * Trun off the torch.
+    */
     turnOffTorch() {
         let promise = new Promise(function (resolve, reject) {
             (0, exec_1.default)(() => resolve(), (error) => reject(error), 'DynamsoftCordovaPlugin', 'setTorchState', [EnumTorchState.OFF]);
         });
         return promise;
     }
+    /**
+    * Specify a region of interest with a region object.
+    */
     setScanRegion(region) {
         if (region) {
             region.regionMeasuredByPercentage = region.regionMeasuredByPercentage ? 1 : 0;
@@ -54,6 +72,9 @@ class DCVCameraEnhancer {
         });
         return promise;
     }
+    /**
+    * Set whether to display the scan region.
+    */
     setScanRegionVisible(isVisible) {
         (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'setScanRegionVisible', [isVisible]);
     }
