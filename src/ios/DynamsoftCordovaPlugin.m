@@ -60,6 +60,8 @@
 - (void)setCameraViewVisible:(CDVInvokedUrlCommand *)command;//SDK private method.
 
 // MARK: - DCECameraView interface
+- (void)createDceView:(CDVInvokedUrlCommand *)command;
+
 - (void)bindCameraViewToElement:(CDVInvokedUrlCommand *)command;
 
 - (void)setOverlayVisible:(CDVInvokedUrlCommand *)command;
@@ -109,10 +111,7 @@
 
 // MARK: - DBR methods
 - (void)createDbrInstance:(CDVInvokedUrlCommand *)command {
-    if ([DynamsoftSDKManager manager].dynamsoftDBRIsExisted == NO) {
-        [DynamsoftSDKManager manager].dynamsoftDBRIsExisted = YES;
-        [DynamsoftSDKManager manager].barcodeReader = [[DynamsoftBarcodeReader alloc] init];
-    }
+    [DynamsoftSDKManager manager].barcodeReader = [[DynamsoftBarcodeReader alloc] init];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -126,6 +125,11 @@
 - (void)startScanning:(CDVInvokedUrlCommand *)command {
     [[DynamsoftSDKManager manager].barcodeReader startScanning];
     [DynamsoftSDKManager manager].dynamsoftBarcodeReaderState = DynamsoftBarcodeReaderStateStartScanning;
+    // Bind DCE to DBR.
+    if ([DynamsoftSDKManager manager].barcodeReader != nil &&  [DynamsoftSDKManager manager].cameraEnhancer != nil) {
+        [[DynamsoftSDKManager manager].barcodeReader setDBRTextResultListener:[DynamsoftSDKManager manager]];
+        [[DynamsoftSDKManager manager].barcodeReader setCameraEnhancer:[DynamsoftSDKManager manager].cameraEnhancer];
+    }
 }
 
 - (void)stopScanning:(CDVInvokedUrlCommand *)command {
@@ -241,49 +245,26 @@
     }
 
     // Visible default value.
-    [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = true;
-    [DynamsoftSDKManager manager].customCameraTorchFrame = CGRectZero;
+    [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = YES;
+    [DynamsoftSDKManager manager].customCameraTorchFrame = CGRectMake(25, 100, 45, 45);
+    [DynamsoftSDKManager manager].dynamsoftCameraViewTorchIsOpen = NO;
     
     // Mask background.
     self.sdkMaskView.backgroundColor = [UIColor whiteColor];
     [self.webView.superview addSubview:self.sdkMaskView];
     [self.webView.superview sendSubviewToBack:self.sdkMaskView];
 
-    // Create dce and view.
-    if ([DynamsoftSDKManager manager].dynamsoftDCEIsExisted == NO) {
-        [DynamsoftSDKManager manager].dynamsoftDCEIsExisted = YES;
-        [self createDefaultDCEView];
-    }
+    // Create dce.
+    [self createDefaultDCE];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)createDefaultDCEView {
-    if (self.dynamsoftCameraView) {
-        self.dynamsoftCameraView.hidden = YES;
-        [self.dynamsoftCameraView removeFromSuperview];
-    }
-
-    NSDictionary *argumentsDic = @{@"position":@{@"x":@(0),
-                                                 @"y":@(0),
-                                                 @"width":@(10),
-                                                 @"height":@(10)
-                                                 }
-    };
-    CGFloat cameraX = [[[argumentsDic valueForKey:@"position"] valueForKey:@"x"] floatValue];
-    CGFloat cameraY = [[[argumentsDic valueForKey:@"position"] valueForKey:@"y"] floatValue];
-    CGFloat cameraWidth = [[[argumentsDic valueForKey:@"position"] valueForKey:@"width"] floatValue];
-    CGFloat cameraHeight = [[[argumentsDic valueForKey:@"position"] valueForKey:@"height"] floatValue];
-    
-    // Create dce and add to webView.superView.
-    self.dynamsoftCameraView = [[DynamsoftCameraView alloc] initWithFrame:CGRectMake(cameraX, cameraY, cameraWidth, cameraHeight) withArguments:argumentsDic];
-    [self.webView.superview addSubview:self.dynamsoftCameraView];
-
-    // Bind DCE to DBR.
-    if ([DynamsoftSDKManager manager].barcodeReader != nil &&  [DynamsoftSDKManager manager].cameraEnhancer != nil) {
-        [[DynamsoftSDKManager manager].barcodeReader setDBRTextResultListener:[DynamsoftSDKManager manager]];
-        [[DynamsoftSDKManager manager].barcodeReader setCameraEnhancer:[DynamsoftSDKManager manager].cameraEnhancer];
+- (void)createDefaultDCE {
+    [DynamsoftSDKManager manager].cameraEnhancer = [[DynamsoftCameraEnhancer alloc] init];
+    if (self.dynamsoftCameraView.dceView != nil) {
+        [DynamsoftSDKManager manager].cameraEnhancer.dceCameraView = self.dynamsoftCameraView.dceView;
     }
 }
 
@@ -368,10 +349,36 @@
     if (self.dynamsoftCameraView.dceView != nil) {
         self.dynamsoftCameraView.hidden = !isVisible;
         self.dynamsoftCameraView.dceView.hidden = !isVisible;
+        [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = isVisible;
     }
 }
 
 // MARK: - DCECameraView methods
+- (void)createDceView:(CDVInvokedUrlCommand *)command {
+    [self createDefaultDCEView];
+}
+
+- (void)createDefaultDCEView {
+    if (self.dynamsoftCameraView) {
+        [self.dynamsoftCameraView removeFromSuperview];
+    }
+
+    NSDictionary *argumentsDic = @{@"position":@{@"x":@(0),
+                                                 @"y":@(0),
+                                                 @"width":@(0),
+                                                 @"height":@(0)
+                                                 }
+    };
+    CGFloat cameraX = [[[argumentsDic valueForKey:@"position"] valueForKey:@"x"] floatValue];
+    CGFloat cameraY = [[[argumentsDic valueForKey:@"position"] valueForKey:@"y"] floatValue];
+    CGFloat cameraWidth = [[[argumentsDic valueForKey:@"position"] valueForKey:@"width"] floatValue];
+    CGFloat cameraHeight = [[[argumentsDic valueForKey:@"position"] valueForKey:@"height"] floatValue];
+    
+    // Create dce and add to webView.superView.
+    self.dynamsoftCameraView = [[DynamsoftCameraView alloc] initWithFrame:CGRectMake(cameraX, cameraY, cameraWidth, cameraHeight) withArguments:argumentsDic];
+    [self.webView.superview addSubview:self.dynamsoftCameraView];
+}
+
 - (void)bindCameraViewToElement:(CDVInvokedUrlCommand *)command  {
     if (![[DynamsoftConvertManager manager] judgeArgumentsIsAvaiable:command.arguments]) {
         return;
@@ -454,9 +461,10 @@
     if ([keyPath  isEqualToString:@"URL"]) {
         NSString *newPath = ((NSURL *)[change valueForKey:NSKeyValueChangeNewKey]).path;
         if ([newPath isEqualToString:[DynamsoftSDKManager manager].cameraViewPageUrlPath]) {
-            [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = YES;
-            [[DynamsoftSDKManager manager] updateCameraViewVisibleWithState:YES dceView:self.dynamsoftCameraView];
-            [[DynamsoftSDKManager manager] updateCameraTorchState];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = YES;
+                [[DynamsoftSDKManager manager] updateCameraViewVisibleWithState:YES dceView:self.dynamsoftCameraView];
+            });
         } else {
             [DynamsoftSDKManager manager].dynamsoftCameraViewIsVisible = NO;
             [[DynamsoftSDKManager manager] updateCameraViewVisibleWithState:NO dceView:self.dynamsoftCameraView];

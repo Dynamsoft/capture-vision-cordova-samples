@@ -25,7 +25,10 @@
     self.dceView = [DCECameraView cameraWithFrame:CGRectMake(0, 0, cameraWidth, cameraHeight)];
     [self addSubview:self.dceView];
     
-    [DynamsoftSDKManager manager].cameraEnhancer = [[DynamsoftCameraEnhancer alloc] initWithView:self.dceView];
+    if ([DynamsoftSDKManager manager].cameraEnhancer != nil) {
+        [[DynamsoftSDKManager manager].cameraEnhancer close];
+        [DynamsoftSDKManager manager].cameraEnhancer.dceCameraView = self.dceView;
+    }
 }
 
 - (void)layoutSubviews {

@@ -47,7 +47,13 @@ class DCVCameraView {
             setTimeout(this.elementDidChange.bind(this), 300);
             setTimeout(this.elementDidChange.bind(this), 1000);
         });
+        this.createDceView();
     }
+
+    createDceView() {
+        (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'createDceView', null);
+    }
+
     /**
     * Bind the instance of DCVCameraView to an HTML element.
     */
