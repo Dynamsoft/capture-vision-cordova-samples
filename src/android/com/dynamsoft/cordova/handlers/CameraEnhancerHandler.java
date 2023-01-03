@@ -25,13 +25,15 @@ public class CameraEnhancerHandler {
     public CameraEnhancerHandler(CordovaInterface cordova, CordovaWebView webView) {
         this.cordova = cordova;
         this.webView = webView;
-        mCamera = new CameraEnhancer(cordova.getActivity());
         mCameraViewHandler = new CameraViewHandler(this);
-        mCamera.setCameraView(mCameraViewHandler.mCameraView);
     }
 
     public void createDceInstance(CallbackContext callbackContext) {
         // init CameraEnhancer and DCECameraView
+        mCamera = new CameraEnhancer(cordova.getActivity());
+        if(mCameraViewHandler.mCameraView != null) {
+            mCamera.setCameraView(mCameraViewHandler.mCameraView);
+        }
         try {
             mCameraViewHandler.mCamera = this.mCamera;
         } catch (Exception e) {

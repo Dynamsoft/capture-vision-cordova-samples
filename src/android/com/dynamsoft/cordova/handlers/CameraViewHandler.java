@@ -53,8 +53,16 @@ public class CameraViewHandler {
         this.webView = cameraEnhancerHandler.webView;
         mDensity = Resources.getSystem().getDisplayMetrics().density;
         mUiHandler = cameraEnhancerHandler.mUiHandler;
+//        mCameraView = new DCECameraView(cordova.getActivity());
+//        initWebViewGestureListener();
+    }
+
+    public void createDCECameraViewInstance() {
         mCameraView = new DCECameraView(cordova.getActivity());
         initWebViewGestureListener();
+        if(mCamera != null) {
+            mCamera.setCameraView(mCameraView);
+        }
     }
 
     private void setBackGroundView() {
@@ -163,7 +171,7 @@ public class CameraViewHandler {
             @Override
             public void run() {
                 try {
-                    mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
+        mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -205,23 +213,20 @@ public class CameraViewHandler {
                     : torchButton.getString("torchOffImage");
             Drawable torchOnDrawable = null;
             Drawable torchOffDrawable = null;
-            if (torchOnImage != null) {
-                try {
-                    InputStream is = cordova.getContext().getAssets().open("www/" + torchOnImage);
-                    torchOnDrawable = BitmapUtil.InputStreamToDrawable(is);
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                InputStream is = cordova.getContext().getAssets().open("www/" + torchOnImage);
+                torchOnDrawable = BitmapUtil.InputStreamToDrawable(is);
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (torchOffImage != null) {
-                try {
-                    InputStream is = cordova.getContext().getAssets().open("www/" + torchOffImage);
-                    torchOffDrawable = BitmapUtil.InputStreamToDrawable(is);
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+            try {
+                InputStream is = cordova.getContext().getAssets().open("www/" + torchOffImage);
+                torchOffDrawable = BitmapUtil.InputStreamToDrawable(is);
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             mTorchButtonState.setLocationInCameraView(startPoint.x * mDensity, startPoint.y * mDensity,

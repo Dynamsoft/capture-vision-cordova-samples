@@ -186,6 +186,8 @@ public class BarcodeReaderHandler {
     }
 
     public void setCameraEnhancer(CameraEnhancer cameraEnhancer) {
-        mReader.setCameraEnhancer(cameraEnhancer);
+        if(cameraEnhancer != null) {
+            mReader.setCameraEnhancer(cameraEnhancer);
+        }
     }
 }

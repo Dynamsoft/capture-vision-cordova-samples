@@ -49,11 +49,9 @@ class DCVCameraView {
         });
         this.createDceView();
     }
-
     createDceView() {
         (0, exec_1.default)(null, null, 'DynamsoftCordovaPlugin', 'createDceView', null);
     }
-
     /**
     * Bind the instance of DCVCameraView to an HTML element.
     */

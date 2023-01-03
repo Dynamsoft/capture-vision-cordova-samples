@@ -32,7 +32,6 @@ public class DynamsoftCordovaPlugin extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
         mBarcodeReaderHandler = new BarcodeReaderHandler();
         mCameraEnhancerHandler = new CameraEnhancerHandler(cordova, webView);
         mCameraViewHandler = mCameraEnhancerHandler.mCameraViewHandler;
@@ -69,13 +68,13 @@ public class DynamsoftCordovaPlugin extends CordovaPlugin {
             // DBR
             case "createDbrInstance":
                 mBarcodeReaderHandler.createDbrInstance(callbackContext);
-                mBarcodeReaderHandler.setCameraEnhancer(mCameraEnhancerHandler.mCamera);
                 break;
             case "getVersion":
                 mBarcodeReaderHandler.getVersion(callbackContext);
                 break;
             case "startScanning":
                 mBarcodeReaderHandler.startScanning();
+                mBarcodeReaderHandler.setCameraEnhancer(mCameraEnhancerHandler.mCamera);
                 break;
             case "stopScanning":
                 mBarcodeReaderHandler.stopScanning();
@@ -117,6 +116,9 @@ public class DynamsoftCordovaPlugin extends CordovaPlugin {
                 break;
 
             // DCE CameraView
+            case "createDceView":
+                mCameraViewHandler.createDCECameraViewInstance();
+                break;
             case "bindCameraViewToElement":
                 mCameraViewHandler.bindCameraViewToElement(args);
                 break;
