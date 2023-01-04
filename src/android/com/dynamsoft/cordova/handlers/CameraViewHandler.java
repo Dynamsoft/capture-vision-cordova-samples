@@ -60,7 +60,7 @@ public class CameraViewHandler {
     public void createDCECameraViewInstance() {
         mCameraView = new DCECameraView(cordova.getActivity());
         initWebViewGestureListener();
-        if(mCamera != null) {
+        if (mCamera != null) {
             mCamera.setCameraView(mCameraView);
         }
     }
@@ -170,10 +170,12 @@ public class CameraViewHandler {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                try {
-        mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(mCameraView != null) {
+                    try {
+                        mCameraView.setVisibility(args.getBoolean(0) ? View.VISIBLE : View.GONE);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -282,19 +284,19 @@ public class CameraViewHandler {
                                 if (mTorchButtonState != null && mTorchButtonState.isVisible) {
                                     float offsetX = mTorchButtonState.locationInCameraView.right
                                             - mCameraView.getWidth() < 0 ? 0
-                                                    : -(mTorchButtonState.locationInCameraView.right
-                                                            - mCameraView.getWidth());
+                                            : -(mTorchButtonState.locationInCameraView.right
+                                            - mCameraView.getWidth());
                                     float offsetY = mTorchButtonState.locationInCameraView.bottom
                                             - mCameraView.getHeight() < 0 ? 0
-                                                    : -(mTorchButtonState.locationInCameraView.bottom
-                                                            - mCameraView.getHeight());
+                                            : -(mTorchButtonState.locationInCameraView.bottom
+                                            - mCameraView.getHeight());
                                     RectF newRectF = new RectF(mTorchButtonState.locationInCameraView);
                                     if (offsetX != 0 || offsetY != 0) {
                                         newRectF.offset(offsetX, offsetY);
                                     }
                                     ifTapOnTorchBtn = mTorchButtonState.isVisible
                                             && newRectF.contains(touchXInCameraView,
-                                                    touchYInCameraView);
+                                            touchYInCameraView);
                                 }
                                 if (ifTapOnTorchBtn) {
                                     // TODO: 2022/7/14 temporary way to answering to webview touch event
@@ -312,7 +314,7 @@ public class CameraViewHandler {
                                             mCamera.turnOffTorch();
                                         }
                                     } catch (NoSuchFieldException | IllegalAccessException
-                                            | CameraEnhancerException noSuchFieldException) {
+                                             | CameraEnhancerException noSuchFieldException) {
                                         noSuchFieldException.printStackTrace();
                                     }
                                 } else {
@@ -328,7 +330,7 @@ public class CameraViewHandler {
                                             Matrix.ScaleToFit.FILL);
                                     float[] dst = new float[2];
                                     mTransformMatrix.mapPoints(dst,
-                                            new float[] { touchXInCameraView, touchYInCameraView });
+                                            new float[]{touchXInCameraView, touchYInCameraView});
                                     try {
                                         mCamera.setFocus(dst[0] / dstRect.width(), dst[1] / dstRect.height());
                                     } catch (CameraEnhancerException cameraEnhancerException) {
