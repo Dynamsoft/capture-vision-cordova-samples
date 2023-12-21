@@ -1,7 +1,7 @@
 {
   "name": "barcodereadersimplesample",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "BarcodeReaderSimpleSample/index.js",
   "keywords": [
     "ecosystem:cordova",
     "cordova:template"
