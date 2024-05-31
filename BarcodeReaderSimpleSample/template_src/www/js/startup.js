@@ -7,7 +7,7 @@ async function onDeviceReady() {
     if (!window.localStorage.initLicense) { 
         // Initialize license for the Barcode Decoding module of Dynamsoft Capture Vision.
 	    // The license string here is a time-limited trial license. Note that network connection is required for this license to work.
-	    // You can also request an extension for your trial license via the Request a Trial License link: https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github&package=cordova
+	    // You can also request an extension for your trial license via the Request a Trial License link: https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github&package=cordova&version=9
         try {
             await Dynamsoft.DCVBarcodeReader.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
         } catch (e) {
