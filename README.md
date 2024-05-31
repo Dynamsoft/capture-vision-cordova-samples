@@ -73,7 +73,7 @@ cordova plugin add dynamsoft-capture-vision-cordova
 
 ## License
 
-* You can request a trial license in the [customer portal](https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github)
+* You can request a 30-day trial license via the [Request a Trial License](https://www.dynamsoft.com/customer/license/trialLicense?product=dbr&utm_source=github&package=cordova) link.
 
 ## Contact
 
